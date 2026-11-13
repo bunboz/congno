@@ -46,7 +46,7 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
   };
 
   return (
-    <FormDialog open onClose={onClose} width={720} title="Thêm Mới Quy Ước Tuổi Giao & Hao Lai Theo Sổ" subtitle="Thiết lập định mức tuổi giao ghi nợ và hao lai gắn liền với từng số đối chiếu công nợ"
+    <FormDialog open onClose={onClose} width={720} title={editing ? 'Sửa Quy Ước Tuổi Giao & Hao Lai' : 'Thêm Mới Quy Ước Tuổi Giao & Hao Lai'}
       footer={<>
         <Button variant="outlined" color="inherit" onClick={onClose}>Hủy Bỏ</Button>
         <Button variant="contained" disabled={!valid} onClick={save}>{editing ? 'Lưu Cập Nhật' : 'Tạo Quy Ước'}</Button>
@@ -55,11 +55,9 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
         <Stack direction="row" spacing={2}>
           <Autocomplete size="small" fullWidth disabled={editing} options={options} value={acc} onChange={(_, a) => setAcc(a)}
             getOptionLabel={(a) => `${a.code} — ${a.customerName} - Sổ ${MATERIAL_LABEL[a.material]} (${a.fineness}%)`}
-            renderInput={(p) => <TextField {...p} required label="Số Đối Chiếu Công Nợ" InputLabelProps={{ shrink: true }} placeholder={editing ? code : 'Chọn từ danh mục số đối chiếu công nợ của khách hàng'} />} />
-          <TextField size="small" fullWidth disabled label="Khách Hàng CRM" value={customer ? `${customer.code} — ${customer.company}` : ''} InputLabelProps={{ shrink: true }} />
+            renderInput={(p) => <TextField {...p} required helperText={customer ? `${customer.code} — ${customer.company} · ${MATERIAL_LABEL[material]}` : undefined} label="Số Đối Chiếu Công Nợ" InputLabelProps={{ shrink: true }} placeholder={editing ? code : 'Chọn từ danh mục số đối chiếu công nợ của khách hàng'} />} />
         </Stack>
         <Stack direction="row" spacing={2}>
-          <TextField size="small" fullWidth disabled label="Loại Nguyên Liệu" value={code ? MATERIAL_LABEL[material].toUpperCase() : ''} InputLabelProps={{ shrink: true }} />
           <TextField size="small" fullWidth required type="date" label="Ngày Bắt Đầu Hiệu Lực" value={from} onChange={(e) => setFrom(e.target.value)} InputLabelProps={{ shrink: true }} error={!!errs.date} helperText={errs.date ?? 'Kích hoạt tự động đóng bản ghi cũ'} />
           <TextField size="small" fullWidth type="date" label="Ngày Kết Thúc (Tùy chọn)" value={to} onChange={(e) => setTo(e.target.value)} InputLabelProps={{ shrink: true }} helperText="Để trống = Hiệu lực vô cực" />
         </Stack>

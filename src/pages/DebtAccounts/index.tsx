@@ -74,7 +74,7 @@ export default function DebtAccounts() {
       <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
-            {['Mã Đối Chiếu', 'Khách Hàng', 'Loại NL', 'Tuổi Đối Chiếu', 'Bút Toán Sổ Cái', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h} sx={h === 'Thao Tác' ? { width: 160 } : undefined}>{h}</TableCell>)}
+            {['Mã Đối Chiếu', 'Khách Hàng', 'Loại NL', 'Tuổi Đối Chiếu', 'Bút Toán Sổ Cái', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h} sx={h === 'Thao Tác' ? { width: 120 } : undefined}>{h}</TableCell>)}
           </TableRow></TableHead>
           <TableBody>
             {shown.map((a) => (
@@ -89,13 +89,12 @@ export default function DebtAccounts() {
                 </TableCell>
                 <TableCell><StatusBadge tone={a.material === 'GOLD' ? 'yellow' : 'gray'}>{MATERIAL_LABEL[a.material]}</StatusBadge></TableCell>
                 <TableCell>{a.fineness.toFixed(2)}%</TableCell>
-                <TableCell sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : 'text.secondary' }}>{a.journalEntryCount} bút toán</TableCell>
-                <TableCell><StatusCell a={a} /></TableCell>
+                <TableCell sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : 'text.secondary' }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '—'}</TableCell>
+                <TableCell><Stack direction="row" alignItems="center" spacing={0.5}><StatusCell a={a} /><IconButton size="small" title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => toggleAccount(a.id)}
+                    sx={{ color: a.isActive ? 'primary.main' : '#9ca3af' }}><span className="material-icons" style={{ fontSize: 26 }}>{a.isActive ? 'toggle_on' : 'toggle_off'}</span></IconButton></Stack></TableCell>
                 <TableCell><Stack direction="row" alignItems="center">
                   <IconButton size="small" title="Lịch sử phiên bản" aria-label="Lịch sử phiên bản" onClick={() => setHistId(a.id)}>{mi('history')}</IconButton>
                   <IconButton size="small" title="Đổi tuổi đối chiếu" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton>
-                  <IconButton size="small" title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => toggleAccount(a.id)}
-                    sx={{ color: a.isActive ? 'primary.main' : '#9ca3af' }}><span className="material-icons" style={{ fontSize: 26 }}>{a.isActive ? 'toggle_on' : 'toggle_off'}</span></IconButton>
                   <IconButton size="small" title="Xóa mã" aria-label="Xóa mã" onClick={() => setDelId(a.id)}>{mi('delete')}</IconButton>
                 </Stack></TableCell>
               </TableRow>

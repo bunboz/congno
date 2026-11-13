@@ -40,7 +40,7 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
         <Button variant="contained" disabled={!valid} onClick={() => { onConfirm(n, from, reason.trim()); close(); }}>Xác Nhận Đổi Tuổi (v{nextV})</Button>
       </>}>
       <Typography variant="body2" sx={{ mb: 2 }}>Khách hàng: <b>{account.customerName}</b> — {account.customerCompany} · Mã đối chiếu: <b>{account.code}</b> (Kênh: {account.channel} • ĐVT: Lượng)</Typography>
-      <Typography variant="subtitle1" sx={{ color: 'primary.main', mb: 1 }}>1. THÔNG TIN PHIÊN BẢN & HIỆU LỰC</Typography>
+      <Typography variant="subtitle1" sx={{ color: 'primary.main', mb: 1 }}>Thông tin phiên bản & hiệu lực</Typography>
       <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ mb: 2 }}>
         <Box sx={{ flex: 1, p: 1.5, border: '1px solid', borderColor: 'divider', borderRadius: '6px', bgcolor: '#fff' }}>
           <Typography variant="caption">Phiên bản hiện tại (v{account.version})</Typography>
@@ -55,7 +55,7 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
           InputLabelProps={{ shrink: true }} error={!!errs.date} helperText={errs.date ?? 'Chốt sổ version cũ từ 00:00 ngày này'} />
       </Stack>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
-        <Typography variant="subtitle1" sx={{ color: 'primary.main' }}>Bảng Đối Chiếu Quy Đổi Số Dư Nợ <code>[ W_mới = W_cũ × (F_cũ / F_mới) ]</code></Typography>
+        <Typography variant="subtitle1" sx={{ color: 'primary.main' }}>Quy Đổi Số Dư Nợ (giữ nguyên vàng 24K)</Typography>
         {delta !== null && <StatusBadge tone={delta === 0 ? 'green' : 'red'}>Δ Vàng 24K = {delta.toFixed(4)} ({delta === 0 ? 'Bảo toàn' : 'Lệch'})</StatusBadge>}
       </Stack>
       <Table size="small" sx={{ mb: 2, bgcolor: '#fff' }}>

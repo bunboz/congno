@@ -19,6 +19,7 @@ const STATUS: Record<CreditStatus, [string, Tone]> = {
   SAFE: ['An Toàn', 'green'], WARNING: ['Cảnh Báo', 'yellow'], OVER_GOLD: ['Vượt HM Vàng', 'red'],
   OVER_SILVER: ['Vượt HM Bạc', 'purple'], OVER_LABOR: ['Vượt HM Công', 'orange'],
 };
+const RANK: Record<CreditStatus, number> = { OVER_GOLD: 0, OVER_SILVER: 0, OVER_LABOR: 0, WARNING: 1, SAFE: 2 };
 const mi = (n: string) => <span className="material-icons" style={{ fontSize: 18 }}>{n}</span>;
 
 // Một ô hạn mức: hạn mức ở trên, dư nợ (và % đã dùng) ở dưới; đỏ khi vượt.
@@ -29,7 +30,7 @@ function LimitCell({ debt, limit, digits, unit }: { debt: number; limit: number 
     <Box sx={{ textAlign: 'right' }}>
       <b>{unlimited ? 'Không giới hạn' : `${num(limit, digits)} ${unit}`}</b>
       <Typography variant="caption" component="div" sx={{ fontWeight: 400, color: over ? 'error.main' : 'text.secondary' }}>
-        Nợ: {num(debt, digits)} {unit}{unlimited ? '' : ` (${Math.round((debt / limit) * 100)}%)`}
+        {debt === 0 ? 'Nợ: 0' : `Nợ: ${num(debt, digits)} ${unit}${unlimited ? '' : ` (${Math.round((debt / limit) * 100)}%)`}`}
       </Typography>
     </Box>
   );
@@ -49,7 +50,7 @@ export default function CreditLimits() {
     const c = customers.find((x) => x.code === r.customerCode);
     const st = creditStatus({ limits: { gold: r.goldLimit, silver: r.silverLimit, labor: r.laborLimit }, debt: r.debt, nextDueDate: r.nextDueDate, today });
     return { r, name: c?.company ?? r.customerCode, st };
-  }), [limits, customers, today]);
+  }).sort((a, b) => RANK[a.st] - RANK[b.st]), [limits, customers, today]);
 
   const filtered = rows.filter((x) => (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase())));
   const shown = pageSize === 0 ? filtered : filtered.slice((page - 1) * pageSize, page * pageSize);

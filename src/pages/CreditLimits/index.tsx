@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Alert, Box, Button, InputAdornment, LinearProgress, MenuItem, OutlinedInput, Select, Snackbar, Stack,
+  Alert, Box, Button, IconButton, InputAdornment, LinearProgress, MenuItem, OutlinedInput, Select, Snackbar, Stack,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import KpiCard from '../../components/KpiCard';
@@ -91,9 +91,9 @@ export default function CreditLimits() {
                 <TableCell><Cell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" color="#0c0c0c" /></TableCell>
                 <TableCell>{r.termDays === 0 ? 'Thanh toán ngay' : `Net ${r.termDays} ngày`}</TableCell>
                 <TableCell><StatusBadge tone={STATUS[st][1]}>{STATUS[st][0]}</StatusBadge></TableCell>
-                <TableCell><Stack direction="row" spacing={1}>
-                  <Button size="small" variant="outlined" color="inherit" sx={{ whiteSpace: 'nowrap' }} onClick={() => setDrawer({ row: r })}>Chỉnh Sửa</Button>
-                  <Button size="small" variant="outlined" color="inherit" sx={{ whiteSpace: 'nowrap' }} onClick={() => nav(`/customer-ledger/${r.customerCode}`)}>Xem Chi Tiết</Button>
+                <TableCell><Stack direction="row">
+                  <IconButton size="small" title="Chỉnh sửa" aria-label="Chỉnh sửa" onClick={() => setDrawer({ row: r })}><span className="material-icons" style={{ fontSize: 18 }}>edit</span></IconButton>
+                  <IconButton size="small" title="Xem chi tiết" aria-label="Xem chi tiết" onClick={() => nav(`/customer-ledger/${r.customerCode}`)}><span className="material-icons" style={{ fontSize: 18 }}>description</span></IconButton>
                 </Stack></TableCell>
               </TableRow>
             ))}

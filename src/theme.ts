@@ -47,7 +47,7 @@ const theme = createTheme({
     MuiTableCell: {
       styleOverrides: {
         root: { padding: 8, fontSize: 14, borderBottom: '1px solid #eef0f1' },
-        head: { background: '#f9fafb', fontWeight: 550, borderTop: 0, borderBottom: '1px solid #e4e6e6', whiteSpace: 'nowrap' },
+        head: { background: '#f9fafb', fontWeight: 550, '&:not(:last-of-type)': { borderRight: '1px solid #e4e6e6' }, borderTop: 0, borderBottom: '1px solid #e4e6e6', whiteSpace: 'nowrap' },
       },
     },
     MuiPaginationItem: { styleOverrides: { root: { borderRadius: 6 } } },

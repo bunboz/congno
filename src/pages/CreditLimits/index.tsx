@@ -5,6 +5,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
+import Card from '../../components/Card';
 import StatusBadge, { type Tone } from '../../components/StatusBadge';
 import StatusTabs from '../../components/StatusTabs';
 import TablePager from '../../components/TablePager';
@@ -57,7 +58,7 @@ export default function CreditLimits() {
   return (
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Hạn Mức Tín Dụng & Kỳ Hạn Nợ' }]} />
-      <StatusTabs value={filter} onChange={(v) => { setFilter(v as CreditStatus | 'ALL'); setPage(1); }} tabs={[
+      <Card><StatusTabs value={filter} onChange={(v) => { setFilter(v as CreditStatus | 'ALL'); setPage(1); }} tabs={[
         { value: 'ALL', label: 'Tất cả', count: rows.length },
         ...(Object.keys(STATUS) as CreditStatus[]).map((k) => ({ value: k, label: STATUS[k][0], count: rows.filter((x) => x.st === k).length })),
       ]} />
@@ -68,7 +69,7 @@ export default function CreditLimits() {
         <Button variant="contained" startIcon={mi('add')} onClick={() => setDrawer({ row: null })}>Tạo Mới Hạn Mức</Button>
       </Stack>
 
-      <TableContainer sx={{ maxHeight: 'calc(100vh - 230px)' }}>
+      <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
             <TableCell>Khách Hàng</TableCell>
@@ -79,7 +80,7 @@ export default function CreditLimits() {
             {shown.map(({ r, name, st }) => (
               <TableRow hover key={r.customerCode} sx={{ height: 60 }}>
                 <TableCell sx={{ maxWidth: 340 }}>
-                  <Typography component="a" onClick={() => ledger(r.customerCode)} sx={{ fontWeight: 600, cursor: 'pointer', '&:hover': { color: 'primary.main' } }}>{r.customerCode}</Typography>
+                  <Typography component="a" onClick={() => ledger(r.customerCode)} sx={{ fontWeight: 600, color: 'primary.main', cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}>{r.customerCode}</Typography>
                   <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{name}</Typography>
                 </TableCell>
                 <TableCell><LimitCell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
@@ -97,7 +98,7 @@ export default function CreditLimits() {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePager page={page} pageSize={pageSize} total={filtered.length} onPage={setPage} onPageSize={setPageSize} />
+      <TablePager page={page} pageSize={pageSize} total={filtered.length} onPage={setPage} onPageSize={setPageSize} /></Card>
 
       {drawer && <LimitDrawer key={drawer.row?.customerCode ?? 'new'} open row={drawer.row} onClose={() => setDrawer(null)} onSaved={(c) => setToast(`Đã lưu cấu hình hạn mức cho ${c.code}`)} />}
       <Snackbar open={!!toast} autoHideDuration={4000} onClose={() => setToast(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>

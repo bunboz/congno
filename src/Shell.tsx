@@ -40,7 +40,7 @@ export default function Shell() {
                 <NavLink key={i.to} to={i.to} style={{ textDecoration: 'none' }}>
                   {({ isActive }) => (
                     <Stack direction="row" alignItems="center" spacing={1.25} sx={{
-                      height: 36, px: 2, fontSize: 14, whiteSpace: 'nowrap', color: '#fff', cursor: 'pointer',
+                      height: 36, mx: 0.75, px: 1.25, borderRadius: '6px', fontSize: 14, whiteSpace: 'nowrap', color: '#fff', cursor: 'pointer',
                       bgcolor: isActive ? 'rgba(255,255,255,.16)' : 'transparent', fontWeight: isActive ? 600 : 400,
                       '&:hover': { bgcolor: 'rgba(255,255,255,.1)' },
                     }}>
@@ -53,7 +53,7 @@ export default function Shell() {
             </Box>
           ))}
         </Box>
-        <Box sx={{ flex: 1, minWidth: 0, p: 2 }}><Outlet /></Box>
+        <Box sx={{ flex: 1, minWidth: 0, p: 1.5, bgcolor: '#fafafa' }}><Outlet /></Box>
       </Box>
     </Box>
   );

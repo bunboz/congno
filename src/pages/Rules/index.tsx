@@ -4,6 +4,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
+import Card from '../../components/Card';
 import StatusBadge from '../../components/StatusBadge';
 import StatusTabs from '../../components/StatusTabs';
 import { useStore } from '../../state/store';
@@ -33,7 +34,7 @@ export default function Rules() {
   return (
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Cấu hình & Chính sách' }, { label: 'Quy Ước Tuổi Giao & Hao Lai' }]} />
-      <StatusTabs value={st} onChange={(v) => setSt(v as typeof st)} tabs={[
+      <Card><StatusTabs value={st} onChange={(v) => setSt(v as typeof st)} tabs={[
         { value: 'ALL', label: 'Tất cả', count: rules.length },
         { value: 'ON', label: 'Hiệu lực', count: active },
         { value: 'OFF', label: 'Hết hiệu lực', count: rules.length - active },
@@ -48,7 +49,7 @@ export default function Rules() {
         <Button variant="contained" startIcon={mi('add')} onClick={() => setDlg({ rule: null })}>Thêm Quy Ước Mới</Button>
       </Stack>
 
-      <TableContainer sx={{ maxHeight: 'calc(100vh - 230px)' }}>
+      <TableContainer sx={{ maxHeight: 'calc(100vh - 250px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
             {['Mã Đối Chiếu', 'Khách Hàng', 'Loại NL', 'Tuổi Kho', 'Tuổi Giao', 'Hao Lai', 'Hiệu Lực', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h}>{h}</TableCell>)}
@@ -56,7 +57,7 @@ export default function Rules() {
           <TableBody>
             {shown.map(({ r, c }) => (
               <TableRow hover key={r.id} sx={{ height: 54 }}>
-                <TableCell><b>{r.debtAccountCode}</b></TableCell>
+                <TableCell><b style={{ color: '#07554b' }}>{r.debtAccountCode}</b></TableCell>
                 <TableCell sx={{ maxWidth: 320 }}>
                   <b>{c?.name ?? r.customerCode}</b>
                   <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{r.customerCode} — {c?.company}</Typography>
@@ -76,7 +77,7 @@ export default function Rules() {
             {shown.length === 0 && <TableRow><TableCell colSpan={9} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có quy ước phù hợp</TableCell></TableRow>}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer></Card>
 
       {dlg && <RuleDialog key={dlg.rule?.id ?? 'new'} rule={dlg.rule} onClose={() => setDlg(null)} onSaved={(r) => setToast(`Đã lưu quy ước ${r.debtAccountCode}`)} />}
       <Snackbar open={!!toast} autoHideDuration={4000} onClose={() => setToast(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>

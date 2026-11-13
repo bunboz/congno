@@ -4,6 +4,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
+import Card from '../../components/Card';
 import StatusBadge from '../../components/StatusBadge';
 import StatusTabs from '../../components/StatusTabs';
 import TablePager from '../../components/TablePager';
@@ -52,7 +53,7 @@ export default function DebtAccounts() {
   return (
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Danh mục sổ đối chiếu' }]} />
-      <StatusTabs value={status} onChange={(v) => { setStatus(v as StatusFilter); setPage(1); }} tabs={[
+      <Card><StatusTabs value={status} onChange={(v) => { setStatus(v as StatusFilter); setPage(1); }} tabs={[
         { value: 'ALL', label: 'Tất cả', count: accounts.length },
         { value: 'ACTIVE', label: 'Đang hoạt động', count: activeN },
         { value: 'UPGRADED', label: 'Đã nâng version', count: accounts.filter((a) => a.version > 1).length },
@@ -70,7 +71,7 @@ export default function DebtAccounts() {
         <Button variant="contained" startIcon={mi('add')} onClick={() => setAddOpen(true)}>Thêm Mã Đối Chiếu</Button>
       </Stack>
 
-      <TableContainer sx={{ maxHeight: 'calc(100vh - 230px)' }}>
+      <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
             {['Mã Đối Chiếu', 'Khách Hàng', 'Loại NL', 'Tuổi Đối Chiếu', 'Bút Toán Sổ Cái', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h}>{h}</TableCell>)}
@@ -79,7 +80,7 @@ export default function DebtAccounts() {
             {shown.map((a) => (
               <TableRow hover key={a.id} sx={{ height: 54 }}>
                 <TableCell><Stack direction="row" alignItems="center" spacing={1}>
-                  <b>{a.code}</b>
+                  <b style={{ color: '#07554b' }}>{a.code}</b>
                   <StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge>
                 </Stack></TableCell>
                 <TableCell sx={{ maxWidth: 380 }}>
@@ -102,7 +103,7 @@ export default function DebtAccounts() {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePager page={page} pageSize={pageSize} total={filtered.length} onPage={setPage} onPageSize={setPageSize} />
+      <TablePager page={page} pageSize={pageSize} total={filtered.length} onPage={setPage} onPageSize={setPageSize} /></Card>
 
       <AddAccountDrawer open={addOpen} onClose={() => setAddOpen(false)} onCreated={(a) => setToast(`Đã tạo mã đối chiếu ${a.code}`)} />
       {hist && <VersionHistoryDialog key={hist.id + hist.version} account={hist} open onClose={() => setHistId(null)} onChangeFineness={() => { setHistId(null); setChangeId(hist.id); }} />}

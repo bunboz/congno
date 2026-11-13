@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
-  Alert, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack, Switch,
+  Alert, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
@@ -74,7 +74,7 @@ export default function DebtAccounts() {
       <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
-            {['Mã Đối Chiếu', 'Khách Hàng', 'Loại NL', 'Tuổi Đối Chiếu', 'Bút Toán Sổ Cái', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h}>{h}</TableCell>)}
+            {['Mã Đối Chiếu', 'Khách Hàng', 'Loại NL', 'Tuổi Đối Chiếu', 'Bút Toán Sổ Cái', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h} sx={h === 'Thao Tác' ? { width: 160 } : undefined}>{h}</TableCell>)}
           </TableRow></TableHead>
           <TableBody>
             {shown.map((a) => (
@@ -94,7 +94,8 @@ export default function DebtAccounts() {
                 <TableCell><Stack direction="row" alignItems="center">
                   <IconButton size="small" title="Lịch sử phiên bản" aria-label="Lịch sử phiên bản" onClick={() => setHistId(a.id)}>{mi('history')}</IconButton>
                   <IconButton size="small" title="Đổi tuổi đối chiếu" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton>
-                  <Switch size="small" checked={a.isActive} onChange={() => toggleAccount(a.id)} inputProps={{ 'aria-label': 'Hoạt động / Tạm khóa' }} />
+                  <IconButton size="small" title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => toggleAccount(a.id)}
+                    sx={{ color: a.isActive ? 'primary.main' : '#9ca3af' }}><span className="material-icons" style={{ fontSize: 26 }}>{a.isActive ? 'toggle_on' : 'toggle_off'}</span></IconButton>
                   <IconButton size="small" title="Xóa mã" aria-label="Xóa mã" onClick={() => setDelId(a.id)}>{mi('delete')}</IconButton>
                 </Stack></TableCell>
               </TableRow>

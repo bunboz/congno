@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import Breadcrumb from '../../components/Breadcrumb';
 import { useNavigate } from 'react-router-dom';
 import {
   Alert, Box, Button, Chip, IconButton, InputAdornment, Menu, MenuItem, OutlinedInput, Select, Snackbar, Stack, Switch,
@@ -56,7 +57,7 @@ export default function DebtAccounts() {
 
   return (
     <Box>
-      <Typography variant="caption" color="text.secondary">Quản lý công nợ / <b>Danh mục sổ đối chiếu</b></Typography>
+      <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Danh mục sổ đối chiếu' }]} />
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
         <Typography variant="h6">Quản Lý Mã Đối Chiếu & Sổ Công Nợ</Typography>
         <Stack direction="row" spacing={1}>

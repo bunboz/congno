@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import Breadcrumb from '../../components/Breadcrumb';
 import { useNavigate } from 'react-router-dom';
 import {
   Alert, Box, Button, IconButton, InputAdornment, LinearProgress, MenuItem, OutlinedInput, Select, Snackbar, Stack,
@@ -53,7 +54,7 @@ export default function CreditLimits() {
 
   return (
     <Box>
-      <Typography variant="caption" color="text.secondary">Quản lý công nợ / <b>Hạn Mức Tín Dụng & Kỳ Hạn Nợ</b></Typography>
+      <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Hạn Mức Tín Dụng & Kỳ Hạn Nợ' }]} />
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
         <Typography variant="h6">Quản Lý Hạn Mức Tín Dụng 3 Trục & Thời Hạn Thanh Toán</Typography>
         <Button size="small" variant="contained" onClick={() => setDrawer({ row: null })}>+ Tạo Mới Hạn Mức</Button>

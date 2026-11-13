@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
 
 export type Tone = 'green' | 'yellow' | 'red' | 'blue' | 'gray' | 'purple' | 'orange';
@@ -16,5 +16,16 @@ export default function StatusBadge({ tone, children }: { tone: Tone; children: 
       display: 'inline-flex', alignItems: 'center', gap: 0.5, px: '6px', py: '4px', borderRadius: '6px',
       border: `1px solid ${c}`, color: c, bgcolor: bg, fontWeight: 500, whiteSpace: 'nowrap',
     }}>{children}</Typography>
+  );
+}
+
+// Trạng thái "bình thường" chỉ cần chấm màu + chữ; ô nổi bật dành cho ngoại lệ cần chú ý.
+export function StatusDot({ tone, children }: { tone: Tone; children: ReactNode }) {
+  const [c] = TONES[tone];
+  return (
+    <Typography component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: 14, whiteSpace: 'nowrap' }}>
+      <Box component="span" aria-hidden sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: c, flexShrink: 0 }} />
+      {children}
+    </Typography>
   );
 }

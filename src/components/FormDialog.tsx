@@ -6,7 +6,7 @@ interface Props { open: boolean; onClose: () => void; title: ReactNode; subtitle
 // Popup chuẩn DS: rộng cố định (420/600/800/840/960 hoặc 880 theo BA), header + footer căn phải.
 export default function FormDialog({ open, onClose, title, subtitle, width, children, footer, headerExtra }: Props) {
   return (
-    <Dialog open={open} onClose={onClose} maxWidth={false} PaperProps={{ sx: { width, maxWidth: 'calc(100vw - 32px)', borderRadius: '8px' } }}>
+    <Dialog open={open} onClose={onClose} disableAutoFocus TransitionProps={{ onEntered: (node: HTMLElement) => node.querySelector<HTMLElement>('input:not([disabled]):not([type=hidden]), textarea:not([disabled])')?.focus() }} maxWidth={false} PaperProps={{ sx: { width, maxWidth: 'calc(100vw - 32px)', borderRadius: '8px' } }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 2, py: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
         <Box>
           <Typography variant="h6" component="div">{title}</Typography>

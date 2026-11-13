@@ -7,7 +7,7 @@ import { parseNum, validateFineness } from '../../lib/fineness';
 import { CURRENT_USER } from '../../data/mock';
 import type { Customer, DebtAccount, Material } from '../../lib/types';
 
-const card = { p: 2, mb: 2, bgcolor: '#fff', border: '1px solid', borderColor: 'divider', borderRadius: '6px' } as const;
+const card = { mb: 3 } as const;
 const Head = ({ children }: { children: string }) => (
   <Typography variant="subtitle1" sx={{ color: 'primary.main', mb: 1.5 }}>{children}</Typography>
 );

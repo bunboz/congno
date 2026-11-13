@@ -29,16 +29,16 @@ const theme = createTheme({
     MuiButton: {
       defaultProps: { disableElevation: true },
       styleOverrides: {
-        root: { borderRadius: 6, minHeight: 32, padding: '6px 16px', whiteSpace: 'nowrap' },
+        root: { borderRadius: 6, minHeight: 34, padding: '6px 16px', whiteSpace: 'nowrap' },
         outlined: { borderColor: '#d1d5db', color: '#374151', '&:hover': { background: '#f9fafb', borderColor: '#9ca3af' } },
         containedPrimary: { boxShadow: '0 2px 12px rgba(0,0,0,.08)' },
       },
     },
-    MuiIconButton: { styleOverrides: { root: { color: '#6b7280', '&:hover': { color: '#07554b', background: '#f0f5f4' } } } },
+    MuiIconButton: { styleOverrides: { root: { color: '#9ca3af', '&:hover': { color: '#07554b', background: '#f0f5f4' } } } },
     MuiOutlinedInput: {
       styleOverrides: {
         root: { borderRadius: 6, fontSize: 14, '& .MuiOutlinedInput-notchedOutline': { borderColor: '#d1d5db' } },
-        input: { padding: '6px 12px', height: 20 },
+        input: { padding: '7px 12px', height: 20 },
       },
     },
     MuiTab: { styleOverrides: { root: { textTransform: 'none', minHeight: 34, padding: 8, fontSize: 14, fontWeight: 400, '&.Mui-selected': { fontWeight: 600, color: '#000' } } } },
@@ -46,8 +46,8 @@ const theme = createTheme({
     MuiTableContainer: { styleOverrides: { root: { border: '1px solid #e4e6e6', borderRadius: 4 } } },
     MuiTableCell: {
       styleOverrides: {
-        root: { padding: 8, fontSize: 14, borderBottom: '1px solid #eef0f1' },
-        head: { background: '#f9fafb', fontWeight: 550, '&:not(:last-of-type)': { borderRight: '1px solid #e4e6e6' }, borderTop: 0, borderBottom: '1px solid #e4e6e6', whiteSpace: 'nowrap' },
+        root: { padding: '10px 12px', fontSize: 14, borderBottom: '1px solid #eef0f1' },
+        head: { background: '#f9fafb', fontWeight: 550, '&:not(:last-of-type)': { borderRight: '1px solid #eceff1' }, borderTop: 0, borderBottom: '1px solid #e4e6e6', whiteSpace: 'nowrap' },
       },
     },
     MuiPaginationItem: { styleOverrides: { root: { borderRadius: 6 } } },

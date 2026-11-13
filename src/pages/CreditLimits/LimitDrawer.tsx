@@ -47,7 +47,7 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
       {editing && <Typography variant="caption" sx={{ color: 'success.main' }}>* Mặc định là khách hàng đang muốn chỉnh sửa</Typography>}
 
       {row && (
-        <Stack direction="row" spacing={4} sx={{ my: 2, p: 1.5, bgcolor: '#fff', border: '1px solid', borderColor: 'divider', borderRadius: '6px' }}>
+        <Stack direction="row" spacing={4} sx={{ my: 2, p: 1.5, bgcolor: '#f3f8f7', borderRadius: '8px' }}>
           <Box><Typography variant="caption" color="text.secondary">DƯ NỢ VÀNG HIỆN TẠI</Typography>
             <Typography sx={{ fontWeight: 600, color: 'success.main' }}>{num(row.debt.gold, 4)} Lượng</Typography>
             {goldAcc && <Typography variant="caption" color="text.secondary">Tuổi quy ước đối chiếu: {goldAcc.fineness}%</Typography>}</Box>
@@ -56,7 +56,7 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
         </Stack>
       )}
 
-      <Box sx={{ p: 2, mt: 2, bgcolor: '#fff', border: '1px solid', borderColor: 'divider', borderRadius: '6px' }}>
+      <Box sx={{ mt: 3 }}>
         <Typography variant="subtitle1" sx={{ color: 'primary.main', mb: 1.5 }}>Hạn Mức Công Nợ & Thời Hạn Thanh Toán</Typography>
         <Stack spacing={2}>
           <TextField size="small" fullWidth label="Hạn mức nợ Vàng tối đa (Lượng)" value={gold} onChange={(e) => setGold(e.target.value)} error={!!errs.gold}

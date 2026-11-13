@@ -6,7 +6,7 @@ interface Props { open: boolean; onClose: () => void; title: string; subtitle?: 
 // Drawer phải; header = Title + nút đóng, footer cố định đáy căn phải (Figma DS: Header/Footer popup).
 export default function FormDrawer({ open, onClose, title, subtitle, children, footer, width = 560 }: Props) {
   return (
-    <Drawer anchor="right" open={open} onClose={onClose} PaperProps={{ sx: { width, maxWidth: '100vw', display: 'flex', flexDirection: 'column' } }}>
+    <Drawer anchor="right" open={open} onClose={onClose} ModalProps={{ disableAutoFocus: true }} SlideProps={{ onEntered: (node: HTMLElement) => node.querySelector<HTMLElement>('input:not([disabled]):not([type=hidden]), textarea:not([disabled])')?.focus() }} PaperProps={{ sx: { width, maxWidth: '100vw', display: 'flex', flexDirection: 'column' } }}>
       <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ px: 2, py: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
         <Box>
           <Typography variant="h6">{title}</Typography>

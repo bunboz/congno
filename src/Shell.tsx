@@ -3,12 +3,12 @@ import { Avatar, Badge, Box, Divider, Stack, Typography } from '@mui/material';
 
 const groups = [
   [
-    { label: 'Mã Đối Chiếu (Sổ Nợ)', to: '/debt-accounts', icon: 'receipt_long' },
-    { label: 'Sổ Chi Tiết Khách Hàng', to: '/customer-ledger/100003', icon: 'menu_book' },
+    { label: 'Mã đối chiếu', to: '/debt-accounts', icon: 'receipt_long' },
+    { label: 'Sổ chi tiết KH', to: '/customer-ledger/100003', icon: 'menu_book' },
   ],
   [
-    { label: 'Hạn Mức & Cảnh Báo Rủi Ro', to: '/credit-limits', icon: 'shield' },
-    { label: 'Quy Ước Tuổi & Hao Lai', to: '/rules-settings', icon: 'tune' },
+    { label: 'Hạn mức tín dụng', to: '/credit-limits', icon: 'shield' },
+    { label: 'Quy ước tuổi & hao lai', to: '/rules-settings', icon: 'tune' },
   ],
 ];
 
@@ -36,7 +36,7 @@ export default function Shell() {
         </Stack>
       </Stack>
       <Box sx={{ display: 'flex', flex: 1, minHeight: 0 }}>
-        <Box component="nav" sx={{ width: 252, flexShrink: 0, bgcolor: 'primary.main', color: '#fff', pt: 1 }}>
+        <Box component="nav" sx={{ width: 208, flexShrink: 0, bgcolor: 'primary.main', color: '#fff', pt: 1 }}>
           {groups.map((g, gi) => (
             <Box key={gi}>
               {gi > 0 && <Divider sx={{ my: 1, borderColor: 'rgba(255,255,255,.18)' }} />}

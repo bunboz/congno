@@ -1,23 +1,21 @@
 import { useMemo, useState } from 'react';
-import Breadcrumb from '../../components/Breadcrumb';
-import { useNavigate } from 'react-router-dom';
 import {
   Alert, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
-import KpiCard from '../../components/KpiCard';
-import StatusTabs from '../../components/StatusTabs';
+import Breadcrumb from '../../components/Breadcrumb';
 import StatusBadge from '../../components/StatusBadge';
+import StatusTabs from '../../components/StatusTabs';
 import { useStore } from '../../state/store';
 import type { Rule } from '../../lib/rules';
 import { MATERIAL_LABEL } from '../../lib/types';
+import { dmy } from '../../lib/format';
 import RuleDialog from './RuleDialog';
 
 const mi = (n: string) => <span className="material-icons" style={{ fontSize: 18 }}>{n}</span>;
 const lossTone = (l: number) => (l > 0 ? 'yellow' : l < 0 ? 'red' : 'gray') as 'yellow' | 'red' | 'gray';
 
 export default function Rules() {
-  const nav = useNavigate();
   const { rules, customers, today, deleteRule } = useStore();
   const [q, setQ] = useState('');
   const [mat, setMat] = useState<'ALL' | 'GOLD' | 'SILVER'>('ALL');
@@ -34,65 +32,48 @@ export default function Rules() {
 
   return (
     <Box>
-      <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Cấu hình & Chính sách' }, { label: 'Bảng Quy Ước Tuổi Giao Hàng & Hao Lai' }]} />
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-        <Typography variant="h6">Thiết Lập Quy Ước Tuổi Giao & Hao Lai</Typography>
-        <Stack direction="row" spacing={1}>
-          <Button size="small" variant="outlined" color="inherit" onClick={() => nav('/debt-accounts')}>Quy Ước Đối Chiếu</Button>
-          <Button size="small" variant="contained" onClick={() => setDlg({ rule: null })}>+ Thêm Quy Ước Mới</Button>
-        </Stack>
-      </Stack>
-      <Alert severity="warning" icon={false} sx={{ mb: 2 }}>
-        <b>Quy Chuẩn Hao Lai & Tỷ Lệ Quy Đổi Từng Khách Hàng</b><br />
-        • Hao lai là % chênh lệch giữa Tuổi giao (F_delivery) và Tuổi kho (F_stock): <b>Hao lai (%) = Tuổi giao - Tuổi kho.</b><br />
-        • Quản lý hiệu lực 2 chiều: Tự động đóng bản ghi cũ (Auto-closing), bảo lưu lịch sử kiểm toán bất biến, tra cứu As-Of theo ngày giao dịch.
-      </Alert>
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <KpiCard label="Tổng số quy ước" icon="tune" value={rules.length} hint={`Đang áp dụng: ${active} quy ước`} />
-        <KpiCard label="Quy ước Vàng (GOLD)" icon="toll" value={rules.filter((r) => r.material === 'GOLD').length} hint="Quy ước tính nợ Vàng" color="#ca8a03" />
-        <KpiCard label="Quy ước Bạc (SILVER)" icon="savings" value={rules.filter((r) => r.material === 'SILVER').length} hint="Quy ước tính nợ Bạc" color="#1570ef" />
-      </Stack>
+      <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Cấu hình & Chính sách' }, { label: 'Quy Ước Tuổi Giao & Hao Lai' }]} />
       <StatusTabs value={st} onChange={(v) => setSt(v as typeof st)} tabs={[
         { value: 'ALL', label: 'Tất cả', count: rules.length },
         { value: 'ON', label: 'Hiệu lực', count: active },
         { value: 'OFF', label: 'Hết hiệu lực', count: rules.length - active },
       ]} />
-      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1.5 }}>
-        <OutlinedInput size="small" placeholder="Tìm theo mã/tên khách hàng, mã số đối chiếu..." value={q} onChange={(e) => setQ(e.target.value)}
-          startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 340, borderRadius: '10px', height: 32 }} />
-        <Typography variant="caption">Nguyên liệu:</Typography>
-        <Select size="small" value={mat} onChange={(e) => setMat(e.target.value as typeof mat)} sx={{ height: 32 }}>
-          <MenuItem value="ALL">Tất Cả Nguyên Liệu</MenuItem><MenuItem value="GOLD">Vàng</MenuItem><MenuItem value="SILVER">Bạc</MenuItem>
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+        <OutlinedInput size="small" placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => setQ(e.target.value)}
+          startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 300, borderRadius: '10px', height: 32 }} />
+        <Select size="small" value={mat} onChange={(e) => setMat(e.target.value as typeof mat)} sx={{ height: 32, minWidth: 150 }}>
+          <MenuItem value="ALL">Tất cả loại NL</MenuItem><MenuItem value="GOLD">Vàng</MenuItem><MenuItem value="SILVER">Bạc</MenuItem>
         </Select>
-        <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }} color="text.secondary">Hiển thị {shown.length} / {rules.length} quy ước</Typography>
+        <Box sx={{ flex: 1 }} />
+        <Button variant="contained" startIcon={mi('add')} onClick={() => setDlg({ rule: null })}>Thêm Quy Ước Mới</Button>
       </Stack>
 
-      <TableContainer sx={{ maxHeight: 'calc(100vh - 460px)' }}>
+      <TableContainer sx={{ maxHeight: 'calc(100vh - 230px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
-            {['STT', 'Mã Đối Chiếu', 'Tên Khách Hàng', 'Mã — Tên Công Ty', 'Loại NL', 'Tuổi Kho (F_stock)', 'Tuổi Giao (F_delivery)', 'Hao Lai (%)', 'Ngày Hiệu Lực', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h}>{h}</TableCell>)}
+            {['Mã Đối Chiếu', 'Khách Hàng', 'Loại NL', 'Tuổi Kho', 'Tuổi Giao', 'Hao Lai', 'Hiệu Lực', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h}>{h}</TableCell>)}
           </TableRow></TableHead>
           <TableBody>
-            {shown.map(({ r, c }, i) => (
+            {shown.map(({ r, c }) => (
               <TableRow hover key={r.id} sx={{ height: 54 }}>
-                <TableCell>{i + 1}</TableCell>
                 <TableCell><b>{r.debtAccountCode}</b></TableCell>
-                <TableCell><b>{c?.name ?? r.customerCode}</b></TableCell>
-                <TableCell sx={{ maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}><b>{r.customerCode}</b> — {c?.company}</TableCell>
-                <TableCell><StatusBadge tone={r.material === 'GOLD' ? 'yellow' : 'gray'}>{MATERIAL_LABEL[r.material].toUpperCase()}</StatusBadge></TableCell>
-                <TableCell><b>{r.productionFineness.toFixed(2)}%</b></TableCell>
-                <TableCell><b style={{ color: '#2e7d32' }}>{r.deliveryFineness.toFixed(2)}%</b></TableCell>
-                <TableCell><StatusBadge tone={lossTone(r.lossRate)}>{r.lossRate > 0 ? '+' : ''}{r.lossRate.toFixed(2)}%</StatusBadge>
-                  <Typography variant="caption" component="div" color="text.secondary" sx={{ fontWeight: 400 }}>{r.deliveryFineness}% - {r.productionFineness}%</Typography></TableCell>
-                <TableCell>{r.effectiveFrom}{r.effectiveTo ? ` → ${r.effectiveTo}` : ''}</TableCell>
-                <TableCell><StatusBadge tone={expired(r) ? 'gray' : 'green'}>{expired(r) ? 'HẾT HIỆU LỰC' : 'HIỆU LỰC'}</StatusBadge></TableCell>
-                <TableCell>
-                  <IconButton size="small" title="Sửa" onClick={() => setDlg({ rule: r })}>{mi('edit')}</IconButton>
-                  <IconButton size="small" title="Xóa" color="error" onClick={() => { if (window.confirm(`Xóa quy ước ${r.debtAccountCode} (tuổi kho ${r.productionFineness}%)?`)) { deleteRule(r.id); setToast('Đã xóa quy ước'); } }}>{mi('delete')}</IconButton>
+                <TableCell sx={{ maxWidth: 320 }}>
+                  <b>{c?.name ?? r.customerCode}</b>
+                  <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{r.customerCode} — {c?.company}</Typography>
                 </TableCell>
+                <TableCell><StatusBadge tone={r.material === 'GOLD' ? 'yellow' : 'gray'}>{MATERIAL_LABEL[r.material]}</StatusBadge></TableCell>
+                <TableCell>{r.productionFineness.toFixed(2)}%</TableCell>
+                <TableCell>{r.deliveryFineness.toFixed(2)}%</TableCell>
+                <TableCell><StatusBadge tone={lossTone(r.lossRate)}>{r.lossRate > 0 ? '+' : ''}{r.lossRate.toFixed(2)}%</StatusBadge></TableCell>
+                <TableCell>{dmy(r.effectiveFrom)}{r.effectiveTo ? ` → ${dmy(r.effectiveTo)}` : ' → nay'}</TableCell>
+                <TableCell><StatusBadge tone={expired(r) ? 'gray' : 'green'}>{expired(r) ? 'Hết hiệu lực' : 'Hiệu lực'}</StatusBadge></TableCell>
+                <TableCell><Stack direction="row">
+                  <IconButton size="small" title="Sửa" aria-label="Sửa" onClick={() => setDlg({ rule: r })}>{mi('edit')}</IconButton>
+                  <IconButton size="small" title="Xóa" aria-label="Xóa" onClick={() => { if (window.confirm(`Xóa quy ước ${r.debtAccountCode} (tuổi kho ${r.productionFineness}%)?`)) { deleteRule(r.id); setToast('Đã xóa quy ước'); } }}>{mi('delete')}</IconButton>
+                </Stack></TableCell>
               </TableRow>
             ))}
-            {shown.length === 0 && <TableRow><TableCell colSpan={11} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có quy ước phù hợp</TableCell></TableRow>}
+            {shown.length === 0 && <TableRow><TableCell colSpan={9} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có quy ước phù hợp</TableCell></TableRow>}
           </TableBody>
         </Table>
       </TableContainer>

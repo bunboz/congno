@@ -20,14 +20,10 @@ export default function Shell() {
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: '#fff' }}>
       <Stack component="header" direction="row" alignItems="center" justifyContent="space-between" sx={{ height: 48, px: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
         <Stack direction="row" alignItems="center" spacing={1.5}>
-          <Box aria-hidden sx={{ display: 'grid', placeItems: 'center', color: '#111' }}>{mi('apps', 26)}</Box>
           <Avatar variant="rounded" sx={{ bgcolor: '#f5c443', color: '#07554b', width: 32, height: 32, borderRadius: '8px' }}>{mi('balance')}</Avatar>
           <Typography sx={{ fontWeight: 600, fontSize: 15 }}>Công nợ</Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Badge badgeContent="99+" color="error" sx={{ '& .MuiBadge-badge': { fontSize: 10, minWidth: 18, height: 16 } }}>
-            <span className="material-icons" aria-label="Thông báo" style={{ fontSize: 20, color: '#07554b' }}>notifications_none</span>
-          </Badge>
           <Avatar sx={{ width: 28, height: 28, bgcolor: 'primary.main', fontSize: 12, fontWeight: 600 }}>MD</Avatar>
           <Box>
             <Typography sx={{ fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>Nguyễn Thị Mỹ Dung</Typography>

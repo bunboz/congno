@@ -17,7 +17,6 @@ export default function TablePager({ page, pageSize, total, onPage, onPageSize }
           {SIZES.map((s) => <MenuItem key={s} value={s}>{s === 0 ? `Tất cả (${total} dòng)` : s}</MenuItem>)}
         </Select>
         <Pagination variant="outlined" shape="rounded" count={pages} page={Math.min(page, pages)} onChange={(_, p) => onPage(p)} />
-        <Typography variant="caption" color="text.secondary">Trang {Math.min(page, pages)} / {pages}</Typography>
       </Stack>
     </Stack>
   );

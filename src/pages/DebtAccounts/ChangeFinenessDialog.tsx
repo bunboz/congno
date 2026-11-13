@@ -8,9 +8,9 @@ import type { DebtAccount } from '../../lib/types';
 
 const r4 = (n: number) => Math.round(n * 1e4) / 1e4;
 
-interface Props { account: DebtAccount; today: string; open: boolean; onClose: () => void; onConfirm: (next: number, from: string, reason: string) => void; onHistory?: () => void }
+interface Props { account: DebtAccount; today: string; open: boolean; onClose: () => void; onConfirm: (next: number, from: string, reason: string) => void }
 
-export default function ChangeFinenessDialog({ account, today, open, onClose, onConfirm, onHistory }: Props) {
+export default function ChangeFinenessDialog({ account, today, open, onClose, onConfirm }: Props) {
   const [next, setNext] = useState('');
   const [from, setFrom] = useState(today);
   const [reason, setReason] = useState('');
@@ -27,15 +27,14 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
   const nextV = account.version + 1;
   const close = () => { setNext(''); setReason(''); setFrom(today); onClose(); };
 
-  const rows: [string, string, string, string][] = [
-    ['Dư nợ Vàng đã giao', `${num(b.goldDelivered, 4)} Lượng`, preview ? `${num(preview.goldDelivered, 4)} Lượng` : '—', `${num(k24(b.goldDelivered, account.fineness), 4)} Lượng`],
-    ['Hàng chưa giao (Chờ xuất)', `${num(b.goldPending, 4)} Lượng`, preview ? `${num(preview.goldPending, 4)} Lượng` : '—', `${num(k24(b.goldPending, account.fineness), 4)} Lượng`],
-    ['Tiền công (VNĐ)', `${num(b.labor)} đ`, preview ? `${num(preview.labor)} đ` : '—', 'Không đổi'],
+  const rows: [string, string, string][] = [
+    ['Dư nợ Vàng đã giao', `${num(b.goldDelivered, 4)} Lượng`, preview ? `${num(preview.goldDelivered, 4)} Lượng` : '—'],
+    ['Hàng chưa giao (Chờ xuất)', `${num(b.goldPending, 4)} Lượng`, preview ? `${num(preview.goldPending, 4)} Lượng` : '—'],
+    ['Tiền công (VNĐ)', `${num(b.labor)} đ`, preview ? `${num(preview.labor)} đ` : '—'],
   ];
 
   return (
     <FormDialog open={open} onClose={close} width={800} title={<>Đổi Tuổi Đối Chiếu: {account.code} <StatusBadge tone="green">v{account.version} → v{nextV}</StatusBadge></>}
-      headerExtra={onHistory && <Button size="small" variant="outlined" color="inherit" onClick={onHistory}>Lịch sử</Button>}
       footer={<>
         <Button variant="outlined" color="inherit" onClick={close}>Hủy Bỏ</Button>
         <Button variant="contained" disabled={!valid} onClick={() => { onConfirm(n, from, reason.trim()); close(); }}>Xác Nhận Đổi Tuổi (v{nextV})</Button>
@@ -44,7 +43,7 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
       <Typography variant="subtitle1" sx={{ color: 'primary.main', mb: 1 }}>1. THÔNG TIN PHIÊN BẢN & HIỆU LỰC</Typography>
       <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ mb: 2 }}>
         <Box sx={{ flex: 1, p: 1.5, border: '1px solid', borderColor: 'divider', borderRadius: '6px', bgcolor: '#fff' }}>
-          <Typography variant="caption">Phiên bản hiện tại (v{account.version}) <StatusBadge tone="yellow">Sẽ khóa sổ</StatusBadge></Typography>
+          <Typography variant="caption">Phiên bản hiện tại (v{account.version})</Typography>
           <Typography sx={{ fontSize: 22, fontWeight: 600 }}>{account.fineness.toFixed(2)}% <Typography component="span" variant="caption">Tuổi cũ</Typography></Typography>
         </Box>
         <Box sx={{ flex: 1.3, p: 1.5, border: '2px solid', borderColor: 'primary.main', borderRadius: '6px', bgcolor: '#fff' }}>
@@ -62,11 +61,11 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
       <Table size="small" sx={{ mb: 2, bgcolor: '#fff' }}>
         <TableHead><TableRow>
           <TableCell>Chỉ tiêu công nợ</TableCell><TableCell align="right">Version v{account.version} ({account.fineness.toFixed(2)}%)</TableCell>
-          <TableCell align="right">Version v{nextV} ({preview ? `${n.toFixed(2)}%` : '—'})</TableCell><TableCell align="right">Quy 24K (Chuẩn)</TableCell>
+          <TableCell align="right">Version v{nextV} ({preview ? `${n.toFixed(2)}%` : '—'})</TableCell>
         </TableRow></TableHead>
         <TableBody>{rows.map((r) => (
           <TableRow key={r[0]}><TableCell>{r[0]}</TableCell><TableCell align="right">{r[1]}</TableCell>
-            <TableCell align="right" sx={{ color: 'primary.main', fontWeight: 600 }}>{r[2]}</TableCell><TableCell align="right">{r[3]}</TableCell></TableRow>
+            <TableCell align="right" sx={{ color: 'primary.main', fontWeight: 600 }}>{r[2]}</TableCell></TableRow>
         ))}</TableBody>
       </Table>
       <TextField fullWidth multiline minRows={2} required label="Lý do thay đổi" value={reason} onChange={(e) => setReason(e.target.value)} InputLabelProps={{ shrink: true }}

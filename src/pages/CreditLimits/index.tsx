@@ -1,13 +1,12 @@
 import { useMemo, useState } from 'react';
-import Breadcrumb from '../../components/Breadcrumb';
 import { useNavigate } from 'react-router-dom';
 import {
-  Alert, Box, Button, IconButton, InputAdornment, LinearProgress, MenuItem, OutlinedInput, Select, Snackbar, Stack,
+  Alert, Box, Button, IconButton, InputAdornment, OutlinedInput, Snackbar, Stack,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
-import KpiCard from '../../components/KpiCard';
-import StatusTabs from '../../components/StatusTabs';
+import Breadcrumb from '../../components/Breadcrumb';
 import StatusBadge, { type Tone } from '../../components/StatusBadge';
+import StatusTabs from '../../components/StatusTabs';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
 import { creditStatus, type CreditStatus } from '../../lib/credit';
@@ -19,15 +18,18 @@ const STATUS: Record<CreditStatus, [string, Tone]> = {
   SAFE: ['An Toàn', 'green'], WARNING: ['Cảnh Báo', 'yellow'], OVER_GOLD: ['Vượt HM Vàng', 'red'],
   OVER_SILVER: ['Vượt HM Bạc', 'purple'], OVER_LABOR: ['Vượt HM Công', 'orange'],
 };
+const mi = (n: string) => <span className="material-icons" style={{ fontSize: 18 }}>{n}</span>;
 
-function Cell({ debt, limit, digits, unit, color }: { debt: number; limit: number | null; digits: number; unit: string; color: string }) {
+// Một ô hạn mức: hạn mức ở trên, dư nợ (và % đã dùng) ở dưới; đỏ khi vượt.
+function LimitCell({ debt, limit, digits, unit }: { debt: number; limit: number | null; digits: number; unit: string }) {
   const unlimited = !limit;
-  const p = unlimited ? 0 : (debt / limit) * 100;
+  const over = !unlimited && debt > limit;
   return (
-    <Box sx={{ minWidth: 150, textAlign: 'right' }}>
-      <Typography variant="body2" sx={{ color, fontWeight: 600 }}>{unlimited ? 'Không giới hạn' : `${num(limit, digits)} ${unit}`}</Typography>
-      <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 400 }}>Nợ: {num(debt, digits)} {unit}{unlimited ? '' : ` (${Math.round(p)}%)`}</Typography>
-      {!unlimited && <LinearProgress variant="determinate" value={Math.min(100, p)} color={p > 100 ? 'error' : 'primary'} sx={{ height: 4, borderRadius: 2, mt: 0.5 }} />}
+    <Box sx={{ textAlign: 'right' }}>
+      <b>{unlimited ? 'Không giới hạn' : `${num(limit, digits)} ${unit}`}</b>
+      <Typography variant="caption" component="div" sx={{ fontWeight: 400, color: over ? 'error.main' : 'text.secondary' }}>
+        Nợ: {num(debt, digits)} {unit}{unlimited ? '' : ` (${Math.round((debt / limit) * 100)}%)`}
+      </Typography>
     </Box>
   );
 }
@@ -38,7 +40,7 @@ export default function CreditLimits() {
   const [q, setQ] = useState('');
   const [filter, setFilter] = useState<CreditStatus | 'ALL'>('ALL');
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(50);
+  const [pageSize, setPageSize] = useState(25);
   const [drawer, setDrawer] = useState<{ row: LimitRow | null } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -50,55 +52,48 @@ export default function CreditLimits() {
 
   const filtered = rows.filter((x) => (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase())));
   const shown = pageSize === 0 ? filtered : filtered.slice((page - 1) * pageSize, page * pageSize);
-  const n = (f: (s: CreditStatus) => boolean) => rows.filter((x) => f(x.st)).length;
+  const ledger = (code: string) => nav(`/customer-ledger/${code}`);
 
   return (
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Hạn Mức Tín Dụng & Kỳ Hạn Nợ' }]} />
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-        <Typography variant="h6">Quản Lý Hạn Mức Tín Dụng 3 Trục & Thời Hạn Thanh Toán</Typography>
-        <Button size="small" variant="contained" onClick={() => setDrawer({ row: null })}>+ Tạo Mới Hạn Mức</Button>
-      </Stack>
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <KpiCard label="Tổng khách đã cấp hạn mức" icon="groups" value={`${rows.length} Đối tác`} hint="Kiểm soát 3 trục Vàng, Bạc, Tiền trên Ví KD" />
-        <KpiCard label="An Toàn" icon="verified_user" value={`${n((s) => s === 'SAFE')} Khách`} hint="Trong hạn mức, chưa đến hạn thanh toán" />
-        <KpiCard label="Cảnh Báo" icon="warning_amber" value={`${n((s) => s === 'WARNING')} Khách`} hint="Có chứng từ đến hạn trong 3 ngày tới" color="#ca8a03" />
-        <KpiCard label="Vượt hạn mức" icon="gpp_bad" value={`${n((s) => s.startsWith('OVER'))} Khách`} hint="Vượt hạn mức Vàng, Bạc hoặc Tiền công" color="#bb0000" />
-      </Stack>
       <StatusTabs value={filter} onChange={(v) => { setFilter(v as CreditStatus | 'ALL'); setPage(1); }} tabs={[
         { value: 'ALL', label: 'Tất cả', count: rows.length },
         ...(Object.keys(STATUS) as CreditStatus[]).map((k) => ({ value: k, label: STATUS[k][0], count: rows.filter((x) => x.st === k).length })),
       ]} />
-      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1.5 }}>
-        <OutlinedInput size="small" placeholder="Tìm theo mã khách, tên tiệm vàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
-          startAdornment={<InputAdornment position="start"><span className="material-icons" style={{ fontSize: 18 }}>search</span></InputAdornment>} sx={{ width: 310, borderRadius: '10px', height: 32 }} />
-        <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }} color="text.secondary">Hiển thị: {filtered.length} / {rows.length} khách hàng</Typography>
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+        <OutlinedInput size="small" placeholder="Tìm mã hoặc tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
+          startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 300, borderRadius: '10px', height: 32 }} />
+        <Box sx={{ flex: 1 }} />
+        <Button variant="contained" startIcon={mi('add')} onClick={() => setDrawer({ row: null })}>Tạo Mới Hạn Mức</Button>
       </Stack>
 
-      <TableContainer sx={{ maxHeight: 'calc(100vh - 380px)' }}>
+      <TableContainer sx={{ maxHeight: 'calc(100vh - 230px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
-            <TableCell>Mã Khách</TableCell><TableCell>Tên Khách Hàng / Tiệm Vàng</TableCell>
-            <TableCell align="right">Hạn Mức Vàng (Lượng)</TableCell><TableCell align="right">Hạn Mức Bạc (Lượng)</TableCell><TableCell align="right">Hạn Mức Tiền (VNĐ)</TableCell>
+            <TableCell>Khách Hàng</TableCell>
+            <TableCell align="right">Hạn Mức Vàng</TableCell><TableCell align="right">Hạn Mức Bạc</TableCell><TableCell align="right">Hạn Mức Tiền Công</TableCell>
             <TableCell>Kỳ Hạn Nợ</TableCell><TableCell>Trạng Thái Nợ</TableCell><TableCell>Thao Tác</TableCell>
           </TableRow></TableHead>
           <TableBody>
             {shown.map(({ r, name, st }) => (
               <TableRow hover key={r.customerCode} sx={{ height: 60 }}>
-                <TableCell><Typography component="a" onClick={() => nav(`/customer-ledger/${r.customerCode}`)} sx={{ fontWeight: 600, cursor: 'pointer' }}>{r.customerCode}</Typography></TableCell>
-                <TableCell><Typography component="a" variant="body2" onClick={() => nav(`/customer-ledger/${r.customerCode}`)} sx={{ color: 'primary.main', cursor: 'pointer' }}>{name}</Typography></TableCell>
-                <TableCell><Cell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" color="#9a3412" /></TableCell>
-                <TableCell><Cell debt={r.debt.silver} limit={r.silverLimit} digits={4} unit="Lượng" color="#4b5563" /></TableCell>
-                <TableCell><Cell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" color="#0c0c0c" /></TableCell>
+                <TableCell sx={{ maxWidth: 340 }}>
+                  <Typography component="a" onClick={() => ledger(r.customerCode)} sx={{ fontWeight: 600, cursor: 'pointer', '&:hover': { color: 'primary.main' } }}>{r.customerCode}</Typography>
+                  <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{name}</Typography>
+                </TableCell>
+                <TableCell><LimitCell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
+                <TableCell><LimitCell debt={r.debt.silver} limit={r.silverLimit} digits={4} unit="Lượng" /></TableCell>
+                <TableCell><LimitCell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
                 <TableCell>{r.termDays === 0 ? 'Thanh toán ngay' : `Net ${r.termDays} ngày`}</TableCell>
                 <TableCell><StatusBadge tone={STATUS[st][1]}>{STATUS[st][0]}</StatusBadge></TableCell>
                 <TableCell><Stack direction="row">
-                  <IconButton size="small" title="Chỉnh sửa" aria-label="Chỉnh sửa" onClick={() => setDrawer({ row: r })}><span className="material-icons" style={{ fontSize: 18 }}>edit</span></IconButton>
-                  <IconButton size="small" title="Xem chi tiết" aria-label="Xem chi tiết" onClick={() => nav(`/customer-ledger/${r.customerCode}`)}><span className="material-icons" style={{ fontSize: 18 }}>description</span></IconButton>
+                  <IconButton size="small" title="Chỉnh sửa" aria-label="Chỉnh sửa" onClick={() => setDrawer({ row: r })}>{mi('edit')}</IconButton>
+                  <IconButton size="small" title="Xem chi tiết" aria-label="Xem chi tiết" onClick={() => ledger(r.customerCode)}>{mi('description')}</IconButton>
                 </Stack></TableCell>
               </TableRow>
             ))}
-            {shown.length === 0 && <TableRow><TableCell colSpan={8} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có khách hàng phù hợp</TableCell></TableRow>}
+            {shown.length === 0 && <TableRow><TableCell colSpan={7} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có khách hàng phù hợp</TableCell></TableRow>}
           </TableBody>
         </Table>
       </TableContainer>

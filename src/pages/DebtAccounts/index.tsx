@@ -1,13 +1,11 @@
 import { useMemo, useState } from 'react';
-import Breadcrumb from '../../components/Breadcrumb';
-import { useNavigate } from 'react-router-dom';
 import {
-  Alert, Box, Button, Chip, IconButton, InputAdornment, Menu, MenuItem, OutlinedInput, Select, Snackbar, Stack, Switch,
+  Alert, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack, Switch,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
-import KpiCard from '../../components/KpiCard';
-import StatusTabs from '../../components/StatusTabs';
+import Breadcrumb from '../../components/Breadcrumb';
 import StatusBadge from '../../components/StatusBadge';
+import StatusTabs from '../../components/StatusTabs';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
 import { MATERIAL_LABEL, type DebtAccount, type Material } from '../../lib/types';
@@ -20,23 +18,21 @@ type StatusFilter = 'ALL' | 'ACTIVE' | 'UPGRADED' | 'LOCKED';
 const mi = (name: string) => <span className="material-icons" style={{ fontSize: 18 }}>{name}</span>;
 
 function StatusCell({ a }: { a: DebtAccount }) {
-  if (a.isActive) return <StatusBadge tone="green">● Hoạt động{a.version > 1 ? ` (v${a.version})` : ''}</StatusBadge>;
-  return a.status === 'CLOSED' ? <StatusBadge tone="gray">Tạm khóa</StatusBadge> : <StatusBadge tone="gray"><span className="material-icons" style={{ fontSize: 12 }}>lock</span>Ngưng hoạt động</StatusBadge>;
+  if (a.isActive) return <StatusBadge tone="green">Hoạt động</StatusBadge>;
+  return a.status === 'CLOSED' ? <StatusBadge tone="gray">Tạm khóa</StatusBadge> : <StatusBadge tone="gray">Ngưng hoạt động</StatusBadge>;
 }
 
 export default function DebtAccounts() {
-  const nav = useNavigate();
   const { accounts, today, toggleAccount, deleteAccount, upgrade } = useStore();
   const [q, setQ] = useState('');
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [material, setMaterial] = useState<Material | 'ALL'>('ALL');
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(50);
+  const [pageSize, setPageSize] = useState(25);
   const [addOpen, setAddOpen] = useState(false);
   const [histId, setHistId] = useState<string | null>(null);
   const [changeId, setChangeId] = useState<string | null>(null);
   const [delId, setDelId] = useState<string | null>(null);
-  const [menu, setMenu] = useState<{ el: HTMLElement; id: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   const byId = (id: string | null) => accounts.find((a) => a.id === id) ?? null;
@@ -51,99 +47,66 @@ export default function DebtAccounts() {
   }, [accounts, q, status, material]);
 
   const shown = pageSize === 0 ? filtered : filtered.slice((page - 1) * pageSize, page * pageSize);
-  const count = (m: Material) => accounts.filter((a) => a.material === m).length;
   const activeN = accounts.filter((a) => a.isActive).length;
-  const reset = () => { setQ(''); setStatus('ALL'); setMaterial('ALL'); setPage(1); };
 
   return (
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Danh mục sổ đối chiếu' }]} />
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-        <Typography variant="h6">Quản Lý Mã Đối Chiếu & Sổ Công Nợ</Typography>
-        <Stack direction="row" spacing={1}>
-          <Button size="small" variant="outlined" color="inherit" onClick={() => nav('/credit-limits')}>Cấu Hình Hạn Mức</Button>
-          <Button size="small" variant="outlined" color="inherit" onClick={() => nav('/rules-settings')}>Quy Ước Đối Chiếu</Button>
-          <Button size="small" variant="outlined" color="inherit" onClick={reset}>Làm mới</Button>
-          <Button size="small" variant="contained" onClick={() => setAddOpen(true)}>+ Thêm Mã Đối Chiếu</Button>
-        </Stack>
-      </Stack>
-
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <KpiCard label="Tổng mã đối chiếu" icon="receipt_long" value={accounts.length} hint="Toàn bộ sổ công nợ CRM" />
-        <KpiCard label="Sổ Vàng (GOLD)" icon="toll" value={count('GOLD')} hint="ĐVT Lượng • Nguyên liệu Vàng" color="#ca8a03" />
-        <KpiCard label="Sổ Bạc (SILVER)" icon="savings" value={count('SILVER')} hint="ĐVT Lượng • Nguyên liệu Bạc" color="#1570ef" />
-        <KpiCard label="Đang hoạt động" icon="verified" value={`${activeN} / ${accounts.length}`} hint={`Tỷ lệ khả dụng: ${accounts.length ? Math.round((activeN / accounts.length) * 100) : 0}%`} />
-      </Stack>
-
       <StatusTabs value={status} onChange={(v) => { setStatus(v as StatusFilter); setPage(1); }} tabs={[
         { value: 'ALL', label: 'Tất cả', count: accounts.length },
-        { value: 'ACTIVE', label: 'Đang hoạt động (Active)', count: activeN },
-        { value: 'UPGRADED', label: 'Version cũ (Đã nâng version)', count: accounts.filter((a) => a.version > 1).length },
-        { value: 'LOCKED', label: 'Tạm khóa / Ngưng HĐ', count: accounts.length - activeN },
+        { value: 'ACTIVE', label: 'Đang hoạt động', count: activeN },
+        { value: 'UPGRADED', label: 'Đã nâng version', count: accounts.filter((a) => a.version > 1).length },
+        { value: 'LOCKED', label: 'Tạm khóa / Ngưng', count: accounts.length - activeN },
       ]} />
-      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1 }}>
-        <OutlinedInput size="small" placeholder="Tìm mã số, tên số, mã khách hàng, ghi chú..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
-          startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 310, borderRadius: '10px', height: 32 }} />
-        <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }} color="text.secondary">Hiển thị {filtered.length} / {accounts.length} sổ đối chiếu</Typography>
-      </Stack>
-      <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
-        <Typography variant="caption" color="text.secondary">LOẠI NGUYÊN LIỆU:</Typography>
-        {([['ALL', 'TẤT CẢ', accounts.length], ['GOLD', 'VÀNG (GOLD)', count('GOLD')], ['SILVER', 'BẠC (SILVER)', count('SILVER')]] as const).map(([v, l, n]) => (
-          <Chip key={v} size="small" clickable color={material === v ? 'primary' : 'default'} label={`${l}  ${n}`} onClick={() => { setMaterial(v); setPage(1); }} sx={{ borderRadius: '6px' }} />
-        ))}
-        <Typography variant="caption" sx={{ flex: 1, textAlign: 'right', color: 'primary.main' }}>
-          Quy tắc: 1 Khách hàng - 1 Loại nguyên liệu chỉ có duy nhất 1 mã đối chiếu (Đổi tuổi ➔ Nâng Version)
-        </Typography>
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+        <OutlinedInput size="small" placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
+          startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 300, borderRadius: '10px', height: 32 }} />
+        <Select size="small" value={material} onChange={(e) => { setMaterial(e.target.value as Material | 'ALL'); setPage(1); }} sx={{ height: 32, minWidth: 150 }}>
+          <MenuItem value="ALL">Tất cả loại NL</MenuItem>
+          <MenuItem value="GOLD">Vàng (GOLD)</MenuItem>
+          <MenuItem value="SILVER">Bạc (SILVER)</MenuItem>
+        </Select>
+        <Box sx={{ flex: 1 }} />
+        <Button variant="contained" startIcon={mi('add')} onClick={() => setAddOpen(true)}>Thêm Mã Đối Chiếu</Button>
       </Stack>
 
-      <TableContainer sx={{ maxHeight: 'calc(100vh - 420px)' }}>
+      <TableContainer sx={{ maxHeight: 'calc(100vh - 230px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
-            {['STT', 'Mã Đối Chiếu', 'Tên Khách Hàng', 'Mã — Tên Công Ty', 'Kênh Phân Phối', 'Loại NL', 'ĐVT', 'Tuổi Đối Chiếu', 'Bút Toán Sổ Cái', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h}>{h}</TableCell>)}
+            {['Mã Đối Chiếu', 'Khách Hàng', 'Loại NL', 'Tuổi Đối Chiếu', 'Bút Toán Sổ Cái', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h}>{h}</TableCell>)}
           </TableRow></TableHead>
           <TableBody>
-            {shown.map((a, i) => (
+            {shown.map((a) => (
               <TableRow hover key={a.id} sx={{ height: 54 }}>
-                <TableCell>{(pageSize === 0 ? 0 : (page - 1) * pageSize) + i + 1}</TableCell>
-                <TableCell><Stack direction="row" alignItems="center" spacing={0.5}>
+                <TableCell><Stack direction="row" alignItems="center" spacing={1}>
                   <b>{a.code}</b>
-                  <IconButton size="small" aria-label="Sao chép mã" onClick={() => navigator.clipboard?.writeText(a.code)}>{mi('content_copy')}</IconButton>
                   <StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge>
                 </Stack></TableCell>
-                <TableCell>
+                <TableCell sx={{ maxWidth: 380 }}>
                   <b>{a.customerName}</b>
-                  {a.version > 1 && <Typography variant="caption" component="div" onClick={() => setHistId(a.id)} sx={{ color: 'success.main', cursor: 'pointer', fontWeight: 400 }}>
-                    Phiên bản v{a.version} • {a.isActive ? 'Đang hoạt động' : 'Ngưng'}</Typography>}
+                  <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCode} — {a.customerCompany}</Typography>
                 </TableCell>
-                <TableCell sx={{ maxWidth: 320, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}><b>{a.customerCode}</b> — {a.customerCompany}</TableCell>
-                <TableCell><StatusBadge tone="blue">{a.channel}</StatusBadge></TableCell>
                 <TableCell><StatusBadge tone={a.material === 'GOLD' ? 'yellow' : 'gray'}>{MATERIAL_LABEL[a.material]}</StatusBadge></TableCell>
-                <TableCell>{a.uom === 'LUONG' ? 'Lượng' : 'Gram'}</TableCell>
-                <TableCell><b>{a.fineness.toFixed(2)}%</b></TableCell>
-                <TableCell>{a.journalEntryCount > 0 ? <StatusBadge tone="blue">{a.journalEntryCount} bút toán</StatusBadge> : <Typography variant="caption" color="text.secondary">0 bút toán</Typography>}</TableCell>
+                <TableCell>{a.fineness.toFixed(2)}%</TableCell>
+                <TableCell sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : 'text.secondary' }}>{a.journalEntryCount} bút toán</TableCell>
                 <TableCell><StatusCell a={a} /></TableCell>
                 <TableCell><Stack direction="row" alignItems="center">
-                  <IconButton size="small" title="Lịch sử phiên bản" onClick={() => setHistId(a.id)}>{mi('history')}</IconButton>
-                  <IconButton size="small" title="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton>
+                  <IconButton size="small" title="Lịch sử phiên bản" aria-label="Lịch sử phiên bản" onClick={() => setHistId(a.id)}>{mi('history')}</IconButton>
+                  <IconButton size="small" title="Đổi tuổi đối chiếu" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton>
                   <Switch size="small" checked={a.isActive} onChange={() => toggleAccount(a.id)} inputProps={{ 'aria-label': 'Hoạt động / Tạm khóa' }} />
-                  <IconButton size="small" aria-label="Thêm thao tác" onClick={(e) => setMenu({ el: e.currentTarget, id: a.id })}>{mi('more_horiz')}</IconButton>
+                  <IconButton size="small" title="Xóa mã" aria-label="Xóa mã" onClick={() => setDelId(a.id)}>{mi('delete')}</IconButton>
                 </Stack></TableCell>
               </TableRow>
             ))}
-            {shown.length === 0 && <TableRow><TableCell colSpan={11} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có sổ đối chiếu phù hợp</TableCell></TableRow>}
+            {shown.length === 0 && <TableRow><TableCell colSpan={7} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có sổ đối chiếu phù hợp</TableCell></TableRow>}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePager page={page} pageSize={pageSize} total={filtered.length} onPage={setPage} onPageSize={setPageSize} />
 
-      <Menu anchorEl={menu?.el} open={!!menu} onClose={() => setMenu(null)}>
-        <MenuItem sx={{ color: 'error.main' }} onClick={() => { setDelId(menu!.id); setMenu(null); }}>{mi('delete')}&nbsp;Xóa mã</MenuItem>
-      </Menu>
-
       <AddAccountDrawer open={addOpen} onClose={() => setAddOpen(false)} onCreated={(a) => setToast(`Đã tạo mã đối chiếu ${a.code}`)} />
       {hist && <VersionHistoryDialog key={hist.id + hist.version} account={hist} open onClose={() => setHistId(null)} onChangeFineness={() => { setHistId(null); setChangeId(hist.id); }} />}
       {change && <ChangeFinenessDialog key={change.id + change.version} account={change} today={today} open onClose={() => setChangeId(null)}
-        onHistory={() => { setChangeId(null); setHistId(change.id); }}
         onConfirm={(next, from, reason) => { upgrade(change.id, next, from, reason); setToast(`Đã nâng mã ${change.code} lên v${change.version + 1}`); }} />}
       {del && <DeleteBlockedDialog account={del} open onClose={() => setDelId(null)}
         onSuspend={() => { if (del.isActive) toggleAccount(del.id); setDelId(null); setToast(`Đã chuyển mã ${del.code} sang trạng thái không hoạt động`); }}

@@ -79,8 +79,7 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
           <Alert severity="warning">Hao lai ngược. Cần phê duyệt: {level === 'KTT' ? 'Kế toán trưởng' : 'Ban Giám Đốc (BOD / CFO)'}.</Alert>
         )}
         <TextField fullWidth multiline minRows={2} label="Lý Do Điều Chỉnh / Căn Cứ Hợp Đồng" value={reason} onChange={(e) => setReason(e.target.value)} InputLabelProps={{ shrink: true }}
-          required={level !== 'NONE'} error={!!errs.reason} helperText={errs.reason ?? (level !== 'NONE' ? 'Bắt buộc, tối thiểu 20 ký tự' : `Độ dài hiện tại: ${reason.length} ký tự`)} placeholder="Nhập căn cứ hợp đồng hoặc lý do thay đổi quy ước..." />
-        <TextField size="small" fullWidth label="Ghi Chú Bổ Sung" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Số hợp đồng, phụ lục kinh doanh..." InputLabelProps={{ shrink: true }} />
+          required={level !== 'NONE'} error={!!errs.reason} helperText={errs.reason ?? (level !== 'NONE' ? 'Bắt buộc, tối thiểu 20 ký tự' : undefined)} placeholder="Nhập căn cứ hợp đồng hoặc lý do thay đổi quy ước..." />
         {err && <Alert severity="error">{err}</Alert>}
       </Stack>
     </FormDialog>

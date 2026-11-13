@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:html": "npm run build && node scripts/inline.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.13.0",

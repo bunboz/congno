@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from './theme';
 import Shell from './Shell';
@@ -15,7 +15,7 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <StoreProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route element={<Shell />}>
             <Route path="/" element={<Navigate to="/debt-accounts" replace />} />
@@ -25,7 +25,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/customer-ledger/:code" element={<CustomerLedger />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
       </StoreProvider>
     </ThemeProvider>
   </StrictMode>,

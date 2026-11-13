@@ -5,6 +5,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import KpiCard from '../../components/KpiCard';
+import StatusTabs from '../../components/StatusTabs';
 import StatusBadge, { type Tone } from '../../components/StatusBadge';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
@@ -58,28 +59,27 @@ export default function CreditLimits() {
         <Button size="small" variant="contained" onClick={() => setDrawer({ row: null })}>+ Tạo Mới Hạn Mức</Button>
       </Stack>
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <KpiCard label="Tổng khách đã cấp hạn mức" value={`${rows.length} Đối tác`} hint="Kiểm soát 3 trục Vàng, Bạc, Tiền trên Ví KD" />
-        <KpiCard label="An Toàn" value={`${n((s) => s === 'SAFE')} Khách`} hint="Trong hạn mức, chưa đến hạn thanh toán" />
-        <KpiCard label="Cảnh Báo" value={`${n((s) => s === 'WARNING')} Khách`} hint="Có chứng từ đến hạn trong 3 ngày tới" color="#ca8a03" />
-        <KpiCard label="Vượt hạn mức" value={`${n((s) => s.startsWith('OVER'))} Khách`} hint="Vượt hạn mức Vàng, Bạc hoặc Tiền công" color="#bb0000" />
+        <KpiCard label="Tổng khách đã cấp hạn mức" icon="groups" value={`${rows.length} Đối tác`} hint="Kiểm soát 3 trục Vàng, Bạc, Tiền trên Ví KD" />
+        <KpiCard label="An Toàn" icon="verified_user" value={`${n((s) => s === 'SAFE')} Khách`} hint="Trong hạn mức, chưa đến hạn thanh toán" />
+        <KpiCard label="Cảnh Báo" icon="warning_amber" value={`${n((s) => s === 'WARNING')} Khách`} hint="Có chứng từ đến hạn trong 3 ngày tới" color="#ca8a03" />
+        <KpiCard label="Vượt hạn mức" icon="gpp_bad" value={`${n((s) => s.startsWith('OVER'))} Khách`} hint="Vượt hạn mức Vàng, Bạc hoặc Tiền công" color="#bb0000" />
       </Stack>
+      <StatusTabs value={filter} onChange={(v) => { setFilter(v as CreditStatus | 'ALL'); setPage(1); }} tabs={[
+        { value: 'ALL', label: 'Tất cả', count: rows.length },
+        ...(Object.keys(STATUS) as CreditStatus[]).map((k) => ({ value: k, label: STATUS[k][0], count: rows.filter((x) => x.st === k).length })),
+      ]} />
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1.5 }}>
         <OutlinedInput size="small" placeholder="Tìm theo mã khách, tên tiệm vàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
           startAdornment={<InputAdornment position="start"><span className="material-icons" style={{ fontSize: 18 }}>search</span></InputAdornment>} sx={{ width: 310, borderRadius: '10px', height: 32 }} />
-        <Typography variant="caption">Trạng thái:</Typography>
-        <Select size="small" value={filter} onChange={(e) => { setFilter(e.target.value as CreditStatus | 'ALL'); setPage(1); }} sx={{ height: 32, minWidth: 180 }}>
-          <MenuItem value="ALL">Tất cả ({rows.length})</MenuItem>
-          {(Object.keys(STATUS) as CreditStatus[]).map((k) => <MenuItem key={k} value={k}>{STATUS[k][0]}</MenuItem>)}
-        </Select>
         <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }} color="text.secondary">Hiển thị: {filtered.length} / {rows.length} khách hàng</Typography>
       </Stack>
 
-      <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: '6px', maxHeight: 'calc(100vh - 380px)' }}>
+      <TableContainer sx={{ maxHeight: 'calc(100vh - 380px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
-            <TableCell>MÃ KHÁCH</TableCell><TableCell>TÊN KHÁCH HÀNG / TIỆM VÀNG</TableCell>
-            <TableCell align="right">HẠN MỨC VÀNG (LƯỢNG)</TableCell><TableCell align="right">HẠN MỨC BẠC (LƯỢNG)</TableCell><TableCell align="right">HẠN MỨC TIỀN (VNĐ)</TableCell>
-            <TableCell>KỲ HẠN NỢ</TableCell><TableCell>TRẠNG THÁI NỢ</TableCell><TableCell>THAO TÁC</TableCell>
+            <TableCell>Mã Khách</TableCell><TableCell>Tên Khách Hàng / Tiệm Vàng</TableCell>
+            <TableCell align="right">Hạn Mức Vàng (Lượng)</TableCell><TableCell align="right">Hạn Mức Bạc (Lượng)</TableCell><TableCell align="right">Hạn Mức Tiền (VNĐ)</TableCell>
+            <TableCell>Kỳ Hạn Nợ</TableCell><TableCell>Trạng Thái Nợ</TableCell><TableCell>Thao Tác</TableCell>
           </TableRow></TableHead>
           <TableBody>
             {shown.map(({ r, name, st }) => (

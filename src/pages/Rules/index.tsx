@@ -5,6 +5,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import KpiCard from '../../components/KpiCard';
+import StatusTabs from '../../components/StatusTabs';
 import StatusBadge from '../../components/StatusBadge';
 import { useStore } from '../../state/store';
 import type { Rule } from '../../lib/rules';
@@ -46,10 +47,15 @@ export default function Rules() {
         • Quản lý hiệu lực 2 chiều: Tự động đóng bản ghi cũ (Auto-closing), bảo lưu lịch sử kiểm toán bất biến, tra cứu As-Of theo ngày giao dịch.
       </Alert>
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <KpiCard label="Tổng số quy ước" value={rules.length} hint={`Đang áp dụng: ${active} quy ước`} />
-        <KpiCard label="Quy ước Vàng (GOLD)" value={rules.filter((r) => r.material === 'GOLD').length} hint="Quy ước tính nợ Vàng" color="#ca8a03" />
-        <KpiCard label="Quy ước Bạc (SILVER)" value={rules.filter((r) => r.material === 'SILVER').length} hint="Quy ước tính nợ Bạc" color="#1570ef" />
+        <KpiCard label="Tổng số quy ước" icon="tune" value={rules.length} hint={`Đang áp dụng: ${active} quy ước`} />
+        <KpiCard label="Quy ước Vàng (GOLD)" icon="toll" value={rules.filter((r) => r.material === 'GOLD').length} hint="Quy ước tính nợ Vàng" color="#ca8a03" />
+        <KpiCard label="Quy ước Bạc (SILVER)" icon="savings" value={rules.filter((r) => r.material === 'SILVER').length} hint="Quy ước tính nợ Bạc" color="#1570ef" />
       </Stack>
+      <StatusTabs value={st} onChange={(v) => setSt(v as typeof st)} tabs={[
+        { value: 'ALL', label: 'Tất cả', count: rules.length },
+        { value: 'ON', label: 'Hiệu lực', count: active },
+        { value: 'OFF', label: 'Hết hiệu lực', count: rules.length - active },
+      ]} />
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1.5 }}>
         <OutlinedInput size="small" placeholder="Tìm theo mã/tên khách hàng, mã số đối chiếu..." value={q} onChange={(e) => setQ(e.target.value)}
           startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 340, borderRadius: '10px', height: 32 }} />
@@ -57,17 +63,13 @@ export default function Rules() {
         <Select size="small" value={mat} onChange={(e) => setMat(e.target.value as typeof mat)} sx={{ height: 32 }}>
           <MenuItem value="ALL">Tất Cả Nguyên Liệu</MenuItem><MenuItem value="GOLD">Vàng</MenuItem><MenuItem value="SILVER">Bạc</MenuItem>
         </Select>
-        <Typography variant="caption">Trạng thái:</Typography>
-        <Select size="small" value={st} onChange={(e) => setSt(e.target.value as typeof st)} sx={{ height: 32 }}>
-          <MenuItem value="ALL">Tất Cả Trạng Thái</MenuItem><MenuItem value="ON">Hiệu lực</MenuItem><MenuItem value="OFF">Hết hiệu lực</MenuItem>
-        </Select>
         <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }} color="text.secondary">Hiển thị {shown.length} / {rules.length} quy ước</Typography>
       </Stack>
 
-      <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: '6px', maxHeight: 'calc(100vh - 460px)' }}>
+      <TableContainer sx={{ maxHeight: 'calc(100vh - 460px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
-            {['STT', 'MÃ ĐỐI CHIẾU', 'TÊN KHÁCH HÀNG', 'MÃ — TÊN CÔNG TY', 'LOẠI NL', 'TUỔI KHO (F_STOCK)', 'TUỔI GIAO (F_DELIVERY)', 'HAO LAI (%)', 'NGÀY HIỆU LỰC', 'TRẠNG THÁI', 'THAO TÁC'].map((h) => <TableCell key={h}>{h}</TableCell>)}
+            {['STT', 'Mã Đối Chiếu', 'Tên Khách Hàng', 'Mã — Tên Công Ty', 'Loại NL', 'Tuổi Kho (F_stock)', 'Tuổi Giao (F_delivery)', 'Hao Lai (%)', 'Ngày Hiệu Lực', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h}>{h}</TableCell>)}
           </TableRow></TableHead>
           <TableBody>
             {shown.map(({ r, c }, i) => (

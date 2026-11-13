@@ -5,6 +5,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import KpiCard from '../../components/KpiCard';
+import StatusTabs from '../../components/StatusTabs';
 import StatusBadge from '../../components/StatusBadge';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
@@ -19,7 +20,7 @@ const mi = (name: string) => <span className="material-icons" style={{ fontSize:
 
 function StatusCell({ a }: { a: DebtAccount }) {
   if (a.isActive) return <StatusBadge tone="green">● Hoạt động{a.version > 1 ? ` (v${a.version})` : ''}</StatusBadge>;
-  return a.status === 'CLOSED' ? <StatusBadge tone="gray">Tạm khóa</StatusBadge> : <StatusBadge tone="gray">🔒 Ngưng hoạt động</StatusBadge>;
+  return a.status === 'CLOSED' ? <StatusBadge tone="gray">Tạm khóa</StatusBadge> : <StatusBadge tone="gray"><span className="material-icons" style={{ fontSize: 12 }}>lock</span>Ngưng hoạt động</StatusBadge>;
 }
 
 export default function DebtAccounts() {
@@ -67,21 +68,21 @@ export default function DebtAccounts() {
       </Stack>
 
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <KpiCard label="Tổng mã đối chiếu" value={accounts.length} hint="Toàn bộ sổ công nợ CRM" />
-        <KpiCard label="Sổ Vàng (GOLD)" value={count('GOLD')} hint="ĐVT Lượng • Nguyên liệu Vàng" color="#ca8a03" />
-        <KpiCard label="Sổ Bạc (SILVER)" value={count('SILVER')} hint="ĐVT Lượng • Nguyên liệu Bạc" color="#1570ef" />
-        <KpiCard label="Đang hoạt động" value={`${activeN} / ${accounts.length}`} hint={`Tỷ lệ khả dụng: ${accounts.length ? Math.round((activeN / accounts.length) * 100) : 0}%`} />
+        <KpiCard label="Tổng mã đối chiếu" icon="receipt_long" value={accounts.length} hint="Toàn bộ sổ công nợ CRM" />
+        <KpiCard label="Sổ Vàng (GOLD)" icon="toll" value={count('GOLD')} hint="ĐVT Lượng • Nguyên liệu Vàng" color="#ca8a03" />
+        <KpiCard label="Sổ Bạc (SILVER)" icon="savings" value={count('SILVER')} hint="ĐVT Lượng • Nguyên liệu Bạc" color="#1570ef" />
+        <KpiCard label="Đang hoạt động" icon="verified" value={`${activeN} / ${accounts.length}`} hint={`Tỷ lệ khả dụng: ${accounts.length ? Math.round((activeN / accounts.length) * 100) : 0}%`} />
       </Stack>
 
+      <StatusTabs value={status} onChange={(v) => { setStatus(v as StatusFilter); setPage(1); }} tabs={[
+        { value: 'ALL', label: 'Tất cả', count: accounts.length },
+        { value: 'ACTIVE', label: 'Đang hoạt động (Active)', count: activeN },
+        { value: 'UPGRADED', label: 'Version cũ (Đã nâng version)', count: accounts.filter((a) => a.version > 1).length },
+        { value: 'LOCKED', label: 'Tạm khóa / Ngưng HĐ', count: accounts.length - activeN },
+      ]} />
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1 }}>
         <OutlinedInput size="small" placeholder="Tìm mã số, tên số, mã khách hàng, ghi chú..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
           startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 310, borderRadius: '10px', height: 32 }} />
-        <Select size="small" value={status} onChange={(e) => { setStatus(e.target.value as StatusFilter); setPage(1); }} sx={{ height: 32, minWidth: 220 }}>
-          <MenuItem value="ALL">Tất cả trạng thái</MenuItem>
-          <MenuItem value="ACTIVE">Đang hoạt động (Active)</MenuItem>
-          <MenuItem value="UPGRADED">Version cũ (Đã nâng version)</MenuItem>
-          <MenuItem value="LOCKED">Tạm khóa / Ngưng HĐ</MenuItem>
-        </Select>
         <Typography variant="caption" sx={{ flex: 1, textAlign: 'right' }} color="text.secondary">Hiển thị {filtered.length} / {accounts.length} sổ đối chiếu</Typography>
       </Stack>
       <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
@@ -94,10 +95,10 @@ export default function DebtAccounts() {
         </Typography>
       </Stack>
 
-      <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: '6px', maxHeight: 'calc(100vh - 420px)' }}>
+      <TableContainer sx={{ maxHeight: 'calc(100vh - 420px)' }}>
         <Table stickyHeader size="small">
           <TableHead><TableRow>
-            {['STT', 'MÃ ĐỐI CHIẾU', 'TÊN KHÁCH HÀNG', 'MÃ — TÊN CÔNG TY', 'KÊNH PHÂN PHỐI', 'LOẠI NL', 'ĐVT', 'TUỔI ĐỐI CHIẾU', 'BÚT TOÁN SỔ CÁI', 'TRẠNG THÁI', 'THAO TÁC'].map((h) => <TableCell key={h}>{h}</TableCell>)}
+            {['STT', 'Mã Đối Chiếu', 'Tên Khách Hàng', 'Mã — Tên Công Ty', 'Kênh Phân Phối', 'Loại NL', 'ĐVT', 'Tuổi Đối Chiếu', 'Bút Toán Sổ Cái', 'Trạng Thái', 'Thao Tác'].map((h) => <TableCell key={h}>{h}</TableCell>)}
           </TableRow></TableHead>
           <TableBody>
             {shown.map((a, i) => (

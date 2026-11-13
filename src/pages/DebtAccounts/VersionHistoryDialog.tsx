@@ -37,8 +37,8 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
       </Box>
       <Table size="small" sx={{ bgcolor: '#fff' }}>
         <TableHead><TableRow>
-          <TableCell width={72}>VERSION</TableCell><TableCell>MÃ ĐỐI CHIẾU</TableCell><TableCell>TUỔI ĐỐI CHIẾU</TableCell>
-          <TableCell>THỜI GIAN HIỆU LỰC</TableCell><TableCell>NGƯỜI TẠO</TableCell><TableCell>TRẠNG THÁI</TableCell>
+          <TableCell width={72}>Version</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Tuổi Đối Chiếu</TableCell>
+          <TableCell>Thời Gian Hiệu Lực</TableCell><TableCell>Người Tạo</TableCell><TableCell>Trạng Thái</TableCell>
         </TableRow></TableHead>
         <TableBody>
           {rows.map((v) => {

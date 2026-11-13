@@ -92,8 +92,8 @@ export default function CreditLimits() {
                 <TableCell>{r.termDays === 0 ? 'Thanh toán ngay' : `Net ${r.termDays} ngày`}</TableCell>
                 <TableCell><StatusBadge tone={STATUS[st][1]}>{STATUS[st][0]}</StatusBadge></TableCell>
                 <TableCell><Stack direction="row" spacing={1}>
-                  <Button size="small" variant="outlined" color="inherit" onClick={() => setDrawer({ row: r })}>Chỉnh Sửa</Button>
-                  <Button size="small" variant="outlined" color="inherit" onClick={() => nav(`/customer-ledger/${r.customerCode}`)}>Xem Chi Tiết</Button>
+                  <Button size="small" variant="outlined" color="inherit" sx={{ whiteSpace: 'nowrap' }} onClick={() => setDrawer({ row: r })}>Chỉnh Sửa</Button>
+                  <Button size="small" variant="outlined" color="inherit" sx={{ whiteSpace: 'nowrap' }} onClick={() => nav(`/customer-ledger/${r.customerCode}`)}>Xem Chi Tiết</Button>
                 </Stack></TableCell>
               </TableRow>
             ))}

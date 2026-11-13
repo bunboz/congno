@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from './theme';
 import Shell from './Shell';
+import { StoreProvider } from './state/store';
 import DebtAccounts from './pages/DebtAccounts';
 import CreditLimits from './pages/CreditLimits';
 import Rules from './pages/Rules';
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <StoreProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<Shell />}>
@@ -24,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
           </Route>
         </Routes>
       </BrowserRouter>
+      </StoreProvider>
     </ThemeProvider>
   </StrictMode>,
 );

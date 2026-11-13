@@ -15,6 +15,7 @@ export interface DebtAccount {
   fineness: number; version: number;
   status: 'ACTIVE' | 'SUPERSEDED' | 'CLOSED'; isActive: boolean;
   journalEntryCount: number; note: string; effectiveFrom: string;
+  versionNote?: string; // lý do tạo version hiện tại; chuyển vào history khi nâng version
   history: VersionRecord[]; balance: Balance; modifiedBy: string; modifiedAt: string;
 }
 

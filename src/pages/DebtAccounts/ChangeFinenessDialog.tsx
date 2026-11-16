@@ -5,6 +5,7 @@ import StatusBadge from '../../components/StatusBadge';
 import { convertBalance, parseNum, validateUpgrade } from '../../lib/fineness';
 import { num } from '../../lib/format';
 import type { DebtAccount } from '../../lib/types';
+import { colors } from '../../tokens';
 
 const r4 = (n: number) => Math.round(n * 1e4) / 1e4;
 const k24 = (w: number, f: number) => r4((w * f) / 100);
@@ -44,7 +45,7 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
         </Stack>
 
         {preview && (
-          <Box sx={{ p: 1.5, border: '1px solid', borderColor: 'divider', borderRadius: '6px', bgcolor: '#fafafa' }}>
+          <Box sx={{ p: 1.5, border: '1px solid', borderColor: 'divider', borderRadius: '6px', bgcolor: colors.pageBg }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
               <Typography variant="subtitle1">Số dư sau khi quy đổi</Typography>
               <StatusBadge tone={delta === 0 ? 'green' : 'red'}>Vàng 24K {delta === 0 ? 'được bảo toàn' : `lệch ${delta.toFixed(4)}`}</StatusBadge>

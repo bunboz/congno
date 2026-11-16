@@ -1,16 +1,17 @@
 import { createTheme } from '@mui/material/styles';
+import { colors } from './tokens';
 
 // Token đo trực tiếp từ ERP Mua hàng (develop.admin.purchase.sevago.local): nền trắng, phẳng, không bóng đổ.
 const theme = createTheme({
   palette: {
-    primary: { main: '#07554b', light: '#018775', dark: '#043731', contrastText: '#fdfdfd' },
-    error: { main: '#bb0000', light: '#dd0000', dark: '#9a0000', contrastText: '#fdfdfd' },
-    success: { main: '#2e7d32', light: '#428a46', dark: '#29702d', contrastText: '#fdfdfd' },
-    info: { main: '#105089', light: '#276194', dark: '#0e487b', contrastText: '#fdfdfd' },
-    warning: { main: '#ffc107', light: '#ffc71f', dark: '#e5ad06', contrastText: '#fdfdfd' },
-    text: { primary: '#0c0c0c', secondary: '#4b5563', disabled: '#a7a7a7' },
-    background: { default: '#ffffff', paper: '#ffffff' },
-    divider: '#e4e6e6',
+    primary: { main: colors.primary, light: colors.primaryLight, dark: colors.primaryDark, contrastText: colors.onPrimary },
+    error: { main: colors.error, light: colors.errorLight, dark: colors.errorDark, contrastText: colors.onPrimary },
+    success: { main: colors.success, light: colors.successLight, dark: colors.successDark, contrastText: colors.onPrimary },
+    info: { main: colors.info, light: colors.infoLight, dark: colors.infoDark, contrastText: colors.onPrimary },
+    warning: { main: colors.warning, light: colors.warningLight, dark: colors.warningDark, contrastText: colors.onPrimary },
+    text: { primary: colors.text, secondary: colors.textSecondary, disabled: colors.disabled },
+    background: { default: colors.white, paper: colors.white },
+    divider: colors.line,
   },
   shape: { borderRadius: 4 },
   spacing: 8,
@@ -30,24 +31,24 @@ const theme = createTheme({
       defaultProps: { disableElevation: true },
       styleOverrides: {
         root: { borderRadius: 6, minHeight: 34, padding: '6px 16px', whiteSpace: 'nowrap' },
-        outlined: { borderColor: '#d1d5db', color: '#374151', '&:hover': { background: '#f9fafb', borderColor: '#9ca3af' } },
+        outlined: { borderColor: colors.inputLine, color: colors.buttonText, '&:hover': { background: colors.headBg, borderColor: colors.muted } },
         containedPrimary: { boxShadow: '0 2px 12px rgba(0,0,0,.08)' },
       },
     },
-    MuiIconButton: { styleOverrides: { root: { color: '#9ca3af', '&:hover': { color: '#07554b', background: '#f0f5f4' } } } },
+    MuiIconButton: { styleOverrides: { root: { color: colors.muted, '&:hover': { color: colors.primary, background: colors.hoverTint } } } },
     MuiOutlinedInput: {
       styleOverrides: {
-        root: { borderRadius: 6, fontSize: 14, '& .MuiOutlinedInput-notchedOutline': { borderColor: '#d1d5db' } },
+        root: { borderRadius: 6, fontSize: 14, '& .MuiOutlinedInput-notchedOutline': { borderColor: colors.inputLine } },
         input: { padding: '7px 12px', height: 20 },
       },
     },
-    MuiTab: { styleOverrides: { root: { textTransform: 'none', minHeight: 34, padding: 8, fontSize: 14, fontWeight: 400, '&.Mui-selected': { fontWeight: 600, color: '#000' } } } },
-    MuiTabs: { styleOverrides: { root: { minHeight: 34, borderBottom: '1px solid #e4e6e6' } } },
-    MuiTableContainer: { styleOverrides: { root: { border: '1px solid #e4e6e6', borderRadius: 4 } } },
+    MuiTab: { styleOverrides: { root: { textTransform: 'none', minHeight: 34, padding: 8, fontSize: 14, fontWeight: 400, '&.Mui-selected': { fontWeight: 600, color: colors.black } } } },
+    MuiTabs: { styleOverrides: { root: { minHeight: 34, borderBottom: `1px solid ${colors.line}` } } },
+    MuiTableContainer: { styleOverrides: { root: { border: `1px solid ${colors.line}`, borderRadius: 4 } } },
     MuiTableCell: {
       styleOverrides: {
-        root: { padding: '10px 12px', fontSize: 14, borderBottom: '1px solid #eef0f1' },
-        head: { background: '#f9fafb', fontWeight: 550, '&:not(:last-of-type)': { borderRight: '1px solid #eceff1' }, borderTop: 0, borderBottom: '1px solid #e4e6e6', whiteSpace: 'nowrap' },
+        root: { padding: '10px 12px', fontSize: 14, borderBottom: `1px solid ${colors.lineSoft}` },
+        head: { background: colors.headBg, fontWeight: 550, '&:not(:last-of-type)': { borderRight: `1px solid ${colors.lineHead}` }, borderTop: 0, borderBottom: `1px solid ${colors.line}`, whiteSpace: 'nowrap' },
       },
     },
     MuiPaginationItem: { styleOverrides: { root: { borderRadius: 6 } } },

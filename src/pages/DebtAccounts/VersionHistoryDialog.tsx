@@ -4,6 +4,7 @@ import FormDialog from '../../components/FormDialog';
 import StatusBadge from '../../components/StatusBadge';
 import { dmy } from '../../lib/format';
 import type { DebtAccount, VersionRecord } from '../../lib/types';
+import { colors } from '../../tokens';
 
 const who = (s: string) => s;
 
@@ -27,7 +28,7 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
         <Typography variant="caption" sx={{ flex: 1, color: 'primary.main' }}>Toàn vẹn số dư: Bút toán lịch sử bảo toàn bất biến theo tuổi từng version</Typography>
         <Button variant="contained" onClick={onChangeFineness}>Đổi Tuổi Đối Chiếu (Tạo Version Mới)</Button>
       </>}>
-      <Box sx={{ p: 1, mb: 2, bgcolor: '#fff', border: '1px solid', borderColor: 'divider', borderRadius: '6px', fontSize: 13 }}>
+      <Box sx={{ p: 1, mb: 2, bgcolor: colors.white, border: '1px solid', borderColor: 'divider', borderRadius: '6px', fontSize: 13 }}>
         <Stack direction="row" spacing={3} flexWrap="wrap">
           <span>Khách hàng ERP: <b>{account.customerName}</b> (Mã: <b>{account.customerCode}</b>)</span>
           <span>Kênh: {account.channel}</span>
@@ -35,7 +36,7 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
           <span>Tổng số: <b>{rows.length} phiên bản</b></span>
         </Stack>
       </Box>
-      <Table size="small" sx={{ bgcolor: '#fff' }}>
+      <Table size="small" sx={{ bgcolor: colors.white }}>
         <TableHead><TableRow>
           <TableCell width={72}>Version</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Tuổi Đối Chiếu</TableCell>
           <TableCell>Thời Gian Hiệu Lực</TableCell><TableCell>Người Tạo</TableCell><TableCell>Trạng Thái</TableCell>
@@ -46,7 +47,7 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
             const expanded = openV === v.version;
             return (
               <Fragment key={v.version}>
-                <TableRow hover onClick={() => setOpenV(expanded ? null : v.version)} sx={{ cursor: 'pointer', bgcolor: isCur ? '#f1f8f6' : undefined }}>
+                <TableRow hover onClick={() => setOpenV(expanded ? null : v.version)} sx={{ cursor: 'pointer', bgcolor: isCur ? colors.rowTint : undefined }}>
                   <TableCell><Stack direction="row" alignItems="center">
                     <IconButton size="small"><span className="material-icons" style={{ fontSize: 18 }}>{expanded ? 'expand_more' : 'chevron_right'}</span></IconButton>
                     <StatusBadge tone={isCur ? 'green' : 'gray'}>v{v.version}</StatusBadge></Stack></TableCell>

@@ -14,6 +14,7 @@ import { creditStatus, type CreditStatus } from '../../lib/credit';
 import { dmy, num } from '../../lib/format';
 import type { LimitRow } from '../../lib/types';
 import LimitDrawer from './LimitDrawer';
+import { colors } from '../../tokens';
 
 const STATUS: Record<CreditStatus, [string, Tone]> = {
   SAFE: ['An Toàn', 'green'], WARNING: ['Cảnh Báo', 'yellow'], OVER_GOLD: ['Vượt HM Vàng', 'red'],
@@ -38,7 +39,7 @@ const mi = (n: string) => <span className="material-icons" style={{ fontSize: 18
 function LimitCell({ debt, limit, digits, unit }: { debt: number; limit: number | null; digits: number; unit: string }) {
   const unlimited = !limit;
   const ratio = unlimited ? 0 : debt / limit;
-  const color = ratio > 1 ? 'error.main' : ratio >= 0.8 ? '#b45309' : 'text.secondary';
+  const color = ratio > 1 ? 'error.main' : ratio >= 0.8 ? colors.amber : 'text.secondary';
   return (
     <Box sx={{ textAlign: 'right' }}>
       <b>{unlimited ? 'Không giới hạn' : `${num(limit, digits)} ${unit}`}</b>

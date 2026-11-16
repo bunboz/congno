@@ -14,6 +14,7 @@ import AddAccountDrawer from './AddAccountDrawer';
 import ChangeFinenessDialog from './ChangeFinenessDialog';
 import VersionHistoryDialog from './VersionHistoryDialog';
 import DeleteBlockedDialog from './DeleteBlockedDialog';
+import { colors } from '../../tokens';
 
 type StatusFilter = 'ALL' | 'ACTIVE' | 'UPGRADED' | 'LOCKED';
 const mi = (name: string, size = 18) => <span className="material-icons" style={{ fontSize: size }}>{name}</span>;
@@ -83,7 +84,7 @@ export default function DebtAccounts() {
               {shown.map((a) => (
                 <TableRow hover key={a.id}>
                   <TableCell><Stack direction="row" alignItems="center" spacing={1}>
-                    <b style={{ color: '#07554b' }}>{a.code}</b>
+                    <b style={{ color: colors.primary }}>{a.code}</b>
                     <Box component="button" type="button" title="Lịch sử phiên bản" aria-label={`Lịch sử phiên bản, hiện tại v${a.version}`} onClick={() => setHistId(a.id)} sx={{ all: 'unset', cursor: 'pointer', display: 'inline-flex' }}><StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge></Box>
                   </Stack></TableCell>
                   <TableCell sx={{ maxWidth: 380 }}>
@@ -92,12 +93,12 @@ export default function DebtAccounts() {
                   </TableCell>
                   <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>
                   <TableCell align="right"><b>{a.fineness.toFixed(2)}%</b></TableCell>
-                  <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : '#9ca3af' }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '0 bút toán'}</TableCell>
+                  <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : colors.muted }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '0 bút toán'}</TableCell>
                   <TableCell><StatusCell a={a} /></TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Đổi tuổi đối chiếu" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton>
                     <IconButton size="small" title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => toggleAccount(a.id)}
-                      sx={{ color: a.isActive ? 'primary.main' : '#9ca3af' }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton>
+                      sx={{ color: a.isActive ? 'primary.main' : colors.muted }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton>
                     <IconButton size="small" title="Xóa mã" aria-label="Xóa mã" onClick={() => setDelId(a.id)}>{mi('delete')}</IconButton>
                   </Stack></TableCell>
                 </TableRow>

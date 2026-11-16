@@ -6,6 +6,7 @@ import { useStore } from '../../state/store';
 import { amountInWords, validateLimits } from '../../lib/credit';
 import { num } from '../../lib/format';
 import type { Customer, LimitRow } from '../../lib/types';
+import { colors } from '../../tokens';
 
 const toNum = (s: string): number | null => (s.trim() === '' ? null : Number(s.replace(/,/g, '')));
 const toStr = (n: number | null) => (n === null ? '' : String(n));
@@ -47,7 +48,7 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
       {editing && <Typography variant="caption" sx={{ color: 'success.main' }}>* Mặc định là khách hàng đang muốn chỉnh sửa</Typography>}
 
       {row && (
-        <Stack direction="row" spacing={4} sx={{ my: 2, p: 1.5, bgcolor: '#f3f8f7', borderRadius: '8px' }}>
+        <Stack direction="row" spacing={4} sx={{ my: 2, p: 1.5, bgcolor: colors.tint, borderRadius: '8px' }}>
           <Box><Typography variant="caption" color="text.secondary">DƯ NỢ VÀNG HIỆN TẠI</Typography>
             <Typography sx={{ fontWeight: 600, color: 'success.main' }}>{num(row.debt.gold, 4)} Lượng</Typography>
             {goldAcc && <Typography variant="caption" color="text.secondary">Tuổi quy ước đối chiếu: {goldAcc.fineness}%</Typography>}</Box>

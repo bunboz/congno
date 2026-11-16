@@ -1,12 +1,13 @@
 import { Box, Stack, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
+import { colors } from '../tokens';
 
 interface Props { label: string; value: ReactNode; hint?: string; color?: string; icon?: string }
 
 // Phẳng như ERP: viền 1px, radius 6, không bóng.
-export default function KpiCard({ label, value, hint, color = '#07554b', icon }: Props) {
+export default function KpiCard({ label, value, hint, color = colors.primary, icon }: Props) {
   return (
-    <Box sx={{ flex: 1, minWidth: 200, p: 2, bgcolor: '#fff', border: '1px solid #e4e6e6', borderRadius: '6px' }}>
+    <Box sx={{ flex: 1, minWidth: 200, p: 2, bgcolor: colors.white, border: `1px solid ${colors.line}`, borderRadius: '6px' }}>
       <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
         <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'uppercase', fontWeight: 500 }}>{label}</Typography>
         {icon && (

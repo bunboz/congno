@@ -13,6 +13,7 @@ import type { Rule } from '../../lib/rules';
 import { MATERIAL_LABEL } from '../../lib/types';
 import { dmy } from '../../lib/format';
 import RuleDialog from './RuleDialog';
+import { colors } from '../../tokens';
 
 const mi = (n: string) => <span className="material-icons" style={{ fontSize: 18 }}>{n}</span>;
 
@@ -66,7 +67,7 @@ export default function Rules() {
             <TableBody>
               {shown.map(({ r, c }) => (
                 <TableRow hover key={r.id}>
-                  <TableCell><b style={{ color: '#07554b' }}>{r.debtAccountCode}</b></TableCell>
+                  <TableCell><b style={{ color: colors.primary }}>{r.debtAccountCode}</b></TableCell>
                   <TableCell sx={{ maxWidth: 320 }}>
                     <b>{c?.name ?? r.customerCode}</b>
                     <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{r.customerCode} - {c?.company}</Typography>

@@ -1,12 +1,13 @@
 import { Typography } from '@mui/material';
 import type { ReactNode } from 'react';
+import { colors } from '../tokens';
 
 export type Tone = 'green' | 'yellow' | 'red' | 'blue' | 'gray' | 'purple' | 'orange';
 
 // [chữ/viền, nền nhạt]; kiểu viền + nền nhạt đúng chip ERP và Figma DS Badges.
 const TONES: Record<Tone, [string, string]> = {
-  green: ['#069021', '#cde9d3'], yellow: ['#ca8a03', '#f4e8cd'], red: ['#ef1515', '#fcd0d0'],
-  blue: ['#1570ef', '#d0e2fc'], gray: ['#6b7280', '#f3f4f6'], purple: ['#6d28d9', '#ede9fe'], orange: ['#c2410c', '#ffedd5'],
+  green: [colors.chipGreenFg, colors.chipGreenBg], yellow: [colors.chipYellowFg, colors.chipYellowBg], red: [colors.chipRedFg, colors.chipRedBg],
+  blue: [colors.link, colors.chipBlueBg], gray: [colors.chipGrayFg, colors.chipGrayBg], purple: [colors.chipPurpleFg, colors.chipPurpleBg], orange: [colors.chipOrangeFg, colors.chipOrangeBg],
 };
 
 export default function StatusBadge({ tone, children }: { tone: Tone; children: ReactNode }) {

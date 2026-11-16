@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Stack, Typography } from '@mui/material';
+import { colors } from '../tokens';
 
 interface Item { label: string; to?: string }
 
@@ -15,10 +16,10 @@ export default function Breadcrumb({ items }: { items: Item[] }) {
             <Typography
               aria-current={last ? 'page' : undefined}
               onClick={it.to && !last ? () => nav(it.to!) : undefined}
-              sx={{ color: last ? '#0c0c0c' : '#737676', cursor: it.to && !last ? 'pointer' : 'default', '&:hover': it.to && !last ? { color: '#07554b' } : undefined }}>
+              sx={{ color: last ? colors.text : colors.muted, cursor: it.to && !last ? 'pointer' : 'default', '&:hover': it.to && !last ? { color: colors.primary } : undefined }}>
               {it.label}
             </Typography>
-            {!last && <span className="material-icons" aria-hidden style={{ fontSize: 19, color: '#737676' }}>keyboard_arrow_right</span>}
+            {!last && <span className="material-icons" aria-hidden style={{ fontSize: 19, color: colors.muted }}>keyboard_arrow_right</span>}
           </Stack>
         );
       })}

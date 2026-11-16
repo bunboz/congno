@@ -5,9 +5,7 @@ import {
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
 import Card from '../../components/Card';
-import EmptyState from '../../components/EmptyState';
-import PageHeader from '../../components/PageHeader';
-import StatusBadge, { StatusDot } from '../../components/StatusBadge';
+import StatusBadge from '../../components/StatusBadge';
 import StatusTabs from '../../components/StatusTabs';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
@@ -20,9 +18,8 @@ import DeleteBlockedDialog from './DeleteBlockedDialog';
 type StatusFilter = 'ALL' | 'ACTIVE' | 'UPGRADED' | 'LOCKED';
 const mi = (name: string, size = 18) => <span className="material-icons" style={{ fontSize: size }}>{name}</span>;
 
-// Bình thường thì im lặng (chấm xanh); chỉ trạng thái ngoại lệ mới thành ô nổi bật.
 function StatusCell({ a }: { a: DebtAccount }) {
-  if (a.isActive) return <StatusDot tone="green">Hoạt động</StatusDot>;
+  if (a.isActive) return <StatusBadge tone="green">Hoạt động</StatusBadge>;
   return <StatusBadge tone="gray">{a.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động'}</StatusBadge>;
 }
 
@@ -52,13 +49,10 @@ export default function DebtAccounts() {
 
   const shown = pageSize === 0 ? filtered : filtered.slice((page - 1) * pageSize, page * pageSize);
   const activeN = accounts.filter((a) => a.isActive).length;
-  const clearFilters = () => { setQ(''); setMaterial('ALL'); setStatus('ALL'); setPage(1); };
 
   return (
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Danh mục sổ đối chiếu' }]} />
-      <PageHeader title="Sổ Đối Chiếu Công Nợ" description="Mỗi khách hàng và loại nguyên liệu chỉ có một mã đối chiếu đang hoạt động. Đổi tuổi sẽ nâng version."
-        action={<Button variant="contained" startIcon={mi('add')} onClick={() => setAddOpen(true)}>Thêm Mã Đối Chiếu</Button>} />
       <Card>
         <StatusTabs value={status} onChange={(v) => { setStatus(v as StatusFilter); setPage(1); }} tabs={[
           { value: 'ALL', label: 'Tất cả', count: accounts.length },
@@ -74,6 +68,8 @@ export default function DebtAccounts() {
             <MenuItem value="GOLD">Vàng (GOLD)</MenuItem>
             <MenuItem value="SILVER">Bạc (SILVER)</MenuItem>
           </Select>
+          <Box sx={{ flex: 1 }} />
+          <Button variant="contained" startIcon={mi('add')} onClick={() => setAddOpen(true)}>Thêm Mã Đối Chiếu</Button>
         </Stack>
 
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
@@ -81,37 +77,33 @@ export default function DebtAccounts() {
             <TableHead><TableRow>
               <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Loại NL</TableCell>
               <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell>
-              <TableCell sx={{ pl: 4 }}>Trạng Thái</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
+              <TableCell>Trạng Thái</TableCell><TableCell align="right" sx={{ width: 160 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a) => (
                 <TableRow hover key={a.id}>
                   <TableCell><Stack direction="row" alignItems="center" spacing={1}>
                     <b style={{ color: '#07554b' }}>{a.code}</b>
-                    {a.version > 1 ? <StatusBadge tone="green">v{a.version}</StatusBadge> : <Typography component="span" variant="caption" sx={{ color: '#9ca3af' }}>v1</Typography>}
+                    <StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge>
                   </Stack></TableCell>
                   <TableCell sx={{ maxWidth: 380 }}>
-                    <b>{a.customerName}</b>
+                    <Stack direction="row" alignItems="center" spacing={1}><b>{a.customerName}</b>{a.version > 1 && <Typography component="a" variant="caption" onClick={() => setHistId(a.id)} sx={{ color: 'success.main', cursor: 'pointer', fontWeight: 400, '&:hover': { textDecoration: 'underline' } }}>Phiên bản v{a.version} • {a.isActive ? 'Đang hoạt động' : 'Ngưng hoạt động'}</Typography>}</Stack>
                     <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCode} — {a.customerCompany}</Typography>
                   </TableCell>
-                  <TableCell><StatusDot tone={a.material === 'GOLD' ? 'yellow' : 'gray'}>{MATERIAL_LABEL[a.material]}</StatusDot></TableCell>
+                  <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>
                   <TableCell align="right"><b>{a.fineness.toFixed(2)}%</b></TableCell>
                   <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : '#9ca3af' }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '—'}</TableCell>
-                  <TableCell sx={{ pl: 4 }}><Stack direction="row" alignItems="center" spacing={0.5}>
-                    <StatusCell a={a} />
-                    <IconButton size="small" title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => toggleAccount(a.id)}
-                      sx={{ color: a.isActive ? 'primary.main' : '#9ca3af' }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton>
-                  </Stack></TableCell>
+                  <TableCell><StatusCell a={a} /></TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Lịch sử phiên bản" aria-label="Lịch sử phiên bản" onClick={() => setHistId(a.id)}>{mi('history')}</IconButton>
                     <IconButton size="small" title="Đổi tuổi đối chiếu" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton>
+                    <IconButton size="small" title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => toggleAccount(a.id)}
+                      sx={{ color: a.isActive ? 'primary.main' : '#9ca3af' }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton>
                     <IconButton size="small" title="Xóa mã" aria-label="Xóa mã" onClick={() => setDelId(a.id)}>{mi('delete')}</IconButton>
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={7} sx={{ border: 0 }}>
-                <EmptyState title="Không tìm thấy sổ đối chiếu nào" hint="Thử đổi từ khóa hoặc bỏ bớt bộ lọc."><Button size="small" variant="outlined" onClick={clearFilters}>Xóa bộ lọc</Button></EmptyState>
-              </TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={7} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

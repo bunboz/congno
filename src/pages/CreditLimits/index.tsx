@@ -1,19 +1,17 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Alert, Box, Button, IconButton, InputAdornment, OutlinedInput, Snackbar, Stack,
+  Alert, Box, Button, IconButton, InputAdornment, OutlinedInput, Snackbar, Stack, Tooltip,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
 import Card from '../../components/Card';
-import EmptyState from '../../components/EmptyState';
-import PageHeader from '../../components/PageHeader';
-import StatusBadge, { StatusDot, type Tone } from '../../components/StatusBadge';
+import StatusBadge, { type Tone } from '../../components/StatusBadge';
 import StatusTabs from '../../components/StatusTabs';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
 import { creditStatus, type CreditStatus } from '../../lib/credit';
-import { num } from '../../lib/format';
+import { dmy, num } from '../../lib/format';
 import type { LimitRow } from '../../lib/types';
 import LimitDrawer from './LimitDrawer';
 
@@ -23,6 +21,17 @@ const STATUS: Record<CreditStatus, [string, Tone]> = {
 };
 // Khách cần xử lý (vượt hạn mức, sắp đến hạn) luôn nằm trên cùng.
 const RANK: Record<CreditStatus, number> = { OVER_GOLD: 0, OVER_SILVER: 0, OVER_LABOR: 0, WARNING: 1, SAFE: 2 };
+// Lý do cụ thể đứng sau mỗi badge ngoại lệ, để người dùng không phải tự suy ra.
+function reasonOf(r: LimitRow, st: CreditStatus, today: string): string | null {
+  if (st === 'OVER_GOLD') return `Nợ vượt ${num(r.debt.gold - (r.goldLimit ?? 0), 4)} Lượng`;
+  if (st === 'OVER_SILVER') return `Nợ vượt ${num(r.debt.silver - (r.silverLimit ?? 0), 4)} Lượng`;
+  if (st === 'OVER_LABOR') return `Nợ vượt ${num(r.debt.labor - (r.laborLimit ?? 0))} đ`;
+  if (st === 'WARNING' && r.nextDueDate) {
+    const d = Math.round((Date.parse(r.nextDueDate) - Date.parse(today)) / 86400000);
+    return d < 0 ? `Quá hạn ${-d} ngày (${dmy(r.nextDueDate)})` : `Đến hạn ${dmy(r.nextDueDate)} (còn ${d} ngày)`;
+  }
+  return null;
+}
 const mi = (n: string) => <span className="material-icons" style={{ fontSize: 18 }}>{n}</span>;
 
 // Hạn mức ở trên, dư nợ ở dưới: xám khi ổn, cam khi dùng từ 80%, đỏ khi vượt.
@@ -53,7 +62,7 @@ export default function CreditLimits() {
   const rows = useMemo(() => limits.map((r) => {
     const c = customers.find((x) => x.code === r.customerCode);
     const st = creditStatus({ limits: { gold: r.goldLimit, silver: r.silverLimit, labor: r.laborLimit }, debt: r.debt, nextDueDate: r.nextDueDate, today });
-    return { r, name: c?.company ?? r.customerCode, st };
+    return { r, name: c?.company ?? r.customerCode, st, why: reasonOf(r, st, today) };
   }).sort((a, b) => RANK[a.st] - RANK[b.st]), [limits, customers, today]);
 
   const filtered = rows.filter((x) => (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase())));
@@ -63,8 +72,6 @@ export default function CreditLimits() {
   return (
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Hạn Mức Tín Dụng & Kỳ Hạn Nợ' }]} />
-      <PageHeader title="Hạn Mức Tín Dụng" description="Kiểm soát hạn mức nợ Vàng, Bạc, Tiền công và kỳ hạn thanh toán của từng khách hàng."
-        action={<Button variant="contained" startIcon={mi('add')} onClick={() => setDrawer({ row: null })}>Tạo Mới Hạn Mức</Button>} />
       <Card>
         <StatusTabs value={filter} onChange={(v) => { setFilter(v as CreditStatus | 'ALL'); setPage(1); }} tabs={[
           { value: 'ALL', label: 'Tất cả', count: rows.length },
@@ -73,34 +80,36 @@ export default function CreditLimits() {
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã hoặc tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />
+          <Box sx={{ flex: 1 }} />
+          <Button variant="contained" startIcon={mi('add')} onClick={() => setDrawer({ row: null })}>Tạo Mới Hạn Mức</Button>
         </Stack>
 
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
               <TableCell>Khách Hàng</TableCell>
-              <TableCell align="right">Hạn Mức Vàng</TableCell><TableCell align="right">Hạn Mức Bạc</TableCell><TableCell align="right">Hạn Mức Tiền Công</TableCell>
+              <TableCell align="right">Hạn Mức Vàng (Lượng, quy 99.99%)</TableCell><TableCell align="right">Hạn Mức Bạc (Lượng, quy 99.99%)</TableCell><TableCell align="right">Hạn Mức Tiền Công (VNĐ)</TableCell>
               <TableCell sx={{ pl: 4 }}>Kỳ Hạn Nợ</TableCell><TableCell>Trạng Thái Nợ</TableCell><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
-              {shown.map(({ r, name, st }) => (
+              {shown.map(({ r, name, st, why }) => (
                 <TableRow hover key={r.customerCode}>
                   <TableCell sx={{ maxWidth: 340 }}>
                     <Typography component="a" onClick={() => ledger(r.customerCode)} sx={{ fontWeight: 600, color: 'primary.main', cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}>{r.customerCode}</Typography>
-                    <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{name}</Typography>
+                    <Typography variant="caption" component="div" noWrap color="text.secondary" onClick={() => ledger(r.customerCode)} sx={{ fontWeight: 400, cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}>{name}</Typography>
                   </TableCell>
                   <TableCell><LimitCell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
                   <TableCell><LimitCell debt={r.debt.silver} limit={r.silverLimit} digits={4} unit="Lượng" /></TableCell>
                   <TableCell><LimitCell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
                   <TableCell sx={{ pl: 4 }}>{r.termDays === 0 ? 'Thanh toán ngay' : `Net ${r.termDays} ngày`}</TableCell>
-                  <TableCell>{st === 'SAFE' ? <StatusDot tone="green">An Toàn</StatusDot> : <StatusBadge tone={STATUS[st][1]}>{STATUS[st][0]}</StatusBadge>}</TableCell>
+                  <TableCell><Tooltip title={why ?? ''} arrow><span><StatusBadge tone={STATUS[st][1]}>{STATUS[st][0]}</StatusBadge></span></Tooltip></TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Chỉnh sửa" aria-label="Chỉnh sửa" onClick={() => setDrawer({ row: r })}>{mi('edit')}</IconButton>
                     <IconButton size="small" title="Xem chi tiết" aria-label="Xem chi tiết" onClick={() => ledger(r.customerCode)}>{mi('description')}</IconButton>
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={7} sx={{ border: 0 }}><EmptyState title="Không có khách hàng phù hợp" hint="Thử đổi từ khóa hoặc chọn tab khác." /></TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={7} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

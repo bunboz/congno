@@ -11,7 +11,7 @@ export function dayBefore(date: string): string {
 
 export function parseNum(v: unknown): number {
   if (typeof v === 'number') return v;
-  if (typeof v === 'string' && /^\d+(\.\d+)?$/.test(v.trim())) return Number(v);
+  if (typeof v === 'string' && /^\d+([.,]\d+)?$/.test(v.trim())) return Number(v.trim().replace(',', '.'));
   return NaN;
 }
 

@@ -9,7 +9,7 @@ export default function ConfirmDialog({ title, children, confirmLabel, danger, o
   return (
     <FormDialog open onClose={onClose} width={420} title={title}
       footer={<>
-        <Button variant="outlined" onClick={onClose}>Hủy</Button>
+        <Button variant="outlined" data-autofocus onClick={onClose}>Hủy</Button>
         <Button variant="contained" color={danger ? 'error' : 'primary'} onClick={onConfirm}>{confirmLabel}</Button>
       </>}>
       <Typography component="div">{children}</Typography>

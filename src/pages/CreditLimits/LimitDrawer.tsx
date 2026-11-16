@@ -8,7 +8,7 @@ import { num } from '../../lib/format';
 import type { Customer, LimitRow } from '../../lib/types';
 import { colors } from '../../tokens';
 
-const toNum = (s: string): number | null => (s.trim() === '' ? null : Number(s.replace(/,/g, '')));
+const toNum = (s: string): number | null => (s.trim() === '' ? null : Number(s.trim().replace(',', '.')));
 const toStr = (n: number | null) => (n === null ? '' : String(n));
 
 interface Props { open: boolean; row: LimitRow | null; onClose: () => void; onSaved: (c: Customer) => void }
@@ -37,7 +37,7 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
   const title = editing ? `Chỉnh sửa Cấu hình Hạn Mức Tín Dụng - ${customer?.company ?? ''}` : 'Tạo Mới Cấu Hình Hạn Mức Tín Dụng';
 
   return (
-    <FormDrawer open={open} onClose={onClose} title={title} width={600}
+    <FormDrawer open={open} onClose={onClose} onEnter={save} title={title} width={600}
       footer={<><Button variant="outlined" color="inherit" onClick={onClose}>Hủy Bỏ</Button><Button variant="contained" disabled={!valid} onClick={save}>Lưu Cấu Hình Hạn Mức</Button></>}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.5 }}>
         <Typography variant="body2">Khách hàng: Mã - Tên công ty *</Typography>

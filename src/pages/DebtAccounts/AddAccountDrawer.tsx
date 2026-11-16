@@ -43,7 +43,7 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
   };
 
   return (
-    <FormDrawer open={open} onClose={close} title="Thêm Mã Đối Chiếu" subtitle="Khởi tạo tài khoản công nợ đối tác khách hàng"
+    <FormDrawer open={open} onClose={close} onEnter={save} title="Thêm Mã Đối Chiếu" subtitle="Khởi tạo tài khoản công nợ đối tác khách hàng"
       footer={<>
         <Button variant="outlined" color="inherit" onClick={close}>Hủy bỏ</Button>
         <Button variant="contained" disabled={!canSave} onClick={save}>Lưu & Áp Dụng</Button>

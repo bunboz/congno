@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { convertBalance, upgradeVersion, validateFineness, validateUpgrade } from './fineness';
+import { convertBalance, parseNum, upgradeVersion, validateFineness, validateUpgrade } from './fineness';
 import type { DebtAccount } from './types';
 
 const ERR = 'Tuổi đối chiếu phải lớn hơn 0% và không vượt quá 100.00%';
@@ -9,7 +9,12 @@ describe('validateFineness', () => {
     for (const v of [61, 100, 33.3, 99.99]) expect(validateFineness(v, 'đối chiếu')).toBeNull();
   });
   it('chặn 0, âm, >100, NaN, rỗng, chữ, dấu phẩy', () => {
-    for (const v of [0, -1, 100.01, NaN, '', 'abc', '61,5']) expect(validateFineness(v, 'đối chiếu')).toBe(ERR);
+    for (const v of [0, -1, 100.01, NaN, '', 'abc', '6,1,5', '61.5.2', '61,']) expect(validateFineness(v, 'đối chiếu')).toBe(ERR);
+  });
+  it('chấp nhận dấu phẩy thập phân kiểu Việt: 61,5 = 61.5', () => {
+    expect(validateFineness('61,5', 'đối chiếu')).toBeNull();
+    expect(parseNum('61,5')).toBe(61.5);
+    expect(parseNum('62.5')).toBe(62.5);
   });
   it('nhãn kim loại cho US-04', () => {
     expect(validateFineness(0, 'kim loại')).toBe('Tuổi kim loại phải lớn hơn 0% và không vượt quá 100.00%');

@@ -26,13 +26,14 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
   const delta = preview
     ? r4(Math.abs(k24(b.goldDelivered, account.fineness) - k24(preview.goldDelivered, n)) + Math.abs(k24(b.goldPending, account.fineness) - k24(preview.goldPending, n)))
     : 0;
+  const submit = () => { if (valid) { onConfirm(n, from, reason.trim()); close(); } };
   const close = () => { setNext(''); setReason(''); setFrom(today); onClose(); };
 
   return (
-    <FormDialog open={open} onClose={close} width={600} title="Đổi Tuổi Đối Chiếu" subtitle={`${account.code} · ${account.customerName}`}
+    <FormDialog open={open} onClose={close} width={600} onEnter={submit} title="Đổi Tuổi Đối Chiếu" subtitle={`${account.code} · ${account.customerName}`}
       footer={<>
         <Button variant="outlined" onClick={close}>Hủy Bỏ</Button>
-        <Button variant="contained" disabled={!valid} onClick={() => { onConfirm(n, from, reason.trim()); close(); }}>Xác Nhận Đổi Tuổi (v{account.version + 1})</Button>
+        <Button variant="contained" disabled={!valid} onClick={submit}>Xác Nhận Đổi Tuổi (v{account.version + 1})</Button>
       </>}>
       <Stack spacing={2.5}>
         <Stack direction="row" spacing={2} alignItems="flex-start">

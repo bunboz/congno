@@ -22,7 +22,7 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
 
   return (
     <FormDialog open={open} onClose={onClose} width={880}
-      title={<>Lịch Sử Phiên Bản Mã Đối Chiếu: {account.code}</>} subtitle={`${account.customerName} — ${account.customerCompany}`}
+      title={<>Lịch Sử Phiên Bản Mã Đối Chiếu: {account.code}</>} subtitle={`${account.customerName} - ${account.customerCompany}`}
       footer={<>
         <Typography variant="caption" sx={{ flex: 1, color: 'primary.main' }}>Toàn vẹn số dư: Bút toán lịch sử bảo toàn bất biến theo tuổi từng version</Typography>
         <Button variant="contained" onClick={onChangeFineness}>Đổi Tuổi Đối Chiếu (Tạo Version Mới)</Button>
@@ -52,13 +52,13 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
                     <StatusBadge tone={isCur ? 'green' : 'gray'}>v{v.version}</StatusBadge></Stack></TableCell>
                   <TableCell sx={{ fontFamily: 'monospace', fontWeight: 600 }}>{v.code}</TableCell>
                   <TableCell><b>{v.fineness.toFixed(2)}%</b>{v.delta !== null && v.delta !== 0 && <> <StatusBadge tone={v.delta > 0 ? 'green' : 'red'}>{v.delta > 0 ? '+' : ''}{v.delta.toFixed(2)}%</StatusBadge></>}</TableCell>
-                  <TableCell>{dmy(v.effectiveFrom)} — {v.effectiveTo ? dmy(v.effectiveTo) : 'Hiện tại (Vô cực)'}</TableCell>
+                  <TableCell>{dmy(v.effectiveFrom)} - {v.effectiveTo ? dmy(v.effectiveTo) : 'Hiện tại (Vô cực)'}</TableCell>
                   <TableCell>{who(v.createdBy)}<br /><Typography variant="caption" color="text.secondary">{dmy(v.createdAt)} {v.createdAt.slice(11, 16)}</Typography></TableCell>
                   <TableCell>{isCur ? currentBadge : <StatusBadge tone="gray">Ngưng hoạt động</StatusBadge>}</TableCell>
                 </TableRow>
                 <TableRow><TableCell colSpan={6} sx={{ p: 0, borderBottom: expanded ? undefined : 'none' }}>
                   <Collapse in={expanded} unmountOnExit><Box sx={{ p: 1.5 }}>
-                    <Typography variant="body2"><b>Lý do thay đổi:</b> {v.note || '—'}</Typography>
+                    <Typography variant="body2"><b>Lý do thay đổi:</b> {v.note || 'Không có'}</Typography>
                     {!isCur && <Alert severity="warning" sx={{ mt: 1 }}>Khóa bất biến: Các bút toán phát sinh trong khoảng thời gian này được bảo toàn nguyên vẹn theo tuổi đối chiếu {v.fineness.toFixed(2)}%</Alert>}
                   </Box></Collapse>
                 </TableCell></TableRow>

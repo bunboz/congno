@@ -33,17 +33,17 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
       debt: row?.debt ?? { gold: 0, silver: 0, labor: 0 }, nextDueDate: row?.nextDueDate ?? null });
     onSaved(customer); onClose();
   };
-  const title = editing ? `Chỉnh sửa Cấu hình Hạn Mức Tín Dụng — ${customer?.company ?? ''}` : 'Tạo Mới Cấu Hình Hạn Mức Tín Dụng';
+  const title = editing ? `Chỉnh sửa Cấu hình Hạn Mức Tín Dụng - ${customer?.company ?? ''}` : 'Tạo Mới Cấu Hình Hạn Mức Tín Dụng';
 
   return (
     <FormDrawer open={open} onClose={onClose} title={title} width={600}
       footer={<><Button variant="outlined" color="inherit" onClick={onClose}>Hủy Bỏ</Button><Button variant="contained" disabled={!valid} onClick={save}>Lưu Cấu Hình Hạn Mức</Button></>}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.5 }}>
-        <Typography variant="body2">Khách hàng: Mã — Tên công ty *</Typography>
+        <Typography variant="body2">Khách hàng: Mã - Tên công ty *</Typography>
         {editing && <StatusBadge tone="green">Đang chỉnh sửa cho khách hàng này</StatusBadge>}
       </Stack>
       <Autocomplete size="small" disabled={editing} options={customers} value={customer} onChange={(_, c) => setCustomer(c)}
-        getOptionLabel={(c) => `${c.code} — ${c.company}`} renderInput={(p) => <TextField {...p} autoFocus={!editing} placeholder="Chọn khách hàng" />} />
+        getOptionLabel={(c) => `${c.code} - ${c.company}`} renderInput={(p) => <TextField {...p} autoFocus={!editing} placeholder="Chọn khách hàng" />} />
       {editing && <Typography variant="caption" sx={{ color: 'success.main' }}>* Mặc định là khách hàng đang muốn chỉnh sửa</Typography>}
 
       {row && (

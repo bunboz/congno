@@ -16,7 +16,7 @@ export default function CustomerLedger() {
       <Card>
         <Box sx={{ py: 8, textAlign: 'center' }}>
           <span className="material-icons" aria-hidden style={{ fontSize: 40, color: '#9ca3af' }}>menu_book</span>
-          <Typography variant="h6" sx={{ mt: 1 }}>{code}{c ? ` — ${c.name}` : ''}</Typography>
+          <Typography variant="h6" sx={{ mt: 1 }}>{code}{c ? ` - ${c.name}` : ''}</Typography>
           <Typography color="text.secondary" sx={{ mb: 2 }}>Sổ chi tiết khách hàng nằm ngoài phạm vi 4 màn công nợ này.</Typography>
           <Button variant="outlined" onClick={() => nav(-1)}>Quay lại</Button>
         </Box>

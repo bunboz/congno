@@ -77,25 +77,24 @@ export default function DebtAccounts() {
             <TableHead><TableRow>
               <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Loại NL</TableCell>
               <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell>
-              <TableCell>Trạng Thái</TableCell><TableCell align="right" sx={{ width: 160 }}>Thao Tác</TableCell>
+              <TableCell>Trạng Thái</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a) => (
                 <TableRow hover key={a.id}>
                   <TableCell><Stack direction="row" alignItems="center" spacing={1}>
                     <b style={{ color: '#07554b' }}>{a.code}</b>
-                    <StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge>
+                    <Box component="button" type="button" title="Lịch sử phiên bản" aria-label={`Lịch sử phiên bản, hiện tại v${a.version}`} onClick={() => setHistId(a.id)} sx={{ all: 'unset', cursor: 'pointer', display: 'inline-flex' }}><StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge></Box>
                   </Stack></TableCell>
                   <TableCell sx={{ maxWidth: 380 }}>
                     <Stack direction="row" alignItems="center" spacing={1}><b>{a.customerName}</b>{a.version > 1 && <Typography component="a" variant="caption" onClick={() => setHistId(a.id)} sx={{ color: 'success.main', cursor: 'pointer', fontWeight: 400, '&:hover': { textDecoration: 'underline' } }}>Phiên bản v{a.version} • {a.isActive ? 'Đang hoạt động' : 'Ngưng hoạt động'}</Typography>}</Stack>
-                    <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCode} — {a.customerCompany}</Typography>
+                    <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCode} - {a.customerCompany}</Typography>
                   </TableCell>
                   <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>
                   <TableCell align="right"><b>{a.fineness.toFixed(2)}%</b></TableCell>
-                  <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : '#9ca3af' }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '—'}</TableCell>
+                  <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : '#9ca3af' }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '0 bút toán'}</TableCell>
                   <TableCell><StatusCell a={a} /></TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
-                    <IconButton size="small" title="Lịch sử phiên bản" aria-label="Lịch sử phiên bản" onClick={() => setHistId(a.id)}>{mi('history')}</IconButton>
                     <IconButton size="small" title="Đổi tuổi đối chiếu" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton>
                     <IconButton size="small" title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => toggleAccount(a.id)}
                       sx={{ color: a.isActive ? 'primary.main' : '#9ca3af' }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton>

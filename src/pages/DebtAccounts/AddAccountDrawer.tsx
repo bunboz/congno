@@ -51,7 +51,7 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
       <Box sx={card}>
         <Head>Đối tượng CRM & nguyên liệu</Head>
         <Autocomplete size="small" options={customers} value={customer} onChange={(_, c) => pick(c, material)}
-          getOptionLabel={(c) => `${c.code} — ${c.name} (${c.company}) • [${c.channel}]`}
+          getOptionLabel={(c) => `${c.code} - ${c.name} (${c.company}) • [${c.channel}]`}
           renderInput={(p) => <TextField {...p} autoFocus required label="Khách hàng CRM" placeholder="Tìm mã hoặc tên khách hàng" InputLabelProps={{ shrink: true }} />} />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
           <TextField select size="small" fullWidth required label="Loại nguyên liệu" value={material} InputLabelProps={{ shrink: true }}

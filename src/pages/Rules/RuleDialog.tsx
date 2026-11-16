@@ -54,8 +54,8 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
           <Autocomplete size="small" fullWidth disabled={editing} options={options} value={acc} onChange={(_, a) => setAcc(a)}
-            getOptionLabel={(a) => `${a.code} — ${a.customerName} - Sổ ${MATERIAL_LABEL[a.material]} (${a.fineness}%)`}
-            renderInput={(p) => <TextField {...p} required helperText={customer ? `${customer.code} — ${customer.company} · ${MATERIAL_LABEL[material]}` : undefined} label="Số Đối Chiếu Công Nợ" InputLabelProps={{ shrink: true }} placeholder={editing ? code : 'Chọn từ danh mục số đối chiếu công nợ của khách hàng'} />} />
+            getOptionLabel={(a) => `${a.code} - ${a.customerName} - Sổ ${MATERIAL_LABEL[a.material]} (${a.fineness}%)`}
+            renderInput={(p) => <TextField {...p} required helperText={customer ? `${customer.code} - ${customer.company} · ${MATERIAL_LABEL[material]}` : undefined} label="Số Đối Chiếu Công Nợ" InputLabelProps={{ shrink: true }} placeholder={editing ? code : 'Chọn từ danh mục số đối chiếu công nợ của khách hàng'} />} />
         </Stack>
         <Stack direction="row" spacing={2}>
           <TextField size="small" fullWidth required type="date" label="Ngày Bắt Đầu Hiệu Lực" value={from} onChange={(e) => setFrom(e.target.value)} InputLabelProps={{ shrink: true }} error={!!errs.date} helperText={errs.date ?? 'Kích hoạt tự động đóng bản ghi cũ'} />

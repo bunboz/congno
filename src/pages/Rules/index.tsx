@@ -69,7 +69,7 @@ export default function Rules() {
                   <TableCell><b style={{ color: '#07554b' }}>{r.debtAccountCode}</b></TableCell>
                   <TableCell sx={{ maxWidth: 320 }}>
                     <b>{c?.name ?? r.customerCode}</b>
-                    <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{r.customerCode} — {c?.company}</Typography>
+                    <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{r.customerCode} - {c?.company}</Typography>
                   </TableCell>
                   <TableCell>{MATERIAL_LABEL[r.material]}</TableCell>
                   <TableCell align="right">{r.productionFineness.toFixed(2)}%</TableCell>

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Alert, Box, Button, IconButton, InputAdornment, OutlinedInput, Snackbar, Stack, Tooltip,
+  Alert, Box, Button, LinearProgress, IconButton, InputAdornment, OutlinedInput, Snackbar, Stack, Tooltip,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
@@ -46,6 +46,7 @@ function LimitCell({ debt, limit, digits, unit }: { debt: number; limit: number 
       <Typography variant="caption" component="div" sx={{ fontWeight: ratio >= 0.8 ? 600 : 400, color }}>
         {debt === 0 ? 'Nợ: 0' : `Nợ: ${num(debt, digits)} ${unit}${unlimited ? '' : ` (${Math.round(ratio * 100)}%)`}`}
       </Typography>
+      {!unlimited && <LinearProgress variant="determinate" value={Math.min(ratio * 100, 100)} sx={{ mt: 0.5, height: 4, borderRadius: 2, bgcolor: colors.lineSoft, '& .MuiLinearProgress-bar': { bgcolor: ratio > 1 ? colors.error : ratio >= 0.8 ? colors.amber : colors.primary } }} />}
     </Box>
   );
 }
@@ -88,17 +89,15 @@ export default function CreditLimits() {
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>Khách Hàng</TableCell>
+              <TableCell>Mã Khách</TableCell><TableCell>Tên Khách Hàng / Tiệm Vàng</TableCell>
               <TableCell align="right">Hạn Mức Vàng (Lượng, quy 99.99%)</TableCell><TableCell align="right">Hạn Mức Bạc (Lượng, quy 99.99%)</TableCell><TableCell align="right">Hạn Mức Tiền Công (VNĐ)</TableCell>
               <TableCell sx={{ pl: 4 }}>Kỳ Hạn Nợ</TableCell><TableCell>Trạng Thái Nợ</TableCell><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map(({ r, name, st, why }) => (
                 <TableRow hover key={r.customerCode}>
-                  <TableCell sx={{ maxWidth: 340 }}>
-                    <Typography component="a" onClick={() => ledger(r.customerCode)} sx={{ fontWeight: 600, color: 'primary.main', cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}>{r.customerCode}</Typography>
-                    <Typography variant="caption" component="div" noWrap color="text.secondary" onClick={() => ledger(r.customerCode)} sx={{ fontWeight: 400, cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}>{name}</Typography>
-                  </TableCell>
+                  <TableCell><Typography component="a" onClick={() => ledger(r.customerCode)} sx={{ fontWeight: 600, color: 'primary.main', cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}>{r.customerCode}</Typography></TableCell>
+                  <TableCell sx={{ maxWidth: 340 }}>{name}</TableCell>
                   <TableCell><LimitCell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
                   <TableCell><LimitCell debt={r.debt.silver} limit={r.silverLimit} digits={4} unit="Lượng" /></TableCell>
                   <TableCell><LimitCell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
@@ -110,7 +109,7 @@ export default function CreditLimits() {
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={7} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={8} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

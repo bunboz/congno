@@ -60,22 +60,21 @@ export default function Rules() {
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Loại NL</TableCell>
+              <TableCell>STT</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Tên Khách Hàng</TableCell><TableCell>Mã - Tên Công Ty</TableCell><TableCell>Loại NL</TableCell>
               <TableCell align="right">Tuổi Kho</TableCell><TableCell align="right">Tuổi Giao</TableCell><TableCell align="right">Hao Lai</TableCell>
               <TableCell>Ngày Hiệu Lực</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
-              {shown.map(({ r, c }) => (
+              {shown.map(({ r, c }, i) => (
                 <TableRow hover key={r.id}>
+                  <TableCell>{i + 1}</TableCell>
                   <TableCell><b style={{ color: colors.primary }}>{r.debtAccountCode}</b></TableCell>
-                  <TableCell sx={{ maxWidth: 320 }}>
-                    <b>{c?.name ?? r.customerCode}</b>
-                    <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{r.customerCode} - {c?.company}</Typography>
-                  </TableCell>
+                  <TableCell><b>{c?.name ?? r.customerCode}</b></TableCell>
+                  <TableCell>{r.customerCode} - {c?.company}</TableCell>
                   <TableCell>{MATERIAL_LABEL[r.material]}</TableCell>
                   <TableCell align="right">{r.productionFineness.toFixed(2)}%</TableCell>
                   <TableCell align="right">{r.deliveryFineness.toFixed(2)}%</TableCell>
-                  <TableCell align="right"><Loss v={r.lossRate} /></TableCell>
+                  <TableCell align="right"><Loss v={r.lossRate} /><Typography variant="caption" component="div" color="text.secondary" sx={{ fontWeight: 400 }}>{r.deliveryFineness}% - {r.productionFineness}%</Typography></TableCell>
                   <TableCell>{dmy(r.effectiveFrom)}{r.effectiveTo ? ` → ${dmy(r.effectiveTo)}` : ' → nay'}</TableCell>
                   <TableCell><StatusBadge tone={expired(r) ? 'gray' : 'green'}>{expired(r) ? 'Hết hiệu lực' : 'Hiệu lực'}</StatusBadge></TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
@@ -84,7 +83,7 @@ export default function Rules() {
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={9} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={11} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

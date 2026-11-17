@@ -78,13 +78,13 @@ export default function DebtAccounts() {
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Loại NL</TableCell>
-              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell>
-              <TableCell>Trạng Thái</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
+              <TableCell>STT</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Tên Khách Hàng</TableCell><TableCell>Mã - Tên Công Ty</TableCell><TableCell>Kênh Phân Phối</TableCell><TableCell>Loại NL</TableCell><TableCell>ĐVT</TableCell>
+              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
-              {shown.map((a) => (
+              {shown.map((a, i) => (
                 <TableRow hover key={a.id}>
+                  <TableCell>{(pageSize === 0 ? 0 : (page - 1) * pageSize) + i + 1}</TableCell>
                   <TableCell>
                     <Tooltip title="Xem lịch sử phiên bản"><Box component="button" type="button" aria-label={`Lịch sử phiên bản ${a.code}, hiện tại v${a.version}`} onClick={() => setHistId(a.id)}
                       sx={{ all: 'unset', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 1, '&:hover b': { textDecoration: 'underline' }, '&:focus-visible': { outline: `2px solid ${colors.primary}`, outlineOffset: 2, borderRadius: '4px' } }}>
@@ -92,17 +92,19 @@ export default function DebtAccounts() {
                       <StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge>
                     </Box></Tooltip>
                   </TableCell>
-                  <TableCell sx={{ maxWidth: 380 }}>
+                  <TableCell>
                     <Stack direction="row" alignItems="center" spacing={1.5}>
                       <Avatar sx={{ width: 32, height: 32, fontSize: 13, bgcolor: colors.primary, color: colors.onPrimary }}>{a.customerName.trim().slice(0, 1).toUpperCase()}</Avatar>
-                      <Box sx={{ minWidth: 0 }}><b>{a.customerName}</b>
-                        <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCode} - {a.customerCompany}</Typography></Box>
+                      <b>{a.customerName}</b>
                     </Stack>
                   </TableCell>
+                  <TableCell>{a.customerCode} - {a.customerCompany}</TableCell>
+                  <TableCell>{a.channel}</TableCell>
                   <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>
+                  <TableCell>{a.uom === 'LUONG' ? 'Lượng' : 'Gram'}</TableCell>
                   <TableCell align="right"><b>{a.fineness.toFixed(2)}%</b></TableCell>
-                  <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : colors.muted }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '0 bút toán'}</TableCell>
                   <TableCell><StatusCell a={a} /></TableCell>
+                  <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : colors.muted }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '0 bút toán'}</TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
                     <Tooltip title="Đổi tuổi đối chiếu"><IconButton size="small" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton></Tooltip>
                     <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => setTogId(a.id)}
@@ -111,7 +113,7 @@ export default function DebtAccounts() {
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={7} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={11} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

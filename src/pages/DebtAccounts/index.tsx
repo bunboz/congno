@@ -92,12 +92,14 @@ export default function DebtAccounts() {
                       <StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge>
                     </Box></Tooltip>
                   </TableCell>
-                  <TableCell sx={{ maxWidth: 380 }}>
+                  <TableCell sx={{ maxWidth: 520 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar>
                       <Box sx={{ minWidth: 0 }}><Typography noWrap sx={{ fontSize: 14 }}>{a.customerCode} - {a.customerName}</Typography>
-                        <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCompany}</Typography>
-                        {a.version > 1 && <Typography noWrap component="a" variant="caption" display="block" onClick={() => setHistId(a.id)} sx={{ color: 'success.main', cursor: 'pointer', fontWeight: 400, '&:hover': { textDecoration: 'underline' } }}>Phiên bản v{a.version} • {a.isActive ? 'Đang hoạt động' : 'Ngưng hoạt động'}</Typography>}</Box>
+                        <Stack direction="row" alignItems="center" spacing={1} sx={{ minWidth: 0 }}>
+                          <Typography variant="caption" noWrap color="text.secondary" sx={{ fontWeight: 400, minWidth: 0 }}>{a.customerCompany}</Typography>
+                          {a.version > 1 && <Typography noWrap component="a" variant="caption" onClick={() => setHistId(a.id)} sx={{ color: 'success.main', cursor: 'pointer', fontWeight: 400, flexShrink: 0, '&:hover': { textDecoration: 'underline' } }}>Phiên bản v{a.version} • {a.isActive ? 'Đang hoạt động' : 'Ngưng hoạt động'}</Typography>}
+                        </Stack></Box>
                     </Stack>
                   </TableCell>
                   <TableCell>{a.channel}</TableCell>

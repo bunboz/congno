@@ -23,8 +23,8 @@ function StatusCell({ a, onChange }: { a: DebtAccount; onChange: () => void }) {
   const off = a.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động';
   return (
     <Select variant="standard" disableUnderline size="small" value={a.isActive ? 'on' : 'off'} onChange={(e) => { if ((e.target.value === 'on') !== a.isActive) onChange(); }}
-      renderValue={(v) => <Stack direction="row" alignItems="center" spacing={1}><Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: v === 'on' ? colors.success : colors.error }} />{v === 'on' ? 'Đang hoạt động' : off}</Stack>}
-      sx={{ fontSize: 14 }}>
+      renderValue={(v) => <Stack direction="row" alignItems="center" gap={1}><Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: v === 'on' ? colors.success : colors.error }} /><span>{v === 'on' ? 'Đang hoạt động' : off}</span></Stack>}
+      sx={{ fontSize: 14, width: 170 }}>
       <MenuItem value="on">Đang hoạt động</MenuItem>
       <MenuItem value="off">{off}</MenuItem>
     </Select>

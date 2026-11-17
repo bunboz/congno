@@ -83,10 +83,13 @@ export default function DebtAccounts() {
             <TableBody>
               {shown.map((a) => (
                 <TableRow hover key={a.id}>
-                  <TableCell><Stack direction="row" alignItems="center" spacing={1}>
-                    <b style={{ color: colors.primary }}>{a.code}</b>
-                    <Box component="button" type="button" title="Lịch sử phiên bản" aria-label={`Lịch sử phiên bản, hiện tại v${a.version}`} onClick={() => setHistId(a.id)} sx={{ all: 'unset', cursor: 'pointer', display: 'inline-flex' }}><StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge></Box>
-                  </Stack></TableCell>
+                  <TableCell>
+                    <Tooltip title="Xem lịch sử phiên bản"><Box component="button" type="button" aria-label={`Lịch sử phiên bản ${a.code}, hiện tại v${a.version}`} onClick={() => setHistId(a.id)}
+                      sx={{ all: 'unset', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 1, '&:hover b': { textDecoration: 'underline' }, '&:focus-visible': { outline: `2px solid ${colors.primary}`, outlineOffset: 2, borderRadius: '4px' } }}>
+                      <b style={{ color: colors.primary }}>{a.code}</b>
+                      <StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge>
+                    </Box></Tooltip>
+                  </TableCell>
                   <TableCell sx={{ maxWidth: 380 }}>
                     <b>{a.customerName}</b>
                     <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCode} - {a.customerCompany}</Typography>

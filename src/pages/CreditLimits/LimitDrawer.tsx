@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Autocomplete, Box, Button, Stack, Typography } from '@mui/material';
 import Field from '../../components/Field';
-import FormDrawer from '../../components/FormDrawer';
+import FormDialog from '../../components/FormDialog';
 import StatusBadge from '../../components/StatusBadge';
 import { useStore } from '../../state/store';
 import { amountInWords, validateLimits } from '../../lib/credit';
@@ -38,7 +38,7 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
   const title = editing ? `Chỉnh sửa Cấu hình Hạn Mức Tín Dụng - ${customer?.company ?? ''}` : 'Tạo Mới Cấu Hình Hạn Mức Tín Dụng';
 
   return (
-    <FormDrawer open={open} onClose={onClose} onEnter={save} title={title} width={600}
+    <FormDialog open={open} onClose={onClose} onEnter={save} title={title} width={600}
       footer={<><Button variant="outlined" color="inherit" onClick={onClose}>Hủy Bỏ</Button><Button variant="contained" disabled={!valid} onClick={save}>Lưu Cấu Hình Hạn Mức</Button></>}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.5 }}>
         <Typography variant="subtitle1" sx={{ color: colors.label }}>Khách hàng: Mã - Tên công ty <span style={{ color: colors.error }}>*</span></Typography>
@@ -61,18 +61,22 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
       <Box sx={{ mt: 3 }}>
         <Typography variant="subtitle1" sx={{ color: 'primary.main', mb: 1.5 }}>Hạn Mức Công Nợ & Thời Hạn Thanh Toán</Typography>
         <Stack spacing={2}>
+          <Stack direction="row" spacing={2}>
           <Field size="small" fullWidth label="Hạn mức nợ Vàng tối đa (Lượng)" value={gold} onChange={(e) => setGold(e.target.value)} error={!!errs.gold}
             helperText={errs.gold ?? 'tính trên vàng 99.99%'} InputLabelProps={{ shrink: true }} InputProps={{ endAdornment: <span>Lượng</span> }} />
           <Field size="small" fullWidth label="Hạn mức nợ Bạc tối đa (Lượng)" value={silver} onChange={(e) => setSilver(e.target.value)} error={!!errs.silver}
             helperText={errs.silver ?? 'tính trên bạc 99.99%'} InputLabelProps={{ shrink: true }} InputProps={{ endAdornment: <span>Lượng</span> }} />
+          </Stack>
+          <Stack direction="row" spacing={2}>
           <Field size="small" fullWidth label="Hạn mức nợ Tiền công tối đa (VNĐ)" value={labor ? Number(labor).toLocaleString('en-US') : ''} onChange={(e) => setLabor(e.target.value.replace(/\D/g, ''))} error={!!errs.labor}
             helperText={errs.labor ?? (l ? `Bằng chữ: ${amountInWords(l)}` : 'Để trống hoặc 0 = không giới hạn')} InputLabelProps={{ shrink: true }} InputProps={{ endAdornment: <span>VNĐ</span> }} />
           <Field size="small" fullWidth required label="Số ngày được phép nợ (Kỳ hạn thanh toán)" value={term} onChange={(e) => setTerm(e.target.value)} error={!!errs.termDays}
             helperText={errs.termDays ?? '0 - 365 ngày (0 = thanh toán ngay)'} InputLabelProps={{ shrink: true }} InputProps={{ endAdornment: <span>Ngày</span> }} />
+          </Stack>
           <Field size="small" fullWidth multiline minRows={2} label="Ghi chú nghiệp vụ / Căn cứ phê duyệt" value={note}
             onChange={(e) => setNote(e.target.value.slice(0, 500))} InputLabelProps={{ shrink: true }} />
         </Stack>
       </Box>
-    </FormDrawer>
+    </FormDialog>
   );
 }

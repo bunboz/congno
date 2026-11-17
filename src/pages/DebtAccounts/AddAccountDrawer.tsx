@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Autocomplete, Box, Button, MenuItem, Stack, Typography } from '@mui/material';
 import Field from '../../components/Field';
-import FormDrawer from '../../components/FormDrawer';
+import FormDialog from '../../components/FormDialog';
 import { useStore } from '../../state/store';
 import { canCreateAccount, defaultCode } from '../../lib/account';
 import { parseNum, validateFineness } from '../../lib/fineness';
@@ -44,7 +44,7 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
   };
 
   return (
-    <FormDrawer open={open} onClose={close} onEnter={save} title="Thêm Mã Đối Chiếu" subtitle="Khởi tạo tài khoản công nợ đối tác khách hàng"
+    <FormDialog open={open} onClose={close} onEnter={save} width={600} title="Thêm Mã Đối Chiếu" subtitle="Khởi tạo tài khoản công nợ đối tác khách hàng"
       footer={<>
         <Button variant="outlined" color="inherit" onClick={close}>Hủy bỏ</Button>
         <Button variant="contained" disabled={!canSave} onClick={save}>Lưu & Áp Dụng</Button>
@@ -76,6 +76,6 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
           helperText="Tối đa 500 ký tự (tùy chọn)" />
       </Box>
       {blockErr && <Alert severity="error">{blockErr}</Alert>}
-    </FormDrawer>
+    </FormDialog>
   );
 }

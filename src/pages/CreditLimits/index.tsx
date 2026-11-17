@@ -15,6 +15,7 @@ import { creditStatus, type CreditStatus } from '../../lib/credit';
 import { dmy, num } from '../../lib/format';
 import type { LimitRow } from '../../lib/types';
 import LimitDrawer from './LimitDrawer';
+import { stickyEndCell, stickyEndHead } from '../../components/stickyEnd';
 import { colors } from '../../tokens';
 
 const STATUS: Record<CreditStatus, [string, Tone]> = {
@@ -96,7 +97,7 @@ export default function CreditLimits() {
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="customer" label="Khách Hàng" />
               <FilterHead ctl={cf} k="gold" label="Hạn Mức Nợ Vàng Tối Đa (Lượng)" align="right" /><FilterHead ctl={cf} k="silver" label="Hạn Mức Nợ Bạc Tối Đa (Lượng)" align="right" /><FilterHead ctl={cf} k="labor" label="Hạn Mức Nợ Tiền Công Tối Đa (VNĐ)" align="right" />
-              <FilterHead ctl={cf} k="term" label="Kỳ Hạn Nợ" sx={{ pl: 4 }} /><FilterHead ctl={cf} k="status" label="Trạng Thái Tín Dụng" /><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="term" label="Kỳ Hạn Nợ" sx={{ pl: 4 }} /><FilterHead ctl={cf} k="status" label="Trạng Thái Tín Dụng" /><TableCell align="right" sx={{ width: 100, ...stickyEndHead }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map(({ r, name, short, st, why }) => (
@@ -115,7 +116,7 @@ export default function CreditLimits() {
                   <TableCell><LimitCell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
                   <TableCell sx={{ pl: 4 }}>{r.termDays === 0 ? 'Thanh toán ngay' : `${r.termDays} ngày`}</TableCell>
                   <TableCell><Tooltip title={why ?? ''} arrow><span><StatusBadge tone={STATUS[st][1]}>{STATUS[st][0]}</StatusBadge></span></Tooltip></TableCell>
-                  <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
+                  <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Chỉnh sửa" aria-label="Chỉnh sửa" onClick={() => setDrawer({ row: r })}>{mi('edit')}</IconButton>
                     <IconButton size="small" title="Xem chi tiết" aria-label="Xem chi tiết" onClick={() => ledger(r.customerCode)}>{mi('description')}</IconButton>
                   </Stack></TableCell>

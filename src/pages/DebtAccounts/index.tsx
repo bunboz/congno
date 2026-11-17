@@ -17,6 +17,7 @@ import AddAccountDrawer from './AddAccountDrawer';
 import ChangeFinenessDialog from './ChangeFinenessDialog';
 import VersionHistoryDialog from './VersionHistoryDialog';
 import DeleteBlockedDialog from './DeleteBlockedDialog';
+import { stickyEndCell, stickyEndHead } from '../../components/stickyEnd';
 import { colors } from '../../tokens';
 
 type StatusFilter = 'ALL' | 'ACTIVE' | 'UPGRADED' | 'LOCKED';
@@ -86,7 +87,7 @@ export default function DebtAccounts() {
           <Table stickyHeader>
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="channel" label="Kênh Phân Phối" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" /><FilterHead ctl={cf} k="uom" label="ĐVT" />
-              <FilterHead ctl={cf} k="fineness" label="Tuổi Đối Chiếu" align="right" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><FilterHead ctl={cf} k="entries" label="Số Bút Toán Sổ Cái" align="right" /><FilterHead ctl={cf} k="note" label="Ghi Chú Nghiệp Vụ" /><FilterHead ctl={cf} k="by" label="Người Cập Nhật Cuối" /><FilterHead ctl={cf} k="at" date label="Thời Điểm Cập Nhật Cuối" /><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="fineness" label="Tuổi Đối Chiếu" align="right" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><FilterHead ctl={cf} k="entries" label="Số Bút Toán Sổ Cái" align="right" /><FilterHead ctl={cf} k="note" label="Ghi Chú Nghiệp Vụ" /><FilterHead ctl={cf} k="by" label="Người Cập Nhật Cuối" /><FilterHead ctl={cf} k="at" date label="Thời Điểm Cập Nhật Cuối" /><TableCell align="right" sx={{ width: 130, ...stickyEndHead }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a) => (
@@ -114,7 +115,7 @@ export default function DebtAccounts() {
                   <TableCell sx={{ maxWidth: 220 }}><Typography noWrap title={a.note} sx={{ fontSize: 14 }}>{a.note || '--'}</Typography></TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><span>{person(a.modifiedBy)}</span></Stack></TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>{dmyHm(a.modifiedAt)}</TableCell>
-                  <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
+                  <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
                     <Tooltip title="Đổi tuổi đối chiếu"><IconButton size="small" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton></Tooltip>
                     <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => setTogId(a.id)}
                       sx={{ color: a.isActive ? 'primary.main' : colors.muted }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton></Tooltip>

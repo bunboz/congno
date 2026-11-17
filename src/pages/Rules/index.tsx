@@ -14,6 +14,7 @@ import type { Rule } from '../../lib/rules';
 import { MATERIAL_LABEL } from '../../lib/types';
 import { dmy } from '../../lib/format';
 import RuleDialog from './RuleDialog';
+import { stickyEndCell, stickyEndHead } from '../../components/stickyEnd';
 import { colors } from '../../tokens';
 
 const mi = (n: string) => <span className="material-icons" style={{ fontSize: 18 }}>{n}</span>;
@@ -66,7 +67,7 @@ export default function Rules() {
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" />
               <FilterHead ctl={cf} k="kho" label="Tuổi Kho" align="right" /><FilterHead ctl={cf} k="giao" label="Tuổi Giao" align="right" /><FilterHead ctl={cf} k="loss" label="Hao Lai (%)" align="right" />
-              <FilterHead ctl={cf} k="date" date label="Ngày Hiệu Lực" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="date" date label="Ngày Hiệu Lực" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><TableCell align="right" sx={{ width: 100, ...stickyEndHead }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map(({ r, c }) => (
@@ -79,7 +80,7 @@ export default function Rules() {
                   <TableCell align="right"><Loss v={r.lossRate} /></TableCell>
                   <TableCell>{dmy(r.effectiveFrom)}{r.effectiveTo ? ` → ${dmy(r.effectiveTo)}` : ' → Vô thời hạn'}</TableCell>
                   <TableCell><StatusBadge tone={expired(r) ? 'gray' : 'green'}>{expired(r) ? 'Hết hiệu lực' : 'Hiệu lực'}</StatusBadge></TableCell>
-                  <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
+                  <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Sửa" aria-label="Sửa" onClick={() => setDlg({ rule: r })}>{mi('edit')}</IconButton>
                     <IconButton size="small" title="Xóa" aria-label="Xóa" onClick={() => setDelId(r.id)}>{mi('delete')}</IconButton>
                   </Stack></TableCell>

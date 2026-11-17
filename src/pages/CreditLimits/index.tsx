@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Alert, Box, Button, IconButton, InputAdornment, OutlinedInput, Snackbar, Stack, Tooltip,
+  Alert, Avatar, Box, Button, IconButton, InputAdornment, OutlinedInput, Snackbar, Stack, Tooltip,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
@@ -63,7 +63,7 @@ export default function CreditLimits() {
   const rows = useMemo(() => limits.map((r) => {
     const c = customers.find((x) => x.code === r.customerCode);
     const st = creditStatus({ limits: { gold: r.goldLimit, silver: r.silverLimit, labor: r.laborLimit }, debt: r.debt, nextDueDate: r.nextDueDate, today });
-    return { r, name: c?.company ?? r.customerCode, st, why: reasonOf(r, st, today) };
+    return { r, name: c?.company ?? r.customerCode, short: c?.name ?? r.customerCode, st, why: reasonOf(r, st, today) };
   }).sort((a, b) => RANK[a.st] - RANK[b.st]), [limits, customers, today]);
 
   const filtered = rows.filter((x) => (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase())));
@@ -88,15 +88,22 @@ export default function CreditLimits() {
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>Mã Khách</TableCell><TableCell>Tên Khách Hàng / Tiệm Vàng</TableCell>
+              <TableCell>Khách Hàng</TableCell>
               <TableCell align="right">Hạn Mức Vàng (Lượng, quy 99.99%)</TableCell><TableCell align="right">Hạn Mức Bạc (Lượng, quy 99.99%)</TableCell><TableCell align="right">Hạn Mức Tiền Công (VNĐ)</TableCell>
               <TableCell sx={{ pl: 4 }}>Kỳ Hạn Nợ</TableCell><TableCell>Trạng Thái Nợ</TableCell><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
-              {shown.map(({ r, name, st, why }) => (
+              {shown.map(({ r, name, short, st, why }) => (
                 <TableRow hover key={r.customerCode}>
-                  <TableCell><Typography component="a" onClick={() => ledger(r.customerCode)} sx={{ fontWeight: 600, color: 'primary.main', cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}>{r.customerCode}</Typography></TableCell>
-                  <TableCell sx={{ maxWidth: 340 }}>{name}</TableCell>
+                  <TableCell sx={{ maxWidth: 380 }}>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar>
+                      <Box sx={{ minWidth: 0 }}>
+                        <Typography component="a" onClick={() => ledger(r.customerCode)} sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}>{r.customerCode} - {short}</Typography>
+                        <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{name}</Typography>
+                      </Box>
+                    </Stack>
+                  </TableCell>
                   <TableCell><LimitCell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
                   <TableCell><LimitCell debt={r.debt.silver} limit={r.silverLimit} digits={4} unit="Lượng" /></TableCell>
                   <TableCell><LimitCell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
@@ -108,7 +115,7 @@ export default function CreditLimits() {
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={8} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={7} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

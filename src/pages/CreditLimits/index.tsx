@@ -37,6 +37,9 @@ function reasonOf(r: LimitRow, st: CreditStatus, today: string): string | null {
 }
 const mi = (n: string) => <span className="material-icons" style={{ fontSize: 18 }}>{n}</span>;
 
+// Ô nào dư nợ vượt hạn mức thì tô nền đỏ nhạt (màu chip đỏ của DS).
+const overCell = (debt: number, limit: number | null) => (limit && debt > limit ? { bgcolor: colors.chipRedBg } : undefined);
+
 // Hạn mức ở trên, dư nợ ở dưới: xám khi ổn, cam khi dùng từ 80%, đỏ khi vượt.
 function LimitCell({ debt, limit, digits, unit }: { debt: number; limit: number | null; digits: number; unit: string }) {
   const unlimited = !limit;
@@ -70,8 +73,6 @@ export default function CreditLimits() {
 
   const lim = (v: number | null, d: number) => (v ? num(v, d) : 'Không giới hạn');
   const base = useMemo(() => rows.filter((x) => (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase()))), [rows, filter, q]);
-  const OVER: CreditStatus[] = ['OVER_GOLD', 'OVER_SILVER', 'OVER_LABOR'];
-  const overN = rows.filter((x) => OVER.includes(x.st)).length;
   const cf = useColumnFilters(base, (x) => ({ customer: `${x.r.customerCode} - ${x.short}`, gold: lim(x.r.goldLimit, 4), silver: lim(x.r.silverLimit, 4), labor: lim(x.r.laborLimit, 0), term: x.r.termDays === 0 ? 'Thanh toán ngay' : `${x.r.termDays} ngày`, status: STATUS[x.st][0] }));
   const filtered = cf.view;
   useEffect(() => setPage(1), [cf.view]);
@@ -86,11 +87,6 @@ export default function CreditLimits() {
           { value: 'ALL', label: 'Tất cả', count: rows.length },
           ...(Object.keys(STATUS) as CreditStatus[]).map((k) => ({ value: k, label: STATUS[k][0], count: rows.filter((x) => x.st === k).length })),
         ]} />
-        {overN > 0 && (
-          <Alert severity="error" sx={{ mb: 1.5 }} action={<Button color="inherit" size="small" onClick={() => { setFilter('ALL'); cf.clear(); cf.setCol('status', { picked: OVER.map((k) => STATUS[k][0]), cond: null }); }}>Xem danh sách</Button>}>
-            Có {overN} khách hàng vượt hạn mức tín dụng.
-          </Alert>
-        )}
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã hoặc tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />
@@ -118,9 +114,9 @@ export default function CreditLimits() {
                       </Box>
                     </Stack>
                   </TableCell>
-                  <TableCell><LimitCell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
-                  <TableCell><LimitCell debt={r.debt.silver} limit={r.silverLimit} digits={4} unit="Lượng" /></TableCell>
-                  <TableCell><LimitCell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
+                  <TableCell sx={overCell(r.debt.gold, r.goldLimit)}><LimitCell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
+                  <TableCell sx={overCell(r.debt.silver, r.silverLimit)}><LimitCell debt={r.debt.silver} limit={r.silverLimit} digits={4} unit="Lượng" /></TableCell>
+                  <TableCell sx={overCell(r.debt.labor, r.laborLimit)}><LimitCell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
                   <TableCell sx={{ pl: 4 }}>{r.termDays === 0 ? 'Thanh toán ngay' : `${r.termDays} ngày`}</TableCell>
                   <TableCell><Tooltip title={why ?? ''} arrow><span><StatusBadge tone={STATUS[st][1]} solid={st.startsWith('OVER')}>{STATUS[st][0]}</StatusBadge></span></Tooltip></TableCell>
                   <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">

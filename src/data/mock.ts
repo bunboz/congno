@@ -104,8 +104,8 @@ const rule = (n: number, code: string, customerCode: string, material: 'GOLD' | 
 export const rules: Rule[] = [
   rule(1, '100003', '100003', 'GOLD', 61, 62),
   rule(2, '100003_01', '100003', 'GOLD', 61, 62.5),
-  rule(3, '100013', '100013', 'GOLD', 61, 62),
-  rule(4, '100013', '100013', 'GOLD', 71, 72),
+  rule(3, '100013', '100013', 'GOLD', 61, 62, { effectiveFrom: '2025-01-01', effectiveTo: '2025-06-30' }),
+  rule(4, '100013', '100013', 'GOLD', 71, 72, { effectiveFrom: '2025-07-01', effectiveTo: '2025-12-31' }),
   rule(5, '100013', '100013', 'GOLD', 75, 76),
   rule(6, '200158', '200158', 'GOLD', 68, 68),
   rule(7, '300061', '300061', 'GOLD', 75, 75),

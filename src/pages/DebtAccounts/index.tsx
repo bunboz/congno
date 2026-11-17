@@ -44,17 +44,17 @@ export default function DebtAccounts() {
   const byId = (id: string | null) => accounts.find((a) => a.id === id) ?? null;
   const hist = byId(histId), change = byId(changeId), del = byId(delId), tog = byId(togId);
 
-  const cf = useColumnFilters();
-  useEffect(() => setPage(1), [cf.f]);
-  const statusText = (a: DebtAccount) => (a.isActive ? 'Hoạt động' : a.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động');
-  const filtered = useMemo(() => {
+  const statusText = (x: DebtAccount) => (x.isActive ? 'Hoạt động' : x.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động');
+  const base = useMemo(() => {
     const k = q.trim().toLowerCase();
     return accounts.filter((a) =>
       (material === 'ALL' || a.material === material) &&
       (status === 'ALL' || (status === 'ACTIVE' ? a.isActive : status === 'UPGRADED' ? a.version > 1 : !a.isActive)) &&
-      (!k || [a.code, a.customerCode, a.customerName, a.customerCompany, a.note].some((s) => s.toLowerCase().includes(k))) &&
-      cf.match({ code: a.code, customer: `${a.customerCode} ${a.customerName} ${a.customerCompany}`, channel: a.channel, material: MATERIAL_LABEL[a.material], uom: a.uom === 'LUONG' ? 'Lượng' : 'Gram', fineness: `${a.fineness.toFixed(2)}%`, status: statusText(a), entries: `${a.journalEntryCount} bút toán`, note: a.note, by: person(a.modifiedBy), at: dmyHm(a.modifiedAt) }));
-  }, [accounts, q, status, material, cf.f]);
+      (!k || [a.code, a.customerCode, a.customerName, a.customerCompany, a.note].some((s) => s.toLowerCase().includes(k))));
+  }, [accounts, q, status, material]);
+  const cf = useColumnFilters(base, (a) => ({ code: a.code, customer: `${a.customerCode} - ${a.customerName}`, channel: a.channel, material: MATERIAL_LABEL[a.material], uom: a.uom === 'LUONG' ? 'Lượng' : 'Gram', fineness: `${a.fineness.toFixed(2)}%`, status: statusText(a), entries: `${a.journalEntryCount} bút toán`, note: a.note, by: person(a.modifiedBy), at: dmyHm(a.modifiedAt) }));
+  const filtered = cf.view;
+  useEffect(() => setPage(1), [cf.view]);
 
   const shown = pageSize === 0 ? filtered : filtered.slice((page - 1) * pageSize, page * pageSize);
   const activeN = accounts.filter((a) => a.isActive).length;
@@ -86,7 +86,7 @@ export default function DebtAccounts() {
           <Table stickyHeader>
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="channel" label="Kênh Phân Phối" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" /><FilterHead ctl={cf} k="uom" label="ĐVT" />
-              <FilterHead ctl={cf} k="fineness" label="Tuổi Đối Chiếu" align="right" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><FilterHead ctl={cf} k="entries" label="Số Bút Toán Sổ Cái" align="right" /><FilterHead ctl={cf} k="note" label="Ghi Chú Nghiệp Vụ" /><FilterHead ctl={cf} k="by" label="Người Cập Nhật Cuối" /><FilterHead ctl={cf} k="at" label="Thời Điểm Cập Nhật Cuối" /><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="fineness" label="Tuổi Đối Chiếu" align="right" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><FilterHead ctl={cf} k="entries" label="Số Bút Toán Sổ Cái" align="right" /><FilterHead ctl={cf} k="note" label="Ghi Chú Nghiệp Vụ" /><FilterHead ctl={cf} k="by" label="Người Cập Nhật Cuối" /><FilterHead ctl={cf} k="at" date label="Thời Điểm Cập Nhật Cuối" /><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a) => (

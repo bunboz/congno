@@ -34,10 +34,11 @@ export default function Rules() {
 
   const expired = (r: Rule) => r.effectiveTo !== null && r.effectiveTo < today;
   const rows = useMemo(() => rules.map((r) => ({ r, c: customers.find((x) => x.code === r.customerCode) })), [rules, customers]);
-  const cf = useColumnFilters();
-  const shown = rows.filter(({ r, c }) => cf.match({ code: r.debtAccountCode, customer: `${r.customerCode} ${c?.name ?? ''} ${c?.company ?? ''}`, material: MATERIAL_LABEL[r.material], kho: `${r.productionFineness.toFixed(2)}%`, giao: `${r.deliveryFineness.toFixed(2)}%`, loss: `${r.lossRate > 0 ? '+' : ''}${r.lossRate.toFixed(2)}%`, date: `${dmy(r.effectiveFrom)} ${r.effectiveTo ? dmy(r.effectiveTo) : 'Vô thời hạn'}`, status: expired(r) ? 'Hết hiệu lực' : 'Hiệu lực' }) &&
+  const base = rows.filter(({ r, c }) =>
     (mat === 'ALL' || r.material === mat) && (st === 'ALL' || (st === 'ON') === !expired(r)) &&
     (!q.trim() || `${r.debtAccountCode} ${c?.name ?? ''} ${c?.company ?? ''} ${r.customerCode}`.toLowerCase().includes(q.trim().toLowerCase())));
+  const cf = useColumnFilters(base, ({ r, c }) => ({ code: r.debtAccountCode, customer: `${r.customerCode} - ${c?.name ?? ''}`, material: MATERIAL_LABEL[r.material], kho: `${r.productionFineness.toFixed(2)}%`, giao: `${r.deliveryFineness.toFixed(2)}%`, loss: `${r.lossRate > 0 ? '+' : ''}${r.lossRate.toFixed(2)}%`, date: `${dmy(r.effectiveFrom)} → ${r.effectiveTo ? dmy(r.effectiveTo) : 'Vô thời hạn'}`, status: expired(r) ? 'Hết hiệu lực' : 'Hiệu lực' }));
+  const shown = cf.view;
   const active = rules.filter((r) => !expired(r)).length;
 
   return (
@@ -65,7 +66,7 @@ export default function Rules() {
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" />
               <FilterHead ctl={cf} k="kho" label="Tuổi Kho" align="right" /><FilterHead ctl={cf} k="giao" label="Tuổi Giao" align="right" /><FilterHead ctl={cf} k="loss" label="Hao Lai (%)" align="right" />
-              <FilterHead ctl={cf} k="date" label="Ngày Hiệu Lực" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="date" date label="Ngày Hiệu Lực" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map(({ r, c }) => (

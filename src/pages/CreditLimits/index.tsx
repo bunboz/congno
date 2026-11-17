@@ -67,10 +67,11 @@ export default function CreditLimits() {
     return { r, name: c?.company ?? r.customerCode, short: c?.name ?? r.customerCode, st, why: reasonOf(r, st, today) };
   }).sort((a, b) => RANK[a.st] - RANK[b.st]), [limits, customers, today]);
 
-  const cf = useColumnFilters();
-  useEffect(() => setPage(1), [cf.f]);
   const lim = (v: number | null, d: number) => (v ? num(v, d) : 'Không giới hạn');
-  const filtered = rows.filter((x) => cf.match({ customer: `${x.r.customerCode} ${x.short} ${x.name}`, gold: lim(x.r.goldLimit, 4), silver: lim(x.r.silverLimit, 4), labor: lim(x.r.laborLimit, 0), term: x.r.termDays === 0 ? 'Thanh toán ngay' : `${x.r.termDays} ngày`, status: STATUS[x.st][0] }) && (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase())));
+  const base = useMemo(() => rows.filter((x) => (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase()))), [rows, filter, q]);
+  const cf = useColumnFilters(base, (x) => ({ customer: `${x.r.customerCode} - ${x.short}`, gold: lim(x.r.goldLimit, 4), silver: lim(x.r.silverLimit, 4), labor: lim(x.r.laborLimit, 0), term: x.r.termDays === 0 ? 'Thanh toán ngay' : `${x.r.termDays} ngày`, status: STATUS[x.st][0] }));
+  const filtered = cf.view;
+  useEffect(() => setPage(1), [cf.view]);
   const shown = pageSize === 0 ? filtered : filtered.slice((page - 1) * pageSize, page * pageSize);
   const ledger = (code: string) => nav(`/customer-ledger/${code}`);
 

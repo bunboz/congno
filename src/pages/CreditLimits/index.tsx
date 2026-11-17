@@ -70,6 +70,8 @@ export default function CreditLimits() {
 
   const lim = (v: number | null, d: number) => (v ? num(v, d) : 'Không giới hạn');
   const base = useMemo(() => rows.filter((x) => (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase()))), [rows, filter, q]);
+  const OVER: CreditStatus[] = ['OVER_GOLD', 'OVER_SILVER', 'OVER_LABOR'];
+  const overN = rows.filter((x) => OVER.includes(x.st)).length;
   const cf = useColumnFilters(base, (x) => ({ customer: `${x.r.customerCode} - ${x.short}`, gold: lim(x.r.goldLimit, 4), silver: lim(x.r.silverLimit, 4), labor: lim(x.r.laborLimit, 0), term: x.r.termDays === 0 ? 'Thanh toán ngay' : `${x.r.termDays} ngày`, status: STATUS[x.st][0] }));
   const filtered = cf.view;
   useEffect(() => setPage(1), [cf.view]);
@@ -84,6 +86,11 @@ export default function CreditLimits() {
           { value: 'ALL', label: 'Tất cả', count: rows.length },
           ...(Object.keys(STATUS) as CreditStatus[]).map((k) => ({ value: k, label: STATUS[k][0], count: rows.filter((x) => x.st === k).length })),
         ]} />
+        {overN > 0 && (
+          <Alert severity="error" sx={{ mb: 1.5 }} action={<Button color="inherit" size="small" onClick={() => { setFilter('ALL'); cf.clear(); cf.setCol('status', { picked: OVER.map((k) => STATUS[k][0]), cond: null }); }}>Xem danh sách</Button>}>
+            Có {overN} khách hàng vượt hạn mức tín dụng.
+          </Alert>
+        )}
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã hoặc tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />

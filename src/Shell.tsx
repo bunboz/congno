@@ -17,7 +17,7 @@ const mi = (n: string, size = 18) => <span className="material-icons" style={{ f
 // Bố cục theo ERP Mua hàng: header trắng trên cùng, sidebar xanh đậm phẳng bên dưới.
 export default function Shell() {
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: colors.white }}>
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', bgcolor: colors.white }}>
       <Stack component="header" direction="row" alignItems="center" justifyContent="space-between" sx={{ height: 48, px: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
         <Stack direction="row" alignItems="center" spacing={1.5}>
           <Avatar variant="rounded" sx={{ bgcolor: colors.logoYellow, color: colors.primary, width: 32, height: 32, borderRadius: '8px' }}>{mi('balance')}</Avatar>
@@ -53,7 +53,7 @@ export default function Shell() {
             </Box>
           ))}
         </Box>
-        <Box sx={{ flex: 1, minWidth: 0, p: 1.5, bgcolor: colors.pageBg }}><Outlet /></Box>
+        <Box sx={{ flex: 1, minWidth: 0, minHeight: 0, p: 1.5, bgcolor: colors.pageBg, display: 'flex', flexDirection: 'column', overflow: 'auto', '& > div': { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' } }}><Outlet /></Box>
       </Box>
     </Box>
   );

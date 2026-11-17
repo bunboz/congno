@@ -92,7 +92,7 @@ export default function CreditLimits() {
           <Button variant="contained" startIcon={mi('add')} onClick={() => setDrawer({ row: null })}>Tạo Mới Hạn Mức</Button>
         </Stack>
 
-        <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
+        <TableContainer sx={{ flex: '0 1 auto', minHeight: 0 }}>
           <Table stickyHeader>
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="customer" label="Khách Hàng" />

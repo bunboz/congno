@@ -62,7 +62,7 @@ export default function Rules() {
           <Button variant="contained" startIcon={mi('add')} onClick={() => setDlg({ rule: null })}>Thêm Quy Ước Tuổi & Hao Lai</Button>
         </Stack>
 
-        <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
+        <TableContainer sx={{ flex: '0 1 auto', minHeight: 0 }}>
           <Table stickyHeader>
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" />

@@ -83,7 +83,7 @@ export default function DebtAccounts() {
           <Button variant="contained" startIcon={mi('add')} onClick={() => setAddOpen(true)}>Thêm Mã Đối Chiếu</Button>
         </Stack>
 
-        <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
+        <TableContainer sx={{ flex: '0 1 auto', minHeight: 0 }}>
           <Table stickyHeader>
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="channel" label="Kênh Phân Phối" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" /><FilterHead ctl={cf} k="uom" label="Đơn Vị Tính (ĐVT)" />

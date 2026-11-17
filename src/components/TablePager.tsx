@@ -9,7 +9,7 @@ export default function TablePager({ page, pageSize, total, onPage, onPageSize }
   const from = total === 0 ? 0 : pageSize === 0 ? 1 : (page - 1) * pageSize + 1;
   const to = pageSize === 0 ? total : Math.min(total, page * pageSize);
   return (
-    <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ py: 1.5 }}>
+    <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ py: 1.5, mt: 'auto', flexShrink: 0 }}>
       <Typography variant="caption" color="text.secondary">Hiển thị {from}–{to} trên tổng số {total} dòng</Typography>
       <Stack direction="row" alignItems="center" spacing={2}>
         <Typography variant="caption" color="text.secondary">Số dòng/trang:</Typography>

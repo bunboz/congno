@@ -5,7 +5,6 @@ import { colors } from './tokens';
 const groups = [
   [
     { label: 'Mã đối chiếu', to: '/debt-accounts', icon: 'receipt_long' },
-    { label: 'Sổ chi tiết KH', to: '/customer-ledger/100003', icon: 'menu_book' },
   ],
   [
     { label: 'Hạn mức tín dụng', to: '/credit-limits', icon: 'shield' },

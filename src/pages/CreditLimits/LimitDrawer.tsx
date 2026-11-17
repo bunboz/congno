@@ -41,7 +41,7 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
     <FormDrawer open={open} onClose={onClose} onEnter={save} title={title} width={600}
       footer={<><Button variant="outlined" color="inherit" onClick={onClose}>Hủy Bỏ</Button><Button variant="contained" disabled={!valid} onClick={save}>Lưu Cấu Hình Hạn Mức</Button></>}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.5 }}>
-        <Typography variant="body2">Khách hàng: Mã - Tên công ty *</Typography>
+        <Typography variant="subtitle1" sx={{ color: colors.label }}>Khách hàng: Mã - Tên công ty <span style={{ color: colors.error }}>*</span></Typography>
         {editing && <StatusBadge tone="green">Đang chỉnh sửa cho khách hàng này</StatusBadge>}
       </Stack>
       <Autocomplete size="small" disabled={editing} options={customers} value={customer} onChange={(_, c) => setCustomer(c)}

@@ -17,15 +17,15 @@ export default function FormDrawer({ open, onClose, title, subtitle, children, f
   }, [open]);
   return (
     <Drawer anchor="right" open={open} onClose={onClose} ModalProps={{ disableAutoFocus: true }} PaperProps={{ sx: { width, maxWidth: '100vw', display: 'flex', flexDirection: 'column' } }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ px: 2, py: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
         <Box>
-          <Typography variant="h6">{title}</Typography>
+          <Typography variant="h6" sx={{ fontSize: 16, fontWeight: 600 }}>{title}</Typography>
           {subtitle && <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 400 }}>{subtitle}</Typography>}
         </Box>
         <IconButton size="small" aria-label="Đóng" onClick={onClose}><span className="material-icons">close</span></IconButton>
       </Stack>
-      <Box ref={body} onKeyDown={enterKey(onEnter)} sx={{ flex: 1, overflowY: 'auto', p: 2, bgcolor: 'background.paper' }}>{children}</Box>
-      <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ px: 2, py: 1.5, borderTop: '1px solid', borderColor: 'divider' }}>{footer}</Stack>
+      <Box ref={body} onKeyDown={enterKey(onEnter)} sx={{ flex: 1, overflowY: 'auto', p: 3, bgcolor: 'background.paper' }}>{children}</Box>
+      <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ px: 3, py: 2, borderTop: '1px solid', borderColor: 'divider' }}>{footer}</Stack>
     </Drawer>
   );
 }

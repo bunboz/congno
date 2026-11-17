@@ -80,7 +80,7 @@ export default function DebtAccounts() {
           <Table stickyHeader>
             <TableHead><TableRow>
               <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Kênh Phân Phối</TableCell><TableCell>Loại NL</TableCell><TableCell>ĐVT</TableCell>
-              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell><TableCell>Ghi Chú</TableCell><TableCell>Người Cập Nhật Cuối</TableCell><TableCell>Thời Điểm Cập Nhật Cuối</TableCell><TableCell align="right" sx={{ width: 150 }}>Thao Tác</TableCell>
+              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell><TableCell>Ghi Chú</TableCell><TableCell>Người Cập Nhật Cuối</TableCell><TableCell>Thời Điểm Cập Nhật Cuối</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a) => (
@@ -109,7 +109,6 @@ export default function DebtAccounts() {
                   <TableCell sx={{ whiteSpace: 'nowrap' }}><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><span>{person(a.modifiedBy)}</span></Stack></TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>{dmyHm(a.modifiedAt)}</TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
-                    <Tooltip title="Lịch sử phiên bản"><IconButton size="small" aria-label="Lịch sử phiên bản" onClick={() => setHistId(a.id)}>{mi('history')}</IconButton></Tooltip>
                     <Tooltip title="Đổi tuổi đối chiếu"><IconButton size="small" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton></Tooltip>
                     <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => setTogId(a.id)}
                       sx={{ color: a.isActive ? 'primary.main' : colors.muted }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton></Tooltip>

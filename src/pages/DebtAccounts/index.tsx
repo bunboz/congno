@@ -93,9 +93,9 @@ export default function DebtAccounts() {
                     </Box></Tooltip>
                   </TableCell>
                   <TableCell>
-                    <Stack direction="row" alignItems="center" spacing={1.5}>
-                      <Avatar sx={{ width: 32, height: 32, fontSize: 13, bgcolor: colors.primary, color: colors.onPrimary }}>{a.customerName.trim().slice(0, 1).toUpperCase()}</Avatar>
-                      <b>{a.customerName}</b>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar>
+                      <span>{a.customerName}</span>
                     </Stack>
                   </TableCell>
                   <TableCell>{a.customerCode} - {a.customerCompany}</TableCell>

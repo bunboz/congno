@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
-  Alert, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack,
+  Alert, Avatar, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
@@ -69,7 +69,7 @@ export default function Rules() {
                 <TableRow hover key={r.id}>
                   <TableCell>{i + 1}</TableCell>
                   <TableCell><b style={{ color: colors.primary }}>{r.debtAccountCode}</b></TableCell>
-                  <TableCell><b>{c?.name ?? r.customerCode}</b></TableCell>
+                  <TableCell><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><span>{c?.name ?? r.customerCode}</span></Stack></TableCell>
                   <TableCell>{r.customerCode} - {c?.company}</TableCell>
                   <TableCell>{MATERIAL_LABEL[r.material]}</TableCell>
                   <TableCell align="right">{r.productionFineness.toFixed(2)}%</TableCell>

@@ -39,13 +39,13 @@ const theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          borderRadius: 6, fontSize: 14, color: colors.text,
+          borderRadius: 4, fontSize: 14, color: colors.text,
           '& .MuiOutlinedInput-notchedOutline': { borderColor: colors.inputBorder },
-          '&.Mui-disabled': { background: colors.headBg },
+          '&.Mui-disabled': { '& .MuiOutlinedInput-notchedOutline': { borderColor: colors.inputDisabled } },
           '&.MuiInputBase-multiline': { padding: 0 },
           '&.MuiAutocomplete-inputRoot': { padding: '0 9px 0 0', '& .MuiAutocomplete-input': { padding: '6px 4px 6px 14px' } },
         },
-        input: { padding: '6px 14px', height: 20, '&::placeholder': { color: colors.disabled, opacity: 1 } },
+        input: { padding: '6px 14px', height: 20, '&::placeholder': { color: colors.text, opacity: 0.42 }, '&.Mui-disabled': { WebkitTextFillColor: colors.disabled } },
         inputMultiline: { padding: '6px 14px' },
       },
     },

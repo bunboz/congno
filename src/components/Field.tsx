@@ -6,7 +6,7 @@ export default function Field({ label, required, fullWidth = true, sx, ...rest }
   return (
     <Box sx={{ flex: fullWidth ? 1 : undefined, minWidth: 0, ...(sx as object) }}>
       {label && (
-        <Typography variant="subtitle1" component="label" sx={{ display: 'block', mb: '6px', color: colors.label }}>
+        <Typography variant="subtitle1" component="label" sx={{ display: 'block', color: colors.label }}>
           {label}{required && <span style={{ color: colors.error }}> *</span>}
         </Typography>
       )}

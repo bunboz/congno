@@ -34,6 +34,7 @@ export const colors = {
   cardLine: '#ececec',
   inputLine: '#d1d5db',
   inputBorder: '#b3b3b3',
+  inputDisabled: '#d4d4d4',
   label: '#595a5d',
   amber: '#b45309',
   logoYellow: '#f5c443',

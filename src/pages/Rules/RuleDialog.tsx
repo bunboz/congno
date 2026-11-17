@@ -57,11 +57,11 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
         <Stack direction="row" spacing={2}>
           <Autocomplete size="small" fullWidth disabled={editing} options={options} value={acc} onChange={(_, a) => setAcc(a)}
             getOptionLabel={(a) => `${a.code} - ${a.customerName} - Sổ ${MATERIAL_LABEL[a.material]} (${a.fineness}%)`}
-            renderInput={(p) => <Field {...p} required helperText={customer ? `${customer.code} - ${customer.company} · ${MATERIAL_LABEL[material]}` : undefined} label="Số Đối Chiếu Công Nợ" InputLabelProps={{ shrink: true }} placeholder={editing ? code : 'Chọn từ danh mục số đối chiếu công nợ của khách hàng'} />} />
+            renderInput={(p) => <Field {...p} required helperText={customer ? `${customer.code} - ${customer.company} · ${MATERIAL_LABEL[material]}` : undefined} label="Mã Đối Chiếu" InputLabelProps={{ shrink: true }} />} />
         </Stack>
         <Stack direction="row" spacing={2}>
-          <Field size="small" fullWidth required type="date" label="Ngày Bắt Đầu Hiệu Lực" value={from} onChange={(e) => setFrom(e.target.value)} InputLabelProps={{ shrink: true }} error={!!errs.date} helperText={errs.date ?? 'Kích hoạt tự động đóng bản ghi cũ'} />
-          <Field size="small" fullWidth type="date" label="Ngày Kết Thúc (Tùy chọn)" value={to} onChange={(e) => setTo(e.target.value)} InputLabelProps={{ shrink: true }} helperText="Để trống = chưa có ngày kết thúc" />
+          <Field size="small" fullWidth required type="date" label="Ngày Bắt Đầu Hiệu Lực" value={from} onChange={(e) => setFrom(e.target.value)} InputLabelProps={{ shrink: true }} error={!!errs.date} helperText={errs.date} />
+          <Field size="small" fullWidth type="date" label="Ngày Kết Thúc Hiệu Lực" value={to} onChange={(e) => setTo(e.target.value)} InputLabelProps={{ shrink: true }} />
         </Stack>
         <Box sx={{ p: 1.5, bgcolor: colors.pageBg, borderRadius: '8px' }}>
           <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
@@ -71,15 +71,15 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
             </Typography>
           </Stack>
           <Stack direction="row" spacing={2}>
-            <Field size="small" fullWidth required label="Tuổi Kho Thực Tế (F_stock)" value={kho} onChange={(e) => setKho(e.target.value)} error={!!errs.production} helperText={errs.production} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
-            <Field size="small" fullWidth required label="Tuổi Giao Ghi Nợ (F_delivery)" value={giao} onChange={(e) => setGiao(e.target.value)} error={!!errs.delivery} helperText={errs.delivery ?? 'Tuổi thỏa thuận ghi nợ khách hàng'} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
+            <Field size="small" fullWidth required label="Tuổi kho sản xuất thực tế (Fkho)" value={kho} onChange={(e) => setKho(e.target.value)} error={!!errs.production} helperText={errs.production} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
+            <Field size="small" fullWidth required label="Tuổi tính nợ giao hàng thỏa thuận (Fgiao)" value={giao} onChange={(e) => setGiao(e.target.value)} error={!!errs.delivery} helperText={errs.delivery} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
           </Stack>
         </Box>
         {level !== 'NONE' && (
           <Alert severity="warning">Hao lai ngược. Cần phê duyệt: {level === 'KTT' ? 'Kế toán trưởng' : 'Ban Giám Đốc (BOD / CFO)'}.</Alert>
         )}
-        <Field fullWidth multiline minRows={2} label="Lý Do Điều Chỉnh / Căn Cứ Hợp Đồng" value={reason} onChange={(e) => setReason(e.target.value)} InputLabelProps={{ shrink: true }}
-          required={level !== 'NONE'} error={!!errs.reason} helperText={errs.reason ?? (level !== 'NONE' ? 'Bắt buộc, tối thiểu 20 ký tự' : undefined)} placeholder="Nhập căn cứ hợp đồng hoặc lý do thay đổi quy ước..." />
+        <Field fullWidth multiline minRows={2} label="Lý do duyệt ngoại lệ" value={reason} onChange={(e) => setReason(e.target.value)} InputLabelProps={{ shrink: true }}
+          required={level !== 'NONE'} error={!!errs.reason} helperText={errs.reason ?? (level !== 'NONE' ? 'Bắt buộc, tối thiểu 20 ký tự' : undefined)} />
         {err && <Alert severity="error">{err}</Alert>}
       </Stack>
     </FormDialog>

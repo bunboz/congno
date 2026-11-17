@@ -39,10 +39,10 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
       <Stack spacing={2.5}>
         <Stack direction="row" spacing={2} alignItems="flex-start">
           <Field size="small" label="Tuổi hiện tại" value={`${account.fineness.toFixed(2)}%`} disabled InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
-          <Field size="small" autoFocus required label="Tuổi mới" value={next} onChange={(e) => setNext(e.target.value)} placeholder="VD: 62.5"
+          <Field size="small" autoFocus required label="Tuổi mới" value={next} onChange={(e) => setNext(e.target.value)}
             error={!!errs.fineness && next !== ''} helperText={next !== '' ? errs.fineness : undefined}
             InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
-          <Field size="small" required type="date" label="Hiệu lực từ" value={from} onChange={(e) => setFrom(e.target.value)}
+          <Field size="small" required type="date" label="Ngày bắt đầu hiệu lực" value={from} onChange={(e) => setFrom(e.target.value)}
             error={!!errs.date} helperText={errs.date} InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
         </Stack>
 

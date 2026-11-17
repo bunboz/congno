@@ -22,7 +22,7 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
 
   return (
     <FormDialog open={open} onClose={onClose} width={880}
-      title={<>Lịch Sử Phiên Bản Mã Đối Chiếu: {account.code}</>} subtitle={`${account.customerName} - ${account.customerCompany}`}
+      title={<>Lịch Sử Phiên Bản Mã Đối Chiếu: {account.code}</>}
       footer={<>
         <Button variant="contained" onClick={onChangeFineness}>Đổi Tuổi Đối Chiếu (Tạo Version Mới)</Button>
       </>}>
@@ -43,7 +43,7 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
                     <StatusBadge tone={isCur ? 'green' : 'gray'}>v{v.version}</StatusBadge></Stack></TableCell>
                   <TableCell sx={{ fontFamily: 'monospace', fontWeight: 600 }}>{v.code}</TableCell>
                   <TableCell><b>{v.fineness.toFixed(2)}%</b>{v.delta !== null && v.delta !== 0 && <> <StatusBadge tone={v.delta > 0 ? 'green' : 'red'}>{v.delta > 0 ? '+' : ''}{v.delta.toFixed(2)}%</StatusBadge></>}</TableCell>
-                  <TableCell>{dmy(v.effectiveFrom)} - {v.effectiveTo ? dmy(v.effectiveTo) : 'Hiện tại'}</TableCell>
+                  <TableCell>{dmy(v.effectiveFrom)} - {v.effectiveTo ? dmy(v.effectiveTo) : 'Vô thời hạn'}</TableCell>
                   <TableCell><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, flexShrink: 0, bgcolor: colors.primary }}>{' '}</Avatar><span>{person(v.createdBy)}</span></Stack></TableCell>
                   <TableCell>{isCur ? currentBadge : <StatusBadge tone="gray">Ngưng hoạt động</StatusBadge>}</TableCell>
                 </TableRow>

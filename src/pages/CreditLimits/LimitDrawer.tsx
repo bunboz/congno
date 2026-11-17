@@ -27,7 +27,6 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
   const g = toNum(gold), s = toNum(silver), l = toNum(labor), t = term.trim() === '' ? NaN : Number(term);
   const errs = validateLimits({ gold: g, silver: s, labor: l, termDays: t });
   const valid = !!customer && Object.keys(errs).length === 0 && note.length <= 500;
-  const goldAcc = accounts.find((a) => a.customerCode === customer?.code && a.material === 'GOLD' && a.isActive);
 
   const save = () => {
     if (!valid || !customer) return;
@@ -35,13 +34,13 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
       debt: row?.debt ?? { gold: 0, silver: 0, labor: 0 }, nextDueDate: row?.nextDueDate ?? null });
     onSaved(customer); onClose();
   };
-  const title = editing ? `Chỉnh sửa Cấu hình Hạn Mức Tín Dụng - ${customer?.company ?? ''}` : 'Tạo Mới Cấu Hình Hạn Mức Tín Dụng';
+  const title = editing ? `Chỉnh sửa Cấu hình Hạn Mức Tín Dụng - ${customer?.company ?? ''}` : 'Tạo mới Hạn mức';
 
   return (
     <FormDrawer open={open} onClose={onClose} onEnter={save} title={title} width={600}
       footer={<><Button variant="contained" color="inherit" onClick={onClose}>Hủy Bỏ</Button><Button variant="contained" disabled={!valid} onClick={save}>Lưu Cấu Hình Hạn Mức</Button></>}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.5 }}>
-        <Typography variant="subtitle1" sx={{ color: colors.label }}>Khách hàng: Mã - Tên công ty <span style={{ color: colors.error }}>*</span></Typography>
+        <Typography variant="subtitle1" sx={{ color: colors.label }}>Khách hàng <span style={{ color: colors.error }}>*</span></Typography>
         {editing && <StatusBadge tone="green">Đang chỉnh sửa cho khách hàng này</StatusBadge>}
       </Stack>
       <Autocomplete size="small" disabled={editing} options={customers} value={customer} onChange={(_, c) => setCustomer(c)}
@@ -51,15 +50,13 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
       {row && (
         <Stack direction="row" spacing={4} sx={{ my: 2, p: 1.5, bgcolor: colors.tint, borderRadius: '8px' }}>
           <Box><Typography variant="caption" color="text.secondary">DƯ NỢ VÀNG HIỆN TẠI</Typography>
-            <Typography sx={{ fontWeight: 600, color: 'success.main' }}>{num(row.debt.gold, 4)} Lượng</Typography>
-            {goldAcc && <Typography variant="caption" color="text.secondary">Tuổi quy ước đối chiếu: {goldAcc.fineness}%</Typography>}</Box>
+            <Typography sx={{ fontWeight: 600, color: 'success.main' }}>{num(row.debt.gold, 4)} Lượng</Typography></Box>
           <Box><Typography variant="caption" color="text.secondary">DƯ NỢ TIỀN CÔNG HIỆN TẠI</Typography>
             <Typography sx={{ fontWeight: 600, color: 'success.main' }}>{num(row.debt.labor)} VNĐ</Typography></Box>
         </Stack>
       )}
 
       <Box sx={{ mt: 3 }}>
-        <Typography variant="subtitle1" sx={{ color: 'primary.main', mb: 1.5 }}>Hạn Mức Công Nợ & Thời Hạn Thanh Toán</Typography>
         <Stack spacing={2}>
           <Stack direction="row" spacing={2}>
           <Field size="small" fullWidth label="Hạn mức nợ Vàng tối đa (Lượng)" value={gold} onChange={(e) => setGold(e.target.value)} error={!!errs.gold}

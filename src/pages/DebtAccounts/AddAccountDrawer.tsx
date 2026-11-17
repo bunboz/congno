@@ -9,9 +9,6 @@ import { CURRENT_USER } from '../../data/mock';
 import type { Customer, DebtAccount, Material } from '../../lib/types';
 
 const card = { mb: 3 } as const;
-const Head = ({ children }: { children: string }) => (
-  <Typography variant="subtitle1" sx={{ color: 'primary.main', mb: 1.5 }}>{children}</Typography>
-);
 
 export default function AddAccountDrawer({ open, onClose, onCreated }: { open: boolean; onClose: () => void; onCreated: (a: DebtAccount) => void }) {
   const { accounts, customers, today, createAccount } = useStore();
@@ -44,16 +41,15 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
   };
 
   return (
-    <FormDrawer open={open} onClose={close} onEnter={save} title="Thêm Mã Đối Chiếu" subtitle="Khởi tạo tài khoản công nợ đối tác khách hàng"
+    <FormDrawer open={open} onClose={close} onEnter={save} title="Thêm Mã Đối Chiếu"
       footer={<>
         <Button variant="contained" color="inherit" onClick={close}>Hủy bỏ</Button>
         <Button variant="contained" disabled={!canSave} onClick={save}>Lưu & Áp Dụng</Button>
       </>}>
       <Box sx={card}>
-        <Head>Đối tượng CRM & nguyên liệu</Head>
         <Autocomplete size="small" options={customers} value={customer} onChange={(_, c) => pick(c, material)}
           getOptionLabel={(c) => `${c.code} - ${c.name} (${c.company}) • [${c.channel}]`}
-          renderInput={(p) => <Field {...p} autoFocus required label="Khách hàng CRM" placeholder="Tìm mã hoặc tên khách hàng" InputLabelProps={{ shrink: true }} />} />
+          renderInput={(p) => <Field {...p} autoFocus required label="Khách hàng" InputLabelProps={{ shrink: true }} />} />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
           <Field select size="small" fullWidth required label="Loại nguyên liệu" value={material} InputLabelProps={{ shrink: true }}
             onChange={(e) => pick(customer, e.target.value as Material)}>
@@ -67,13 +63,9 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
         </Stack>
       </Box>
       <Box sx={card}>
-        <Head>Định danh mã đối chiếu</Head>
         <Field size="small" fullWidth required label="Mã đối chiếu công nợ" value={code} InputLabelProps={{ shrink: true }}
-          onChange={(e) => { setCode(e.target.value); setCodeTouched(true); }}
-          helperText="Mặc định là Mã khách hàng (VD: 100006), có thể chỉnh sửa nếu cần" />
-        <Field size="small" fullWidth multiline minRows={2} label="Ghi chú nghiệp vụ" value={note} sx={{ mt: 2 }} InputLabelProps={{ shrink: true }}
-          placeholder="Ghi chú về thỏa thuận công nợ, chính sách giao dịch, lý do tạo mã..." onChange={(e) => setNote(e.target.value.slice(0, 500))}
-          helperText="Tối đa 500 ký tự (tùy chọn)" />
+          onChange={(e) => { setCode(e.target.value); setCodeTouched(true); }} />
+        <Field size="small" fullWidth multiline minRows={2} label="Ghi chú nghiệp vụ" value={note} sx={{ mt: 2 }} InputLabelProps={{ shrink: true }} onChange={(e) => setNote(e.target.value.slice(0, 500))} />
       </Box>
       {blockErr && <Alert severity="error">{blockErr}</Alert>}
     </FormDrawer>

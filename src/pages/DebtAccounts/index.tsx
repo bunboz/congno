@@ -68,7 +68,7 @@ export default function DebtAccounts() {
           <OutlinedInput placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />
           <Select value={material} onChange={(e) => { setMaterial(e.target.value as Material | 'ALL'); setPage(1); }} sx={{ minWidth: 160 }}>
-            <MenuItem value="ALL">Tất cả loại NL</MenuItem>
+            <MenuItem value="ALL">Tất cả loại nguyên liệu</MenuItem>
             <MenuItem value="GOLD">Vàng (GOLD)</MenuItem>
             <MenuItem value="SILVER">Bạc (SILVER)</MenuItem>
           </Select>
@@ -79,8 +79,8 @@ export default function DebtAccounts() {
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Kênh Phân Phối</TableCell><TableCell>Loại NL</TableCell><TableCell>ĐVT</TableCell>
-              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell><TableCell>Ghi Chú</TableCell><TableCell>Người Cập Nhật Cuối</TableCell><TableCell>Thời Điểm Cập Nhật Cuối</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
+              <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Kênh Phân Phối</TableCell><TableCell>Loại Nguyên Liệu</TableCell><TableCell>ĐVT</TableCell>
+              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Số Bút Toán Sổ Cái</TableCell><TableCell>Ghi Chú Nghiệp Vụ</TableCell><TableCell>Người Cập Nhật Cuối</TableCell><TableCell>Thời Điểm Cập Nhật Cuối</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a) => (

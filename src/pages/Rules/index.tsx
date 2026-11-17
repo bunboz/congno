@@ -51,7 +51,7 @@ export default function Rules() {
           <OutlinedInput placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => setQ(e.target.value)}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />
           <Select value={mat} onChange={(e) => setMat(e.target.value as typeof mat)} sx={{ minWidth: 160 }}>
-            <MenuItem value="ALL">Tất cả loại NL</MenuItem><MenuItem value="GOLD">Vàng</MenuItem><MenuItem value="SILVER">Bạc</MenuItem>
+            <MenuItem value="ALL">Tất cả loại nguyên liệu</MenuItem><MenuItem value="GOLD">Vàng</MenuItem><MenuItem value="SILVER">Bạc</MenuItem>
           </Select>
           <Box sx={{ flex: 1 }} />
           <Button variant="contained" startIcon={mi('add')} onClick={() => setDlg({ rule: null })}>Thêm Quy Ước Mới</Button>
@@ -60,8 +60,8 @@ export default function Rules() {
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Loại NL</TableCell>
-              <TableCell align="right">Tuổi Kho</TableCell><TableCell align="right">Tuổi Giao</TableCell><TableCell align="right">Hao Lai</TableCell>
+              <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Loại Nguyên Liệu</TableCell>
+              <TableCell align="right">Tuổi Kho</TableCell><TableCell align="right">Tuổi Giao</TableCell><TableCell align="right">Hao Lai (%)</TableCell>
               <TableCell>Ngày Hiệu Lực</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
@@ -73,7 +73,7 @@ export default function Rules() {
                   <TableCell align="right">{r.productionFineness.toFixed(2)}%</TableCell>
                   <TableCell align="right">{r.deliveryFineness.toFixed(2)}%</TableCell>
                   <TableCell align="right"><Loss v={r.lossRate} /></TableCell>
-                  <TableCell>{dmy(r.effectiveFrom)}{r.effectiveTo ? ` → ${dmy(r.effectiveTo)}` : ' → nay'}</TableCell>
+                  <TableCell>{dmy(r.effectiveFrom)}{r.effectiveTo ? ` → ${dmy(r.effectiveTo)}` : ' → Vô thời hạn'}</TableCell>
                   <TableCell><StatusBadge tone={expired(r) ? 'gray' : 'green'}>{expired(r) ? 'Hết hiệu lực' : 'Hiệu lực'}</StatusBadge></TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Sửa" aria-label="Sửa" onClick={() => setDlg({ rule: r })}>{mi('edit')}</IconButton>

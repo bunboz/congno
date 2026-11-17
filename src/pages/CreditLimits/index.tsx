@@ -89,8 +89,8 @@ export default function CreditLimits() {
           <Table stickyHeader>
             <TableHead><TableRow>
               <TableCell>Khách Hàng</TableCell>
-              <TableCell align="right">Hạn Mức Vàng (Lượng, quy 99.99%)</TableCell><TableCell align="right">Hạn Mức Bạc (Lượng, quy 99.99%)</TableCell><TableCell align="right">Hạn Mức Tiền Công (VNĐ)</TableCell>
-              <TableCell sx={{ pl: 4 }}>Kỳ Hạn Nợ</TableCell><TableCell>Trạng Thái Nợ</TableCell><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
+              <TableCell align="right">Hạn Mức Nợ Vàng Tối Đa (Lượng)</TableCell><TableCell align="right">Hạn Mức Nợ Bạc Tối Đa (Lượng)</TableCell><TableCell align="right">Hạn Mức Nợ Tiền Công Tối Đa (VNĐ)</TableCell>
+              <TableCell sx={{ pl: 4 }}>Kỳ Hạn Nợ</TableCell><TableCell>Trạng Thái Tín Dụng</TableCell><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map(({ r, name, short, st, why }) => (
@@ -107,7 +107,7 @@ export default function CreditLimits() {
                   <TableCell><LimitCell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
                   <TableCell><LimitCell debt={r.debt.silver} limit={r.silverLimit} digits={4} unit="Lượng" /></TableCell>
                   <TableCell><LimitCell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
-                  <TableCell sx={{ pl: 4 }}>{r.termDays === 0 ? 'Thanh toán ngay' : `Net ${r.termDays} ngày`}</TableCell>
+                  <TableCell sx={{ pl: 4 }}>{r.termDays === 0 ? 'Thanh toán ngay' : `${r.termDays} ngày`}</TableCell>
                   <TableCell><Tooltip title={why ?? ''} arrow><span><StatusBadge tone={STATUS[st][1]}>{STATUS[st][0]}</StatusBadge></span></Tooltip></TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Chỉnh sửa" aria-label="Chỉnh sửa" onClick={() => setDrawer({ row: r })}>{mi('edit')}</IconButton>

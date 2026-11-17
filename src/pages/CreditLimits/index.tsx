@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { ClearFilterButton, FilterHead, useColumnFilters } from '../../components/ColumnFilter';
 import { useNavigate } from 'react-router-dom';
 import {
   Alert, Avatar, Box, Button, IconButton, InputAdornment, OutlinedInput, Snackbar, Stack, Tooltip,
@@ -66,7 +67,10 @@ export default function CreditLimits() {
     return { r, name: c?.company ?? r.customerCode, short: c?.name ?? r.customerCode, st, why: reasonOf(r, st, today) };
   }).sort((a, b) => RANK[a.st] - RANK[b.st]), [limits, customers, today]);
 
-  const filtered = rows.filter((x) => (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase())));
+  const cf = useColumnFilters();
+  useEffect(() => setPage(1), [cf.f]);
+  const lim = (v: number | null, d: number) => (v ? num(v, d) : 'Không giới hạn');
+  const filtered = rows.filter((x) => cf.match({ customer: `${x.r.customerCode} ${x.short} ${x.name}`, gold: lim(x.r.goldLimit, 4), silver: lim(x.r.silverLimit, 4), labor: lim(x.r.laborLimit, 0), term: x.r.termDays === 0 ? 'Thanh toán ngay' : `${x.r.termDays} ngày`, status: STATUS[x.st][0] }) && (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase())));
   const shown = pageSize === 0 ? filtered : filtered.slice((page - 1) * pageSize, page * pageSize);
   const ledger = (code: string) => nav(`/customer-ledger/${code}`);
 
@@ -82,15 +86,16 @@ export default function CreditLimits() {
           <OutlinedInput placeholder="Tìm mã hoặc tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />
           <Box sx={{ flex: 1 }} />
+          <ClearFilterButton active={cf.active} onClick={cf.clear} />
           <Button variant="contained" startIcon={mi('add')} onClick={() => setDrawer({ row: null })}>Tạo Mới Hạn Mức</Button>
         </Stack>
 
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>Khách Hàng</TableCell>
-              <TableCell align="right">Hạn Mức Nợ Vàng Tối Đa (Lượng)</TableCell><TableCell align="right">Hạn Mức Nợ Bạc Tối Đa (Lượng)</TableCell><TableCell align="right">Hạn Mức Nợ Tiền Công Tối Đa (VNĐ)</TableCell>
-              <TableCell sx={{ pl: 4 }}>Kỳ Hạn Nợ</TableCell><TableCell>Trạng Thái Tín Dụng</TableCell><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="customer" label="Khách Hàng" />
+              <FilterHead ctl={cf} k="gold" label="Hạn Mức Nợ Vàng Tối Đa (Lượng)" align="right" /><FilterHead ctl={cf} k="silver" label="Hạn Mức Nợ Bạc Tối Đa (Lượng)" align="right" /><FilterHead ctl={cf} k="labor" label="Hạn Mức Nợ Tiền Công Tối Đa (VNĐ)" align="right" />
+              <FilterHead ctl={cf} k="term" label="Kỳ Hạn Nợ" sx={{ pl: 4 }} /><FilterHead ctl={cf} k="status" label="Trạng Thái Tín Dụng" /><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map(({ r, name, short, st, why }) => (

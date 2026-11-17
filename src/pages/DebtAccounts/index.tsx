@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { ClearFilterButton, FilterHead, useColumnFilters } from '../../components/ColumnFilter';
 import {
   Alert, Avatar, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography,
@@ -43,13 +44,17 @@ export default function DebtAccounts() {
   const byId = (id: string | null) => accounts.find((a) => a.id === id) ?? null;
   const hist = byId(histId), change = byId(changeId), del = byId(delId), tog = byId(togId);
 
+  const cf = useColumnFilters();
+  useEffect(() => setPage(1), [cf.f]);
+  const statusText = (a: DebtAccount) => (a.isActive ? 'Hoạt động' : a.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động');
   const filtered = useMemo(() => {
     const k = q.trim().toLowerCase();
     return accounts.filter((a) =>
       (material === 'ALL' || a.material === material) &&
       (status === 'ALL' || (status === 'ACTIVE' ? a.isActive : status === 'UPGRADED' ? a.version > 1 : !a.isActive)) &&
-      (!k || [a.code, a.customerCode, a.customerName, a.customerCompany, a.note].some((s) => s.toLowerCase().includes(k))));
-  }, [accounts, q, status, material]);
+      (!k || [a.code, a.customerCode, a.customerName, a.customerCompany, a.note].some((s) => s.toLowerCase().includes(k))) &&
+      cf.match({ code: a.code, customer: `${a.customerCode} ${a.customerName} ${a.customerCompany}`, channel: a.channel, material: MATERIAL_LABEL[a.material], uom: a.uom === 'LUONG' ? 'Lượng' : 'Gram', fineness: `${a.fineness.toFixed(2)}%`, status: statusText(a), entries: `${a.journalEntryCount} bút toán`, note: a.note, by: person(a.modifiedBy), at: dmyHm(a.modifiedAt) }));
+  }, [accounts, q, status, material, cf.f]);
 
   const shown = pageSize === 0 ? filtered : filtered.slice((page - 1) * pageSize, page * pageSize);
   const activeN = accounts.filter((a) => a.isActive).length;
@@ -73,14 +78,15 @@ export default function DebtAccounts() {
             <MenuItem value="SILVER">Bạc (SILVER)</MenuItem>
           </Select>
           <Box sx={{ flex: 1 }} />
+          <ClearFilterButton active={cf.active} onClick={cf.clear} />
           <Button variant="contained" startIcon={mi('add')} onClick={() => setAddOpen(true)}>Thêm Mã Đối Chiếu</Button>
         </Stack>
 
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Kênh Phân Phối</TableCell><TableCell>Loại Nguyên Liệu</TableCell><TableCell>ĐVT</TableCell>
-              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Số Bút Toán Sổ Cái</TableCell><TableCell>Ghi Chú Nghiệp Vụ</TableCell><TableCell>Người Cập Nhật Cuối</TableCell><TableCell>Thời Điểm Cập Nhật Cuối</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="channel" label="Kênh Phân Phối" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" /><FilterHead ctl={cf} k="uom" label="ĐVT" />
+              <FilterHead ctl={cf} k="fineness" label="Tuổi Đối Chiếu" align="right" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><FilterHead ctl={cf} k="entries" label="Số Bút Toán Sổ Cái" align="right" /><FilterHead ctl={cf} k="note" label="Ghi Chú Nghiệp Vụ" /><FilterHead ctl={cf} k="by" label="Người Cập Nhật Cuối" /><FilterHead ctl={cf} k="at" label="Thời Điểm Cập Nhật Cuối" /><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a) => (

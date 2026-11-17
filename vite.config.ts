@@ -6,5 +6,6 @@ export default defineConfig({
   plugins: [react()],
   base: './',
   server: { port: 5173 },
-  build: { rollupOptions: { output: { format: 'iife', inlineDynamicImports: true } } },
+  // Nguồn là app.html; index.html ở gốc là bản build một file cho GitHub Pages.
+  build: { rollupOptions: { input: 'app.html', output: { format: 'iife', inlineDynamicImports: true } } },
 });

@@ -26,7 +26,7 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
       footer={<>
         <Button variant="contained" onClick={onChangeFineness}>Đổi Tuổi Đối Chiếu (Tạo Version Mới)</Button>
       </>}>
-      <Table size="small" sx={{ bgcolor: colors.white, '& .MuiTableCell-root': { px: 1 } }}>
+      <Box sx={{ overflowX: 'auto' }}><Table size="small" sx={{ bgcolor: colors.white, '& .MuiTableCell-root': { px: 1 } }}>
         <TableHead><TableRow>
           <TableCell width={72}>Version</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Tuổi Đối Chiếu</TableCell>
           <TableCell>Thời Gian Hiệu Lực</TableCell><TableCell>Người Tạo</TableCell><TableCell>Trạng Thái</TableCell>
@@ -57,7 +57,7 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
             );
           })}
         </TableBody>
-      </Table>
+      </Table></Box>
     </FormDialog>
   );
 }

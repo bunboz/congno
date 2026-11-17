@@ -56,7 +56,7 @@ const theme = createTheme({
     MuiTableContainer: { styleOverrides: { root: { border: `1px solid ${colors.line}`, borderRadius: 4 } } },
     MuiTableCell: {
       styleOverrides: {
-        root: { padding: '10px 12px', fontSize: 14, borderBottom: `1px solid ${colors.lineSoft}` },
+        root: { padding: '10px 12px', fontSize: 14, whiteSpace: 'nowrap', borderBottom: `1px solid ${colors.lineSoft}` },
         head: { background: colors.headBg, fontWeight: 550, '&:not(:last-of-type)': { borderRight: `1px solid ${colors.lineHead}` }, borderTop: 0, borderBottom: `1px solid ${colors.line}`, whiteSpace: 'nowrap' },
       },
     },

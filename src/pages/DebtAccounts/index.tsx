@@ -78,7 +78,7 @@ export default function DebtAccounts() {
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>STT</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Tên Khách Hàng</TableCell><TableCell>Mã - Tên Công Ty</TableCell><TableCell>Kênh Phân Phối</TableCell><TableCell>Loại NL</TableCell><TableCell>ĐVT</TableCell>
+              <TableCell>STT</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Kênh Phân Phối</TableCell><TableCell>Loại NL</TableCell><TableCell>ĐVT</TableCell>
               <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
@@ -92,13 +92,13 @@ export default function DebtAccounts() {
                       <StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge>
                     </Box></Tooltip>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ maxWidth: 380 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar>
-                      <span>{a.customerName}</span>
+                      <Box sx={{ minWidth: 0 }}><span>{a.customerCode} - {a.customerName}</span>
+                        <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCompany}</Typography></Box>
                     </Stack>
                   </TableCell>
-                  <TableCell>{a.customerCode} - {a.customerCompany}</TableCell>
                   <TableCell>{a.channel}</TableCell>
                   <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>
                   <TableCell>{a.uom === 'LUONG' ? 'Lượng' : 'Gram'}</TableCell>
@@ -113,7 +113,7 @@ export default function DebtAccounts() {
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={11} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={10} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

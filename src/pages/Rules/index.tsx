@@ -60,7 +60,7 @@ export default function Rules() {
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>STT</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Tên Khách Hàng</TableCell><TableCell>Mã - Tên Công Ty</TableCell><TableCell>Loại NL</TableCell>
+              <TableCell>STT</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Loại NL</TableCell>
               <TableCell align="right">Tuổi Kho</TableCell><TableCell align="right">Tuổi Giao</TableCell><TableCell align="right">Hao Lai</TableCell>
               <TableCell>Ngày Hiệu Lực</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
@@ -69,8 +69,7 @@ export default function Rules() {
                 <TableRow hover key={r.id}>
                   <TableCell>{i + 1}</TableCell>
                   <TableCell><b style={{ color: colors.primary }}>{r.debtAccountCode}</b></TableCell>
-                  <TableCell><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><span>{c?.name ?? r.customerCode}</span></Stack></TableCell>
-                  <TableCell>{r.customerCode} - {c?.company}</TableCell>
+                  <TableCell sx={{ maxWidth: 380 }}><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><Box sx={{ minWidth: 0 }}><span>{r.customerCode} - {c?.name ?? r.customerCode}</span><Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{c?.company}</Typography></Box></Stack></TableCell>
                   <TableCell>{MATERIAL_LABEL[r.material]}</TableCell>
                   <TableCell align="right">{r.productionFineness.toFixed(2)}%</TableCell>
                   <TableCell align="right">{r.deliveryFineness.toFixed(2)}%</TableCell>
@@ -83,7 +82,7 @@ export default function Rules() {
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={11} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={10} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

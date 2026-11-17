@@ -19,16 +19,9 @@ import { colors } from '../../tokens';
 type StatusFilter = 'ALL' | 'ACTIVE' | 'UPGRADED' | 'LOCKED';
 const mi = (name: string, size = 18) => <span className="material-icons" style={{ fontSize: size }}>{name}</span>;
 
-function StatusCell({ a, onChange }: { a: DebtAccount; onChange: () => void }) {
-  const off = a.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động';
-  return (
-    <Select variant="standard" disableUnderline size="small" value={a.isActive ? 'on' : 'off'} onChange={(e) => { if ((e.target.value === 'on') !== a.isActive) onChange(); }}
-      renderValue={(v) => <Stack direction="row" alignItems="center" gap={1}><Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: v === 'on' ? colors.success : colors.error }} /><span>{v === 'on' ? 'Đang hoạt động' : off}</span></Stack>}
-      sx={{ fontSize: 14, width: 170 }}>
-      <MenuItem value="on">Đang hoạt động</MenuItem>
-      <MenuItem value="off">{off}</MenuItem>
-    </Select>
-  );
+function StatusCell({ a }: { a: DebtAccount }) {
+  if (a.isActive) return <StatusBadge tone="green">Hoạt động</StatusBadge>;
+  return <StatusBadge tone="gray">{a.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động'}</StatusBadge>;
 }
 
 export default function DebtAccounts() {
@@ -85,7 +78,7 @@ export default function DebtAccounts() {
             <TableHead><TableRow>
               <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Loại NL</TableCell>
               <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell>
-              <TableCell>Trạng Thái</TableCell><TableCell align="right" sx={{ width: 100 }}>Thao Tác</TableCell>
+              <TableCell>Trạng Thái</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a) => (
@@ -101,9 +94,11 @@ export default function DebtAccounts() {
                   <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>
                   <TableCell align="right"><b>{a.fineness.toFixed(2)}%</b></TableCell>
                   <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : colors.muted }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '0 bút toán'}</TableCell>
-                  <TableCell><StatusCell a={a} onChange={() => { toggleAccount(a.id); setToast(a.isActive ? `Đã tạm khóa mã ${a.code}` : `Đã kích hoạt mã ${a.code}`); }} /></TableCell>
+                  <TableCell><StatusCell a={a} /></TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Đổi tuổi đối chiếu" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton>
+                    <IconButton size="small" title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => { toggleAccount(a.id); setToast(a.isActive ? `Đã tạm khóa mã ${a.code}` : `Đã kích hoạt mã ${a.code}`); }}
+                      sx={{ color: a.isActive ? 'primary.main' : colors.muted }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton>
                     <IconButton size="small" title="Xóa mã" aria-label="Xóa mã" onClick={() => setDelId(a.id)}>{mi('delete')}</IconButton>
                   </Stack></TableCell>
                 </TableRow>

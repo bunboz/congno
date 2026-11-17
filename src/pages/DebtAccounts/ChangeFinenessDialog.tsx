@@ -33,18 +33,20 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
   return (
     <FormDialog open={open} onClose={close} width={600} onEnter={submit} title="Đổi Tuổi Đối Chiếu" subtitle={`${account.code} · ${account.customerName}`}
       footer={<>
-        <Button variant="outlined" onClick={close}>Hủy Bỏ</Button>
+        <Button variant="contained" color="inherit" onClick={close}>Hủy Bỏ</Button>
         <Button variant="contained" disabled={!valid} onClick={submit}>Xác Nhận Đổi Tuổi (v{account.version + 1})</Button>
       </>}>
       <Stack spacing={2.5}>
         <Stack direction="row" spacing={2} alignItems="flex-start">
           <Field size="small" label="Tuổi hiện tại" value={`${account.fineness.toFixed(2)}%`} disabled InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
           <Field size="small" autoFocus required label="Tuổi mới" value={next} onChange={(e) => setNext(e.target.value)} placeholder="VD: 62.5"
-            error={!!errs.fineness && next !== ''} helperText={next !== '' ? errs.fineness : undefined}
+            error={!!errs.fineness && next !== ''} helperText={next !== '' ? errs.fineness : 'Lớn hơn 0% và tối đa 100%'}
             InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
           <Field size="small" required type="date" label="Hiệu lực từ" value={from} onChange={(e) => setFrom(e.target.value)}
-            error={!!errs.date} helperText={errs.date} InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
+            error={!!errs.date} helperText={errs.date ?? 'Phiên bản mới áp dụng từ ngày này'} InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
         </Stack>
+
+        {!preview && <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 400 }}>Số dư hiện tại sẽ được quy đổi theo tuổi mới. Tiền công không đổi.</Typography>}
 
         {preview && (
           <Box sx={{ p: 1.5, border: '1px solid', borderColor: 'divider', borderRadius: '6px', bgcolor: colors.pageBg }}>

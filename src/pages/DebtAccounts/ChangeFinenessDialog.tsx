@@ -49,13 +49,13 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
         {preview && (
           <Box sx={{ p: 1.5, border: '1px solid', borderColor: 'divider', borderRadius: '6px', bgcolor: colors.pageBg }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
-              <Typography variant="subtitle1">Số dư sau khi quy đổi</Typography>
+              <Typography variant="subtitle1">Số dư nợ sau khi quy đổi</Typography>
               <StatusBadge tone={delta === 0 ? 'green' : 'red'}>Vàng 24K {delta === 0 ? 'được bảo toàn' : `lệch ${delta.toFixed(4)}`}</StatusBadge>
             </Stack>
             {[
-              ['Vàng đã giao', `${num(b.goldDelivered, 4)} → ${num(preview.goldDelivered, 4)} Lượng`],
-              ['Hàng chưa giao', `${num(b.goldPending, 4)} → ${num(preview.goldPending, 4)} Lượng`],
-              ['Tiền công', 'Không đổi'],
+              ['Dư nợ Vàng đã giao mới', `${num(b.goldDelivered, 4)} → ${num(preview.goldDelivered, 4)} Lượng`],
+              ['Hàng chưa giao mới', `${num(b.goldPending, 4)} → ${num(preview.goldPending, 4)} Lượng`],
+              ['Dư nợ Tiền công', 'Giữ nguyên'],
             ].map(([label, value]) => (
               <Stack key={label} direction="row" justifyContent="space-between" sx={{ py: 0.5 }}>
                 <Typography color="text.secondary">{label}</Typography>

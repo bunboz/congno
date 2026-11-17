@@ -50,9 +50,9 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
 
       {row && (
         <Stack direction="row" spacing={4} sx={{ my: 2, p: 1.5, bgcolor: colors.tint, borderRadius: '8px' }}>
-          <Box><Typography variant="caption" color="text.secondary">DƯ NỢ VÀNG HIỆN TẠI</Typography>
+          <Box><Typography variant="caption" color="text.secondary">Dư nợ Vàng</Typography>
             <Typography sx={{ fontWeight: 600, color: 'success.main' }}>{num(row.debt.gold, 4)} Lượng</Typography></Box>
-          <Box><Typography variant="caption" color="text.secondary">DƯ NỢ TIỀN CÔNG HIỆN TẠI</Typography>
+          <Box><Typography variant="caption" color="text.secondary">Dư nợ Tiền công</Typography>
             <Typography sx={{ fontWeight: 600, color: 'success.main' }}>{num(row.debt.labor)} VNĐ</Typography></Box>
         </Stack>
       )}

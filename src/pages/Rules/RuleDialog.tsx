@@ -65,7 +65,6 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
         </Stack>
         <Box sx={{ p: 1.5, bgcolor: colors.pageBg, borderRadius: '8px' }}>
           <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
-            <Typography variant="subtitle1">Thông Số Tuổi & Hao Lai</Typography>
             <Typography variant="caption" sx={{ color: loss !== null && loss < 0 ? 'error.main' : 'success.main', fontWeight: 600 }}>
               {loss === null ? 'Hao lai = Tuổi giao - Tuổi kho' : `Hao lai = Tuổi giao (${g}%) - Tuổi kho (${k}%) = ${loss > 0 ? '+' : ''}${loss.toFixed(2)}%`}
             </Typography>

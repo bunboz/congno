@@ -59,15 +59,15 @@ export default function Rules() {
           </Select>
           <Box sx={{ flex: 1 }} />
           <ClearFilterButton active={cf.active} onClick={cf.clear} />
-          <Button variant="contained" startIcon={mi('add')} onClick={() => setDlg({ rule: null })}>Thêm Quy Ước Mới</Button>
+          <Button variant="contained" startIcon={mi('add')} onClick={() => setDlg({ rule: null })}>Thêm Quy Ước Tuổi & Hao Lai</Button>
         </Stack>
 
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" />
-              <FilterHead ctl={cf} k="kho" label="Tuổi Kho" align="right" /><FilterHead ctl={cf} k="giao" label="Tuổi Giao" align="right" /><FilterHead ctl={cf} k="loss" label="Hao Lai (%)" align="right" />
-              <FilterHead ctl={cf} k="date" date label="Ngày Hiệu Lực" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><TableCell align="right" sx={{ width: 100, ...stickyEndHead }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="kho" label="Tuổi Kho Sản Xuất" align="right" /><FilterHead ctl={cf} k="giao" label="Tuổi Giao Tính Nợ" align="right" /><FilterHead ctl={cf} k="loss" label="Hao Lai (%)" align="right" />
+              <FilterHead ctl={cf} k="date" date label="Ngày Hiệu Lực" /><FilterHead ctl={cf} k="status" label="Trạng Thái Hoạt Động" /><TableCell align="right" sx={{ width: 100, ...stickyEndHead }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map(({ r, c }) => (

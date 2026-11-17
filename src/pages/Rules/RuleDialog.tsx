@@ -61,7 +61,7 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
         </Stack>
         <Stack direction="row" spacing={2}>
           <Field size="small" fullWidth required type="date" label="Ngày Bắt Đầu Hiệu Lực" value={from} onChange={(e) => setFrom(e.target.value)} InputLabelProps={{ shrink: true }} error={!!errs.date} helperText={errs.date ?? 'Kích hoạt tự động đóng bản ghi cũ'} />
-          <Field size="small" fullWidth type="date" label="Ngày Kết Thúc (Tùy chọn)" value={to} onChange={(e) => setTo(e.target.value)} InputLabelProps={{ shrink: true }} helperText="Để trống = Hiệu lực vô cực" />
+          <Field size="small" fullWidth type="date" label="Ngày Kết Thúc (Tùy chọn)" value={to} onChange={(e) => setTo(e.target.value)} InputLabelProps={{ shrink: true }} helperText="Để trống = chưa có ngày kết thúc" />
         </Stack>
         <Box sx={{ p: 1.5, bgcolor: colors.pageBg, borderRadius: '8px' }}>
           <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>

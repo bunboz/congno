@@ -1,12 +1,13 @@
 import { Fragment, useState } from 'react';
-import { Alert, Box, Button, Collapse, IconButton, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Collapse, IconButton, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import FormDialog from '../../components/FormDialog';
 import StatusBadge from '../../components/StatusBadge';
 import { dmy } from '../../lib/format';
 import type { DebtAccount, VersionRecord } from '../../lib/types';
 import { colors } from '../../tokens';
 
-const who = (s: string) => s;
+// "Tên (mã)" -> "mã - Tên", cùng kiểu cột Người tạo của ERP.
+const who = (s: string) => { const m = s.match(/^(.*) \((\d+)\)$/); return m ? `${m[2]} - ${m[1]}` : s; };
 
 export default function VersionHistoryDialog({ account, open, onClose, onChangeFineness }: { account: DebtAccount; open: boolean; onClose: () => void; onChangeFineness: () => void }) {
   const [openV, setOpenV] = useState<number | null>(account.version);
@@ -36,10 +37,10 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
           <span>Tổng số: <b>{rows.length} phiên bản</b></span>
         </Stack>
       </Box>
-      <Table size="small" sx={{ bgcolor: colors.white }}>
+      <Table size="small" sx={{ bgcolor: colors.white, '& .MuiTableCell-root': { px: 1 } }}>
         <TableHead><TableRow>
           <TableCell width={72}>Version</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Tuổi Đối Chiếu</TableCell>
-          <TableCell>Thời Gian Hiệu Lực</TableCell><TableCell>Người Tạo</TableCell><TableCell>Trạng Thái</TableCell>
+          <TableCell>Thời Gian Hiệu Lực</TableCell><TableCell>Người Tạo</TableCell><TableCell>Ngày Tạo</TableCell><TableCell>Trạng Thái</TableCell>
         </TableRow></TableHead>
         <TableBody>
           {rows.map((v) => {
@@ -54,10 +55,11 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
                   <TableCell sx={{ fontFamily: 'monospace', fontWeight: 600 }}>{v.code}</TableCell>
                   <TableCell><b>{v.fineness.toFixed(2)}%</b>{v.delta !== null && v.delta !== 0 && <> <StatusBadge tone={v.delta > 0 ? 'green' : 'red'}>{v.delta > 0 ? '+' : ''}{v.delta.toFixed(2)}%</StatusBadge></>}</TableCell>
                   <TableCell>{dmy(v.effectiveFrom)} - {v.effectiveTo ? dmy(v.effectiveTo) : 'Hiện tại (Vô cực)'}</TableCell>
-                  <TableCell>{who(v.createdBy)}<br /><Typography variant="caption" color="text.secondary">{dmy(v.createdAt)} {v.createdAt.slice(11, 16)}</Typography></TableCell>
+                  <TableCell><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, flexShrink: 0, bgcolor: colors.primary }}>{' '}</Avatar><span>{who(v.createdBy)}</span></Stack></TableCell>
+                  <TableCell>{dmy(v.createdAt)} {v.createdAt.slice(11, 16)}</TableCell>
                   <TableCell>{isCur ? currentBadge : <StatusBadge tone="gray">Ngưng hoạt động</StatusBadge>}</TableCell>
                 </TableRow>
-                <TableRow><TableCell colSpan={6} sx={{ p: 0, borderBottom: expanded ? undefined : 'none' }}>
+                <TableRow><TableCell colSpan={7} sx={{ p: 0, borderBottom: expanded ? undefined : 'none' }}>
                   <Collapse in={expanded} unmountOnExit><Box sx={{ p: 1.5 }}>
                     <Typography variant="body2"><b>Lý do thay đổi:</b> {v.note || 'Không có'}</Typography>
                     {!isCur && <Alert severity="warning" sx={{ mt: 1 }}>Khóa bất biến: Các bút toán phát sinh trong khoảng thời gian này được bảo toàn nguyên vẹn theo tuổi đối chiếu {v.fineness.toFixed(2)}%</Alert>}

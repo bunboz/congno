@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Autocomplete, Box, Button, Stack, Typography } from '@mui/material';
 import Field from '../../components/Field';
+import { customerPicker } from '../../components/customerPicker';
 import FormDrawer from '../../components/FormDrawer';
 import StatusBadge from '../../components/StatusBadge';
 import { useStore } from '../../state/store';
@@ -43,8 +44,8 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
         <Typography variant="subtitle1" sx={{ color: colors.label }}>Khách hàng <span style={{ color: colors.error }}>*</span></Typography>
         {editing && <StatusBadge tone="green">Đang chỉnh sửa cho khách hàng này</StatusBadge>}
       </Stack>
-      <Autocomplete size="small" disabled={editing} options={customers} value={customer} onChange={(_, c) => setCustomer(c)}
-        getOptionLabel={(c) => `${c.code} - ${c.company}`} renderInput={(p) => <Field {...p} autoFocus={!editing} placeholder="Chọn khách hàng" />} />
+      <Autocomplete size="small" disabled={editing} options={customers} value={customer} onChange={(_, c) => setCustomer(c)} {...customerPicker}
+        renderInput={(p) => <Field {...p} autoFocus={!editing} placeholder="Chọn khách hàng" />} />
       {editing && <Typography variant="caption" sx={{ color: 'success.main' }}>* Mặc định là khách hàng đang muốn chỉnh sửa</Typography>}
 
       {row && (

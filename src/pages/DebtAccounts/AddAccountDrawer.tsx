@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert, Autocomplete, Box, Button, MenuItem, Stack, Typography } from '@mui/material';
 import Field from '../../components/Field';
+import { customerPicker } from '../../components/customerPicker';
 import FormDrawer from '../../components/FormDrawer';
 import { useStore } from '../../state/store';
 import { canCreateAccount, defaultCode } from '../../lib/account';
@@ -47,8 +48,7 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
         <Button variant="contained" disabled={!canSave} onClick={save}>Lưu & Áp Dụng</Button>
       </>}>
       <Box sx={card}>
-        <Autocomplete size="small" options={customers} value={customer} onChange={(_, c) => pick(c, material)}
-          getOptionLabel={(c) => `${c.code} - ${c.name} (${c.company}) • [${c.channel}]`}
+        <Autocomplete size="small" options={customers} value={customer} onChange={(_, c) => pick(c, material)} {...customerPicker}
           renderInput={(p) => <Field {...p} autoFocus required label="Khách hàng" InputLabelProps={{ shrink: true }} />} />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
           <Field select size="small" fullWidth required label="Loại nguyên liệu" value={material} InputLabelProps={{ shrink: true }}

@@ -44,6 +44,8 @@ export const colors = {
   chipGreenBg: '#cde9d3',
   chipYellowFg: '#ca8a03',
   chipYellowBg: '#f4e8cd',
+  overBg: '#fddede',
+  overRow: '#fff6f6',
   chipRedFg: '#ef1515',
   chipRedBg: '#fcd0d0',
   chipBlueFg: '#1570ef',

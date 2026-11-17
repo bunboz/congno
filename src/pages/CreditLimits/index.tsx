@@ -43,10 +43,10 @@ function LimitCell({ debt, limit, digits, unit }: { debt: number; limit: number 
   const ratio = unlimited ? 0 : debt / limit;
   const color = ratio > 1 ? 'error.main' : ratio >= 0.8 ? colors.amber : 'text.secondary';
   return (
-    <Box sx={{ textAlign: 'right' }}>
+    <Box sx={{ textAlign: 'right', ...(ratio > 1 && { bgcolor: colors.overBg, borderRadius: '6px', px: 1, py: 0.5, mx: -1, border: `1px solid ${colors.error}` }) }}>
       <b>{unlimited ? 'Không giới hạn' : `${num(limit, digits)} ${unit}`}</b>
-      <Typography variant="caption" component="div" sx={{ fontWeight: ratio >= 0.8 ? 600 : 400, color }}>
-        {debt === 0 ? 'Nợ: 0' : `Nợ: ${num(debt, digits)} ${unit}${unlimited ? '' : ` (${Math.round(ratio * 100)}%)`}`}
+      <Typography variant="caption" component="div" sx={{ fontWeight: ratio >= 0.8 ? 600 : 400, color, ...(ratio > 1 && { fontWeight: 700 }) }}>
+        {ratio > 1 && <span className="material-icons" style={{ fontSize: 14, verticalAlign: '-2px', marginRight: 2 }}>error</span>}{debt === 0 ? 'Nợ: 0' : `Nợ: ${num(debt, digits)} ${unit}${unlimited ? '' : ` (${Math.round(ratio * 100)}%)`}`}
       </Typography>
     </Box>
   );
@@ -101,7 +101,7 @@ export default function CreditLimits() {
             </TableRow></TableHead>
             <TableBody>
               {shown.map(({ r, name, short, st, why }) => (
-                <TableRow hover key={r.customerCode}>
+                <TableRow hover key={r.customerCode} sx={st.startsWith('OVER') ? { bgcolor: colors.overRow, '& > td:first-of-type': { boxShadow: `inset 4px 0 0 ${colors.error}` } } : undefined}>
                   <TableCell sx={{ maxWidth: 380 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar>

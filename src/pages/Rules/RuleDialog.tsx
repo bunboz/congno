@@ -48,7 +48,7 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
   };
 
   return (
-    <FormDialog open onClose={onClose} onEnter={save} width={720} title={editing ? 'Sửa Quy Ước Tuổi Giao & Hao Lai' : 'Thêm Mới Quy Ước Tuổi Giao & Hao Lai'}
+    <FormDialog open onClose={onClose} onEnter={save} width={720} title={editing ? 'Sửa Quy Ước Tuổi & Hao Lai' : 'Thêm Quy Ước Tuổi & Hao Lai'}
       footer={<>
         <Button variant="contained" color="inherit" onClick={onClose}>Hủy Bỏ</Button>
         <Button variant="contained" disabled={!valid} onClick={save}>{editing ? 'Lưu Cập Nhật' : 'Tạo Quy Ước'}</Button>
@@ -71,7 +71,7 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
             </Typography>
           </Stack>
           <Stack direction="row" spacing={2}>
-            <Field size="small" fullWidth required label="Tuổi Kho Thực Tế (F_stock)" value={kho} onChange={(e) => setKho(e.target.value)} error={!!errs.production} helperText={errs.production ?? 'Tuổi vàng thực tế trong kho'} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
+            <Field size="small" fullWidth required label="Tuổi Kho Thực Tế (F_stock)" value={kho} onChange={(e) => setKho(e.target.value)} error={!!errs.production} helperText={errs.production} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
             <Field size="small" fullWidth required label="Tuổi Giao Ghi Nợ (F_delivery)" value={giao} onChange={(e) => setGiao(e.target.value)} error={!!errs.delivery} helperText={errs.delivery ?? 'Tuổi thỏa thuận ghi nợ khách hàng'} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
           </Stack>
         </Box>

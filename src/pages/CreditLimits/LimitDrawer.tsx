@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Autocomplete, Box, Button, Stack, Typography } from '@mui/material';
 import Field from '../../components/Field';
-import FormDialog from '../../components/FormDialog';
+import FormDrawer from '../../components/FormDrawer';
 import StatusBadge from '../../components/StatusBadge';
 import { useStore } from '../../state/store';
 import { amountInWords, validateLimits } from '../../lib/credit';
@@ -38,7 +38,7 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
   const title = editing ? `Chỉnh sửa Cấu hình Hạn Mức Tín Dụng - ${customer?.company ?? ''}` : 'Tạo Mới Cấu Hình Hạn Mức Tín Dụng';
 
   return (
-    <FormDialog open={open} onClose={onClose} onEnter={save} title={title} width={600}
+    <FormDrawer open={open} onClose={onClose} onEnter={save} title={title} width={600}
       footer={<><Button variant="contained" color="inherit" onClick={onClose}>Hủy Bỏ</Button><Button variant="contained" disabled={!valid} onClick={save}>Lưu Cấu Hình Hạn Mức</Button></>}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.5 }}>
         <Typography variant="subtitle1" sx={{ color: colors.label }}>Khách hàng: Mã - Tên công ty <span style={{ color: colors.error }}>*</span></Typography>
@@ -77,6 +77,6 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
             onChange={(e) => setNote(e.target.value.slice(0, 500))} InputLabelProps={{ shrink: true }} />
         </Stack>
       </Box>
-    </FormDialog>
+    </FormDrawer>
   );
 }

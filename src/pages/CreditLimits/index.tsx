@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Alert, Box, Button, LinearProgress, IconButton, InputAdornment, OutlinedInput, Snackbar, Stack, Tooltip,
+  Alert, Box, Button, IconButton, InputAdornment, OutlinedInput, Snackbar, Stack, Tooltip,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
@@ -46,7 +46,6 @@ function LimitCell({ debt, limit, digits, unit }: { debt: number; limit: number 
       <Typography variant="caption" component="div" sx={{ fontWeight: ratio >= 0.8 ? 600 : 400, color }}>
         {debt === 0 ? 'Nợ: 0' : `Nợ: ${num(debt, digits)} ${unit}${unlimited ? '' : ` (${Math.round(ratio * 100)}%)`}`}
       </Typography>
-      {!unlimited && <LinearProgress variant="determinate" value={Math.min(ratio * 100, 100)} sx={{ mt: 0.5, height: 4, borderRadius: 2, bgcolor: colors.lineSoft, '& .MuiLinearProgress-bar': { bgcolor: ratio > 1 ? colors.error : ratio >= 0.8 ? colors.amber : colors.primary } }} />}
     </Box>
   );
 }

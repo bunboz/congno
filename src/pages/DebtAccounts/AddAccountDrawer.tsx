@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Autocomplete, Box, Button, MenuItem, Stack, Typography } from '@mui/material';
 import Field from '../../components/Field';
-import FormDialog from '../../components/FormDialog';
+import FormDrawer from '../../components/FormDrawer';
 import { useStore } from '../../state/store';
 import { canCreateAccount, defaultCode } from '../../lib/account';
 import { parseNum, validateFineness } from '../../lib/fineness';
@@ -44,7 +44,7 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
   };
 
   return (
-    <FormDialog open={open} onClose={close} onEnter={save} width={600} title="Thêm Mã Đối Chiếu" subtitle="Khởi tạo tài khoản công nợ đối tác khách hàng"
+    <FormDrawer open={open} onClose={close} onEnter={save} title="Thêm Mã Đối Chiếu" subtitle="Khởi tạo tài khoản công nợ đối tác khách hàng"
       footer={<>
         <Button variant="contained" color="inherit" onClick={close}>Hủy bỏ</Button>
         <Button variant="contained" disabled={!canSave} onClick={save}>Lưu & Áp Dụng</Button>
@@ -55,7 +55,7 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
           getOptionLabel={(c) => `${c.code} - ${c.name} (${c.company}) • [${c.channel}]`}
           renderInput={(p) => <Field {...p} autoFocus required label="Khách hàng CRM" placeholder="Tìm mã hoặc tên khách hàng" InputLabelProps={{ shrink: true }} />} />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-          <Field select size="small" fullWidth required label="Loại nguyên liệu" value={material} helperText="Mỗi khách hàng chỉ có 1 mã cho mỗi loại" InputLabelProps={{ shrink: true }}
+          <Field select size="small" fullWidth required label="Loại nguyên liệu" value={material} InputLabelProps={{ shrink: true }}
             onChange={(e) => pick(customer, e.target.value as Material)}>
             <MenuItem value="GOLD">Vàng (GOLD)</MenuItem>
             <MenuItem value="SILVER">Bạc (SILVER)</MenuItem>
@@ -63,7 +63,7 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
           </Field>
           <Field size="small" fullWidth required label="Tuổi đối chiếu thỏa thuận" value={fineness} InputLabelProps={{ shrink: true }}
             onChange={(e) => setFineness(e.target.value)} error={!!finErr}
-            helperText={finErr ?? 'Hợp lệ: lớn hơn 0% và tối đa 100.00%'} InputProps={{ endAdornment: <span>%</span> }} />
+            helperText={finErr ?? undefined} InputProps={{ endAdornment: <span>%</span> }} />
         </Stack>
       </Box>
       <Box sx={card}>
@@ -76,6 +76,6 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
           helperText="Tối đa 500 ký tự (tùy chọn)" />
       </Box>
       {blockErr && <Alert severity="error">{blockErr}</Alert>}
-    </FormDialog>
+    </FormDrawer>
   );
 }

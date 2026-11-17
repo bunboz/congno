@@ -79,13 +79,12 @@ export default function DebtAccounts() {
         <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <TableCell>STT</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Kênh Phân Phối</TableCell><TableCell>Loại NL</TableCell><TableCell>ĐVT</TableCell>
-              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell><TableCell>Ghi Chú</TableCell><TableCell>Người Cập Nhật Cuối</TableCell><TableCell>Thời Điểm Cập Nhật Cuối</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
+              <TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Kênh Phân Phối</TableCell><TableCell>Loại NL</TableCell><TableCell>ĐVT</TableCell>
+              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell><TableCell>Ghi Chú</TableCell><TableCell>Người Cập Nhật Cuối</TableCell><TableCell>Thời Điểm Cập Nhật Cuối</TableCell><TableCell align="right" sx={{ width: 150 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
-              {shown.map((a, i) => (
+              {shown.map((a) => (
                 <TableRow hover key={a.id}>
-                  <TableCell>{(pageSize === 0 ? 0 : (page - 1) * pageSize) + i + 1}</TableCell>
                   <TableCell>
                     <Tooltip title="Xem lịch sử phiên bản"><Box component="button" type="button" aria-label={`Lịch sử phiên bản ${a.code}, hiện tại v${a.version}`} onClick={() => setHistId(a.id)}
                       sx={{ all: 'unset', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 1, '&:hover b': { textDecoration: 'underline' }, '&:focus-visible': { outline: `2px solid ${colors.primary}`, outlineOffset: 2, borderRadius: '4px' } }}>
@@ -96,7 +95,7 @@ export default function DebtAccounts() {
                   <TableCell sx={{ maxWidth: 380 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar>
-                      <Box sx={{ minWidth: 0 }}><span>{a.customerCode} - {a.customerName}</span>
+                      <Box sx={{ minWidth: 0 }}><Stack direction="row" alignItems="center" spacing={1}><span>{a.customerCode} - {a.customerName}</span>{a.version > 1 && <Typography component="a" variant="caption" onClick={() => setHistId(a.id)} sx={{ color: 'success.main', cursor: 'pointer', fontWeight: 400, '&:hover': { textDecoration: 'underline' } }}>Phiên bản v{a.version} • {a.isActive ? 'Đang hoạt động' : 'Ngưng hoạt động'}</Typography>}</Stack>
                         <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCompany}</Typography></Box>
                     </Stack>
                   </TableCell>
@@ -110,6 +109,7 @@ export default function DebtAccounts() {
                   <TableCell sx={{ whiteSpace: 'nowrap' }}><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><span>{person(a.modifiedBy)}</span></Stack></TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>{dmyHm(a.modifiedAt)}</TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
+                    <Tooltip title="Lịch sử phiên bản"><IconButton size="small" aria-label="Lịch sử phiên bản" onClick={() => setHistId(a.id)}>{mi('history')}</IconButton></Tooltip>
                     <Tooltip title="Đổi tuổi đối chiếu"><IconButton size="small" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton></Tooltip>
                     <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => setTogId(a.id)}
                       sx={{ color: a.isActive ? 'primary.main' : colors.muted }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton></Tooltip>
@@ -117,7 +117,7 @@ export default function DebtAccounts() {
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={13} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={12} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

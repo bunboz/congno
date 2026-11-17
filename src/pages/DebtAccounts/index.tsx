@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
-  Alert, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack,
+  Alert, Avatar, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
@@ -10,6 +10,7 @@ import StatusTabs from '../../components/StatusTabs';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
 import { MATERIAL_LABEL, type DebtAccount, type Material } from '../../lib/types';
+import ConfirmDialog from '../../components/ConfirmDialog';
 import AddAccountDrawer from './AddAccountDrawer';
 import ChangeFinenessDialog from './ChangeFinenessDialog';
 import VersionHistoryDialog from './VersionHistoryDialog';
@@ -35,10 +36,11 @@ export default function DebtAccounts() {
   const [histId, setHistId] = useState<string | null>(null);
   const [changeId, setChangeId] = useState<string | null>(null);
   const [delId, setDelId] = useState<string | null>(null);
+  const [togId, setTogId] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   const byId = (id: string | null) => accounts.find((a) => a.id === id) ?? null;
-  const hist = byId(histId), change = byId(changeId), del = byId(delId);
+  const hist = byId(histId), change = byId(changeId), del = byId(delId), tog = byId(togId);
 
   const filtered = useMemo(() => {
     const k = q.trim().toLowerCase();
@@ -91,8 +93,11 @@ export default function DebtAccounts() {
                     </Box></Tooltip>
                   </TableCell>
                   <TableCell sx={{ maxWidth: 380 }}>
-                    <b>{a.customerName}</b>
-                    <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCode} - {a.customerCompany}</Typography>
+                    <Stack direction="row" alignItems="center" spacing={1.5}>
+                      <Avatar sx={{ width: 32, height: 32, fontSize: 13, bgcolor: colors.primary, color: colors.onPrimary }}>{a.customerName.trim().slice(0, 1).toUpperCase()}</Avatar>
+                      <Box sx={{ minWidth: 0 }}><b>{a.customerName}</b>
+                        <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCode} - {a.customerCompany}</Typography></Box>
+                    </Stack>
                   </TableCell>
                   <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>
                   <TableCell align="right"><b>{a.fineness.toFixed(2)}%</b></TableCell>
@@ -100,7 +105,7 @@ export default function DebtAccounts() {
                   <TableCell><StatusCell a={a} /></TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
                     <Tooltip title="Đổi tuổi đối chiếu"><IconButton size="small" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton></Tooltip>
-                    <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => { toggleAccount(a.id); setToast(a.isActive ? `Đã tạm khóa mã ${a.code}` : `Đã kích hoạt mã ${a.code}`); }}
+                    <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => setTogId(a.id)}
                       sx={{ color: a.isActive ? 'primary.main' : colors.muted }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton></Tooltip>
                     <Tooltip title="Xóa mã"><IconButton size="small" aria-label="Xóa mã" onClick={() => setDelId(a.id)}>{mi('delete')}</IconButton></Tooltip>
                   </Stack></TableCell>
@@ -120,6 +125,10 @@ export default function DebtAccounts() {
       {del && <DeleteBlockedDialog account={del} open onClose={() => setDelId(null)}
         onSuspend={() => { if (del.isActive) toggleAccount(del.id); setDelId(null); setToast(`Đã chuyển mã ${del.code} sang trạng thái không hoạt động`); }}
         onDelete={() => { deleteAccount(del.id); setDelId(null); setToast(`Đã xóa mã ${del.code}`); }} />}
+      {tog && <ConfirmDialog danger={tog.isActive} title={tog.isActive ? `Tạm khóa mã ${tog.code}?` : `Kích hoạt mã ${tog.code}?`} confirmLabel={tog.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClose={() => setTogId(null)}
+        onConfirm={() => { toggleAccount(tog.id); setToast(tog.isActive ? `Đã tạm khóa mã ${tog.code}` : `Đã kích hoạt mã ${tog.code}`); setTogId(null); }}>
+        {tog.isActive ? 'Mã bị khóa sẽ không thể phát sinh giao dịch mới. Dữ liệu và bút toán cũ được giữ nguyên.' : 'Mã được kích hoạt lại sẽ tiếp tục phát sinh giao dịch.'}
+      </ConfirmDialog>}
       <Snackbar open={!!toast} autoHideDuration={4000} onClose={() => setToast(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
         <Alert severity="success" onClose={() => setToast(null)}>{toast}</Alert>
       </Snackbar>

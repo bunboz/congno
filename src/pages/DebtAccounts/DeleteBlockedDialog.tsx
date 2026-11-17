@@ -12,10 +12,10 @@ export default function DeleteBlockedDialog({ account, open, onClose, onSuspend,
     <FormDialog open={open} onClose={onClose} width={600}
       title={blocked ? 'Không thể xóa mã đối chiếu!' : `Xóa mã đối chiếu ${account.code}?`}
       footer={blocked ? <>
-        <Button variant="outlined" color="inherit" onClick={onClose}>Đóng</Button>
+        <Button variant="contained" color="inherit" onClick={onClose}>Đóng</Button>
         <Button variant="contained" onClick={onSuspend}>Chuyển sang Ngưng hoạt động</Button>
       </> : <>
-        <Button variant="outlined" color="inherit" onClick={onClose}>Hủy</Button>
+        <Button variant="contained" color="inherit" onClick={onClose}>Hủy</Button>
         <Button variant="contained" color="error" onClick={onDelete}>Xóa vĩnh viễn</Button>
       </>}>
       <Typography>{blocked

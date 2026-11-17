@@ -32,6 +32,7 @@ const theme = createTheme({
       styleOverrides: {
         root: { borderRadius: 6, minHeight: 34, padding: '6px 16px', whiteSpace: 'nowrap' },
         outlined: { borderColor: colors.inputLine, color: colors.buttonText, '&:hover': { background: colors.headBg, borderColor: colors.muted } },
+        containedInherit: { background: colors.cancelBg, color: colors.white, '&:hover': { background: colors.disabled } },
         containedPrimary: { boxShadow: '0 2px 12px rgba(0,0,0,.08)' },
       },
     },

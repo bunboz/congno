@@ -50,7 +50,7 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
   return (
     <FormDialog open onClose={onClose} onEnter={save} width={720} title={editing ? 'Sửa Quy Ước Tuổi Giao & Hao Lai' : 'Thêm Mới Quy Ước Tuổi Giao & Hao Lai'}
       footer={<>
-        <Button variant="outlined" color="inherit" onClick={onClose}>Hủy Bỏ</Button>
+        <Button variant="contained" color="inherit" onClick={onClose}>Hủy Bỏ</Button>
         <Button variant="contained" disabled={!valid} onClick={save}>{editing ? 'Lưu Cập Nhật' : 'Tạo Quy Ước'}</Button>
       </>}>
       <Stack spacing={2}>

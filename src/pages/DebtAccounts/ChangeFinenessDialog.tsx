@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Box, Button, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
+import Field from '../../components/Field';
 import FormDialog from '../../components/FormDialog';
 import StatusBadge from '../../components/StatusBadge';
 import { convertBalance, parseNum, validateUpgrade } from '../../lib/fineness';
@@ -37,11 +38,11 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
       </>}>
       <Stack spacing={2.5}>
         <Stack direction="row" spacing={2} alignItems="flex-start">
-          <TextField size="small" label="Tuổi hiện tại" value={`${account.fineness.toFixed(2)}%`} disabled InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
-          <TextField size="small" autoFocus required label="Tuổi mới" value={next} onChange={(e) => setNext(e.target.value)} placeholder="VD: 62.5"
+          <Field size="small" label="Tuổi hiện tại" value={`${account.fineness.toFixed(2)}%`} disabled InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
+          <Field size="small" autoFocus required label="Tuổi mới" value={next} onChange={(e) => setNext(e.target.value)} placeholder="VD: 62.5"
             error={!!errs.fineness && next !== ''} helperText={next !== '' ? errs.fineness : undefined}
             InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
-          <TextField size="small" required type="date" label="Hiệu lực từ" value={from} onChange={(e) => setFrom(e.target.value)}
+          <Field size="small" required type="date" label="Hiệu lực từ" value={from} onChange={(e) => setFrom(e.target.value)}
             error={!!errs.date} helperText={errs.date} InputLabelProps={{ shrink: true }} sx={{ flex: 1 }} />
         </Stack>
 
@@ -64,7 +65,7 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
           </Box>
         )}
 
-        <TextField fullWidth multiline minRows={2} required label="Lý do thay đổi" value={reason} onChange={(e) => setReason(e.target.value)} InputLabelProps={{ shrink: true }}
+        <Field fullWidth multiline minRows={2} required label="Lý do thay đổi" value={reason} onChange={(e) => setReason(e.target.value)} InputLabelProps={{ shrink: true }}
           placeholder="VD: Nâng tuổi theo Phụ lục số 12/2026/PL-SEV ngày 12/11/2026" error={!!errs.reason && reason !== ''}
           helperText={reason !== '' ? errs.reason : 'Tối thiểu 6 ký tự'} />
       </Stack>

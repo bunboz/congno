@@ -33,6 +33,8 @@ export const colors = {
   lineHead: '#eceff1',
   cardLine: '#ececec',
   inputLine: '#d1d5db',
+  inputBorder: '#b3b3b3',
+  label: '#595a5d',
   amber: '#b45309',
   logoYellow: '#f5c443',
   link: '#1570ef',

@@ -38,10 +38,18 @@ const theme = createTheme({
     MuiIconButton: { styleOverrides: { root: { color: colors.muted, '&:hover': { color: colors.primary, background: colors.hoverTint } } } },
     MuiOutlinedInput: {
       styleOverrides: {
-        root: { borderRadius: 6, fontSize: 14, '& .MuiOutlinedInput-notchedOutline': { borderColor: colors.inputLine } },
-        input: { padding: '7px 12px', height: 20 },
+        root: {
+          borderRadius: 6, fontSize: 14, color: colors.text,
+          '& .MuiOutlinedInput-notchedOutline': { borderColor: colors.inputBorder },
+          '&.Mui-disabled': { background: colors.headBg },
+          '&.MuiInputBase-multiline': { padding: 0 },
+          '&.MuiAutocomplete-inputRoot': { padding: '0 9px 0 0', '& .MuiAutocomplete-input': { padding: '6px 4px 6px 14px' } },
+        },
+        input: { padding: '6px 14px', height: 20, '&::placeholder': { color: colors.disabled, opacity: 1 } },
+        inputMultiline: { padding: '6px 14px' },
       },
     },
+    MuiFormHelperText: { styleOverrides: { root: { margin: '4px 0 0', fontSize: 12 } } },
     MuiTab: { styleOverrides: { root: { textTransform: 'none', minHeight: 34, padding: 8, fontSize: 14, fontWeight: 400, '&.Mui-selected': { fontWeight: 600, color: colors.black } } } },
     MuiTabs: { styleOverrides: { root: { minHeight: 34, borderBottom: `1px solid ${colors.line}` } } },
     MuiTableContainer: { styleOverrides: { root: { border: `1px solid ${colors.line}`, borderRadius: 4 } } },

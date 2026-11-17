@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Alert, Autocomplete, Box, Button, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Autocomplete, Box, Button, Stack, Typography } from '@mui/material';
+import Field from '../../components/Field';
 import FormDialog from '../../components/FormDialog';
 import { useStore } from '../../state/store';
 import { approvalLevel, lossRate, validateRule, type Rule } from '../../lib/rules';
@@ -56,11 +57,11 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
         <Stack direction="row" spacing={2}>
           <Autocomplete size="small" fullWidth disabled={editing} options={options} value={acc} onChange={(_, a) => setAcc(a)}
             getOptionLabel={(a) => `${a.code} - ${a.customerName} - Sổ ${MATERIAL_LABEL[a.material]} (${a.fineness}%)`}
-            renderInput={(p) => <TextField {...p} required helperText={customer ? `${customer.code} - ${customer.company} · ${MATERIAL_LABEL[material]}` : undefined} label="Số Đối Chiếu Công Nợ" InputLabelProps={{ shrink: true }} placeholder={editing ? code : 'Chọn từ danh mục số đối chiếu công nợ của khách hàng'} />} />
+            renderInput={(p) => <Field {...p} required helperText={customer ? `${customer.code} - ${customer.company} · ${MATERIAL_LABEL[material]}` : undefined} label="Số Đối Chiếu Công Nợ" InputLabelProps={{ shrink: true }} placeholder={editing ? code : 'Chọn từ danh mục số đối chiếu công nợ của khách hàng'} />} />
         </Stack>
         <Stack direction="row" spacing={2}>
-          <TextField size="small" fullWidth required type="date" label="Ngày Bắt Đầu Hiệu Lực" value={from} onChange={(e) => setFrom(e.target.value)} InputLabelProps={{ shrink: true }} error={!!errs.date} helperText={errs.date ?? 'Kích hoạt tự động đóng bản ghi cũ'} />
-          <TextField size="small" fullWidth type="date" label="Ngày Kết Thúc (Tùy chọn)" value={to} onChange={(e) => setTo(e.target.value)} InputLabelProps={{ shrink: true }} helperText="Để trống = Hiệu lực vô cực" />
+          <Field size="small" fullWidth required type="date" label="Ngày Bắt Đầu Hiệu Lực" value={from} onChange={(e) => setFrom(e.target.value)} InputLabelProps={{ shrink: true }} error={!!errs.date} helperText={errs.date ?? 'Kích hoạt tự động đóng bản ghi cũ'} />
+          <Field size="small" fullWidth type="date" label="Ngày Kết Thúc (Tùy chọn)" value={to} onChange={(e) => setTo(e.target.value)} InputLabelProps={{ shrink: true }} helperText="Để trống = Hiệu lực vô cực" />
         </Stack>
         <Box sx={{ p: 1.5, bgcolor: colors.pageBg, borderRadius: '8px' }}>
           <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
@@ -70,14 +71,14 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
             </Typography>
           </Stack>
           <Stack direction="row" spacing={2}>
-            <TextField size="small" fullWidth required label="Tuổi Kho Thực Tế (F_stock)" value={kho} onChange={(e) => setKho(e.target.value)} error={!!errs.production} helperText={errs.production} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
-            <TextField size="small" fullWidth required label="Tuổi Giao Ghi Nợ (F_delivery)" value={giao} onChange={(e) => setGiao(e.target.value)} error={!!errs.delivery} helperText={errs.delivery ?? 'Tuổi thỏa thuận ghi nợ khách hàng'} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
+            <Field size="small" fullWidth required label="Tuổi Kho Thực Tế (F_stock)" value={kho} onChange={(e) => setKho(e.target.value)} error={!!errs.production} helperText={errs.production} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
+            <Field size="small" fullWidth required label="Tuổi Giao Ghi Nợ (F_delivery)" value={giao} onChange={(e) => setGiao(e.target.value)} error={!!errs.delivery} helperText={errs.delivery ?? 'Tuổi thỏa thuận ghi nợ khách hàng'} InputProps={{ endAdornment: <span>%</span> }} InputLabelProps={{ shrink: true }} />
           </Stack>
         </Box>
         {level !== 'NONE' && (
           <Alert severity="warning">Hao lai ngược. Cần phê duyệt: {level === 'KTT' ? 'Kế toán trưởng' : 'Ban Giám Đốc (BOD / CFO)'}.</Alert>
         )}
-        <TextField fullWidth multiline minRows={2} label="Lý Do Điều Chỉnh / Căn Cứ Hợp Đồng" value={reason} onChange={(e) => setReason(e.target.value)} InputLabelProps={{ shrink: true }}
+        <Field fullWidth multiline minRows={2} label="Lý Do Điều Chỉnh / Căn Cứ Hợp Đồng" value={reason} onChange={(e) => setReason(e.target.value)} InputLabelProps={{ shrink: true }}
           required={level !== 'NONE'} error={!!errs.reason} helperText={errs.reason ?? (level !== 'NONE' ? 'Bắt buộc, tối thiểu 20 ký tự' : undefined)} placeholder="Nhập căn cứ hợp đồng hoặc lý do thay đổi quy ước..." />
         {err && <Alert severity="error">{err}</Alert>}
       </Stack>

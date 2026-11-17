@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Alert, Autocomplete, Box, Button, MenuItem, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Autocomplete, Box, Button, MenuItem, Stack, Typography } from '@mui/material';
+import Field from '../../components/Field';
 import FormDrawer from '../../components/FormDrawer';
 import { useStore } from '../../state/store';
 import { canCreateAccount, defaultCode } from '../../lib/account';
@@ -52,25 +53,25 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
         <Head>Đối tượng CRM & nguyên liệu</Head>
         <Autocomplete size="small" options={customers} value={customer} onChange={(_, c) => pick(c, material)}
           getOptionLabel={(c) => `${c.code} - ${c.name} (${c.company}) • [${c.channel}]`}
-          renderInput={(p) => <TextField {...p} autoFocus required label="Khách hàng CRM" placeholder="Tìm mã hoặc tên khách hàng" InputLabelProps={{ shrink: true }} />} />
+          renderInput={(p) => <Field {...p} autoFocus required label="Khách hàng CRM" placeholder="Tìm mã hoặc tên khách hàng" InputLabelProps={{ shrink: true }} />} />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-          <TextField select size="small" fullWidth required label="Loại nguyên liệu" value={material} InputLabelProps={{ shrink: true }}
+          <Field select size="small" fullWidth required label="Loại nguyên liệu" value={material} InputLabelProps={{ shrink: true }}
             onChange={(e) => pick(customer, e.target.value as Material)}>
             <MenuItem value="GOLD">Vàng (GOLD)</MenuItem>
             <MenuItem value="SILVER">Bạc (SILVER)</MenuItem>
             <MenuItem value="PLATINUM">Bạch Kim (PLATINUM)</MenuItem>
-          </TextField>
-          <TextField size="small" fullWidth required label="Tuổi đối chiếu thỏa thuận" value={fineness} InputLabelProps={{ shrink: true }}
+          </Field>
+          <Field size="small" fullWidth required label="Tuổi đối chiếu thỏa thuận" value={fineness} InputLabelProps={{ shrink: true }}
             onChange={(e) => setFineness(e.target.value)} error={!!finErr}
             helperText={finErr ?? 'Hợp lệ: lớn hơn 0% và tối đa 100.00%'} InputProps={{ endAdornment: <span>%</span> }} />
         </Stack>
       </Box>
       <Box sx={card}>
         <Head>Định danh mã đối chiếu</Head>
-        <TextField size="small" fullWidth required label="Mã đối chiếu công nợ" value={code} InputLabelProps={{ shrink: true }}
+        <Field size="small" fullWidth required label="Mã đối chiếu công nợ" value={code} InputLabelProps={{ shrink: true }}
           onChange={(e) => { setCode(e.target.value); setCodeTouched(true); }}
           helperText="Mặc định là Mã khách hàng (VD: 100006), có thể chỉnh sửa nếu cần" />
-        <TextField size="small" fullWidth multiline minRows={2} label="Ghi chú nghiệp vụ" value={note} sx={{ mt: 2 }} InputLabelProps={{ shrink: true }}
+        <Field size="small" fullWidth multiline minRows={2} label="Ghi chú nghiệp vụ" value={note} sx={{ mt: 2 }} InputLabelProps={{ shrink: true }}
           placeholder="Ghi chú về thỏa thuận công nợ, chính sách giao dịch, lý do tạo mã..." onChange={(e) => setNote(e.target.value.slice(0, 500))}
           helperText="Tối đa 500 ký tự (tùy chọn)" />
       </Box>

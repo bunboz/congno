@@ -88,7 +88,7 @@ export default function DebtAccounts() {
                     <Box component="button" type="button" title="Lịch sử phiên bản" aria-label={`Lịch sử phiên bản, hiện tại v${a.version}`} onClick={() => setHistId(a.id)} sx={{ all: 'unset', cursor: 'pointer', display: 'inline-flex' }}><StatusBadge tone={a.version > 1 ? 'green' : 'gray'}>v{a.version}</StatusBadge></Box>
                   </Stack></TableCell>
                   <TableCell sx={{ maxWidth: 380 }}>
-                    <Stack direction="row" alignItems="center" spacing={1}><b>{a.customerName}</b>{a.version > 1 && <Typography component="a" variant="caption" onClick={() => setHistId(a.id)} sx={{ color: 'success.main', cursor: 'pointer', fontWeight: 400, '&:hover': { textDecoration: 'underline' } }}>Phiên bản v{a.version} • {a.isActive ? 'Đang hoạt động' : 'Ngưng hoạt động'}</Typography>}</Stack>
+                    <b>{a.customerName}</b>
                     <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCode} - {a.customerCompany}</Typography>
                   </TableCell>
                   <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>

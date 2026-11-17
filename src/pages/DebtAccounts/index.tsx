@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ClearFilterButton, FilterHead, useColumnFilters } from '../../components/ColumnFilter';
 import {
-  Alert, Avatar, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack,
+  Alert, Avatar, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack, Switch,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography,
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
@@ -23,9 +23,14 @@ import { colors } from '../../tokens';
 type StatusFilter = 'ALL' | 'ACTIVE' | 'UPGRADED' | 'LOCKED';
 const mi = (name: string, size = 18) => <span className="material-icons" style={{ fontSize: size }}>{name}</span>;
 
-function StatusCell({ a }: { a: DebtAccount }) {
-  if (a.isActive) return <StatusBadge tone="green">Hoạt động</StatusBadge>;
-  return <StatusBadge tone="gray">{a.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động'}</StatusBadge>;
+// Trạng thái hoạt động: toggle của DS kèm chữ. Bật/tắt đều hỏi xác nhận (xem hộp thoại bên dưới).
+function StatusCell({ a, onToggle }: { a: DebtAccount; onToggle: () => void }) {
+  return (
+    <Stack direction="row" alignItems="center" spacing={1}>
+      <Switch checked={a.isActive} onChange={onToggle} inputProps={{ 'aria-label': a.isActive ? 'Tạm khóa' : 'Kích hoạt' }} />
+      <span>{a.isActive ? 'Đang hoạt động' : a.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động'}</span>
+    </Stack>
+  );
 }
 
 export default function DebtAccounts() {
@@ -45,7 +50,7 @@ export default function DebtAccounts() {
   const byId = (id: string | null) => accounts.find((a) => a.id === id) ?? null;
   const hist = byId(histId), change = byId(changeId), del = byId(delId), tog = byId(togId);
 
-  const statusText = (x: DebtAccount) => (x.isActive ? 'Hoạt động' : x.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động');
+  const statusText = (x: DebtAccount) => (x.isActive ? 'Đang hoạt động' : x.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động');
   const base = useMemo(() => {
     const k = q.trim().toLowerCase();
     return accounts.filter((a) =>
@@ -110,15 +115,13 @@ export default function DebtAccounts() {
                   <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>
                   <TableCell>{a.uom === 'LUONG' ? 'Lượng' : 'Gram'}</TableCell>
                   <TableCell align="right"><b>{a.fineness.toFixed(2)}%</b></TableCell>
-                  <TableCell><StatusCell a={a} /></TableCell>
+                  <TableCell><StatusCell a={a} onToggle={() => setTogId(a.id)} /></TableCell>
                   <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : colors.muted }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '0 bút toán'}</TableCell>
                   <TableCell sx={{ maxWidth: 220 }}><Typography noWrap title={a.note} sx={{ fontSize: 14 }}>{a.note || '--'}</Typography></TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><span>{person(a.modifiedBy)}</span></Stack></TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>{dmyHm(a.modifiedAt)}</TableCell>
                   <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
                     <Tooltip title="Đổi tuổi đối chiếu"><IconButton size="small" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton></Tooltip>
-                    <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => setTogId(a.id)}
-                      sx={{ color: a.isActive ? 'primary.main' : colors.muted }}>{mi(a.isActive ? 'toggle_on' : 'toggle_off', 26)}</IconButton></Tooltip>
                     <Tooltip title="Xóa mã"><IconButton size="small" aria-label="Xóa mã" onClick={() => setDelId(a.id)}>{mi('delete')}</IconButton></Tooltip>
                   </Stack></TableCell>
                 </TableRow>

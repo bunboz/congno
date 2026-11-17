@@ -9,6 +9,7 @@ import StatusBadge from '../../components/StatusBadge';
 import StatusTabs from '../../components/StatusTabs';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
+import { dmyHm, person } from '../../lib/format';
 import { MATERIAL_LABEL, type DebtAccount, type Material } from '../../lib/types';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import AddAccountDrawer from './AddAccountDrawer';
@@ -79,7 +80,7 @@ export default function DebtAccounts() {
           <Table stickyHeader>
             <TableHead><TableRow>
               <TableCell>STT</TableCell><TableCell>Mã Đối Chiếu</TableCell><TableCell>Khách Hàng</TableCell><TableCell>Kênh Phân Phối</TableCell><TableCell>Loại NL</TableCell><TableCell>ĐVT</TableCell>
-              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
+              <TableCell align="right">Tuổi Đối Chiếu</TableCell><TableCell>Trạng Thái</TableCell><TableCell align="right">Bút Toán Sổ Cái</TableCell><TableCell>Ghi Chú</TableCell><TableCell>Người Cập Nhật Cuối</TableCell><TableCell>Thời Điểm Cập Nhật Cuối</TableCell><TableCell align="right" sx={{ width: 130 }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a, i) => (
@@ -105,6 +106,9 @@ export default function DebtAccounts() {
                   <TableCell align="right"><b>{a.fineness.toFixed(2)}%</b></TableCell>
                   <TableCell><StatusCell a={a} /></TableCell>
                   <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : colors.muted }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '0 bút toán'}</TableCell>
+                  <TableCell sx={{ maxWidth: 220 }}><Typography noWrap title={a.note} sx={{ fontSize: 14 }}>{a.note || '--'}</Typography></TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><span>{person(a.modifiedBy)}</span></Stack></TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>{dmyHm(a.modifiedAt)}</TableCell>
                   <TableCell align="right"><Stack direction="row" justifyContent="flex-end">
                     <Tooltip title="Đổi tuổi đối chiếu"><IconButton size="small" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton></Tooltip>
                     <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => setTogId(a.id)}
@@ -113,7 +117,7 @@ export default function DebtAccounts() {
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={10} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={13} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

@@ -2,12 +2,10 @@ import { Fragment, useState } from 'react';
 import { Alert, Avatar, Box, Button, Collapse, IconButton, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import FormDialog from '../../components/FormDialog';
 import StatusBadge from '../../components/StatusBadge';
-import { dmy } from '../../lib/format';
+import { dmy, person } from '../../lib/format';
 import type { DebtAccount, VersionRecord } from '../../lib/types';
 import { colors } from '../../tokens';
 
-// "Tên (mã)" -> "mã - Tên", cùng kiểu cột Người tạo của ERP.
-const who = (s: string) => { const m = s.match(/^(.*) \((\d+)\)$/); return m ? `${m[2]} - ${m[1]}` : s; };
 
 export default function VersionHistoryDialog({ account, open, onClose, onChangeFineness }: { account: DebtAccount; open: boolean; onClose: () => void; onChangeFineness: () => void }) {
   const [openV, setOpenV] = useState<number | null>(account.version);
@@ -55,7 +53,7 @@ export default function VersionHistoryDialog({ account, open, onClose, onChangeF
                   <TableCell sx={{ fontFamily: 'monospace', fontWeight: 600 }}>{v.code}</TableCell>
                   <TableCell><b>{v.fineness.toFixed(2)}%</b>{v.delta !== null && v.delta !== 0 && <> <StatusBadge tone={v.delta > 0 ? 'green' : 'red'}>{v.delta > 0 ? '+' : ''}{v.delta.toFixed(2)}%</StatusBadge></>}</TableCell>
                   <TableCell>{dmy(v.effectiveFrom)} - {v.effectiveTo ? dmy(v.effectiveTo) : 'Hiện tại (Vô cực)'}</TableCell>
-                  <TableCell><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, flexShrink: 0, bgcolor: colors.primary }}>{' '}</Avatar><span>{who(v.createdBy)}</span></Stack></TableCell>
+                  <TableCell><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, flexShrink: 0, bgcolor: colors.primary }}>{' '}</Avatar><span>{person(v.createdBy)}</span></Stack></TableCell>
                   <TableCell>{dmy(v.createdAt)} {v.createdAt.slice(11, 16)}</TableCell>
                   <TableCell>{isCur ? currentBadge : <StatusBadge tone="gray">Ngưng hoạt động</StatusBadge>}</TableCell>
                 </TableRow>

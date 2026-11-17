@@ -10,12 +10,13 @@ const TONES: Record<Tone, [string, string]> = {
   blue: [colors.link, colors.chipBlueBg], gray: [colors.chipGrayFg, colors.chipGrayBg], purple: [colors.chipPurpleFg, colors.chipPurpleBg], orange: [colors.chipOrangeFg, colors.chipOrangeBg],
 };
 
-export default function StatusBadge({ tone, children }: { tone: Tone; children: ReactNode }) {
+// solid = kiểu Badge đặc của Figma DS (nền đậm, chữ trắng) cho trạng thái cần chú ý.
+export default function StatusBadge({ tone, children, solid }: { tone: Tone; children: ReactNode; solid?: boolean }) {
   const [c, bg] = TONES[tone];
   return (
     <Typography component="span" variant="caption" sx={{
       display: 'inline-flex', alignItems: 'center', gap: 0.5, px: '6px', py: '4px', borderRadius: '6px',
-      border: `1px solid ${c}`, color: c, bgcolor: bg, fontWeight: 500, whiteSpace: 'nowrap',
+      border: `1px solid ${c}`, color: solid ? colors.white : c, bgcolor: solid ? c : bg, fontWeight: 500, whiteSpace: 'nowrap',
     }}>{children}</Typography>
   );
 }

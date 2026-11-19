@@ -23,7 +23,7 @@ import { colors } from '../../tokens';
 type StatusFilter = 'ALL' | 'ACTIVE' | 'CLOSED' | 'SUPERSEDED';
 const mi = (name: string, size = 18) => <span className="material-icons" style={{ fontSize: size }}>{name}</span>;
 
-// 3 trạng thái BA: Hoạt động / Tạm khóa / Ngưng hoạt động (đã bị thay thế, không bật lại). Khóa / Kích hoạt luôn hỏi xác nhận.
+// 3 trạng thái BA: Hoạt động / Tạm khóa / Ngưng hoạt động. BA không phân biệt cách xử lý của hai trạng thái không hoạt động nên cùng một nút Khóa / Kích hoạt (luôn hỏi xác nhận).
 const VSTATUS: Record<DebtAccount['status'], [string, 'green' | 'gray']> = { ACTIVE: ['Hoạt động', 'green'], CLOSED: ['Tạm khóa', 'gray'], SUPERSEDED: ['Ngưng hoạt động', 'gray'] };
 
 export default function DebtAccounts() {
@@ -106,7 +106,7 @@ export default function DebtAccounts() {
                   <TableCell sx={{ whiteSpace: 'nowrap' }}><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><span>{person(a.modifiedBy)}</span></Stack></TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>{dmyHm(a.modifiedAt)}</TableCell>
                   <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
-                    {a.status !== 'SUPERSEDED' && <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => setTogId(a.id)}>{mi(a.isActive ? 'lock' : 'lock_open')}</IconButton></Tooltip>}
+                    <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => setTogId(a.id)}>{mi(a.isActive ? 'lock' : 'lock_open')}</IconButton></Tooltip>
                     <Tooltip title="Đổi tuổi đối chiếu"><IconButton size="small" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('balance')}</IconButton></Tooltip>
                     <Tooltip title="Xóa mã"><IconButton size="small" aria-label="Xóa mã" onClick={() => setDelId(a.id)}>{mi('delete')}</IconButton></Tooltip>
                   </Stack></TableCell>

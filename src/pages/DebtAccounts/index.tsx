@@ -7,7 +7,6 @@ import {
 import Breadcrumb from '../../components/Breadcrumb';
 import Card from '../../components/Card';
 import StatusBadge from '../../components/StatusBadge';
-import StatusTabs from '../../components/StatusTabs';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
 import { dmyHm, person } from '../../lib/format';
@@ -69,12 +68,6 @@ export default function DebtAccounts() {
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Danh mục sổ đối chiếu' }]} />
       <Card>
-        <StatusTabs value={status} onChange={(v) => { setStatus(v as StatusFilter); setPage(1); }} tabs={[
-          { value: 'ALL', label: 'Tất cả', count: accounts.length },
-          { value: 'ACTIVE', label: 'Hoạt động', count: activeN },
-          { value: 'UPGRADED', label: 'Đã nâng version', count: accounts.filter((a) => a.version > 1).length },
-          { value: 'LOCKED', label: 'Tạm khóa / Ngưng hoạt động', count: accounts.length - activeN },
-        ]} />
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />

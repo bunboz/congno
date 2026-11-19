@@ -8,7 +8,6 @@ import {
 import Breadcrumb from '../../components/Breadcrumb';
 import Card from '../../components/Card';
 import StatusBadge, { type Tone } from '../../components/StatusBadge';
-import StatusTabs from '../../components/StatusTabs';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
 import { creditStatus, type CreditStatus } from '../../lib/credit';
@@ -83,10 +82,6 @@ export default function CreditLimits() {
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Hạn Mức Tín Dụng & Kỳ Hạn Nợ' }]} />
       <Card>
-        <StatusTabs value={filter} onChange={(v) => { setFilter(v as CreditStatus | 'ALL'); setPage(1); }} tabs={[
-          { value: 'ALL', label: 'Tất cả', count: rows.length },
-          ...(Object.keys(STATUS) as CreditStatus[]).map((k) => ({ value: k, label: STATUS[k][0], count: rows.filter((x) => x.st === k).length })),
-        ]} />
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã hoặc tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />

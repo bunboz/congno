@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import TablePager from '../../components/TablePager';
 import { ClearFilterButton, FilterHead, useColumnFilters } from '../../components/ColumnFilter';
 import {
   Alert, Avatar, Box, Button, IconButton, InputAdornment, MenuItem, OutlinedInput, Select, Snackbar, Stack,
@@ -25,7 +26,6 @@ function Loss({ v }: { v: number }) {
 export default function Rules() {
   const { rules, customers, today, deleteRule } = useStore();
   const [q, setQ] = useState('');
-  const [mat, setMat] = useState<'ALL' | 'GOLD' | 'SILVER'>('ALL');
   const [st, setSt] = useState<'ALL' | 'ON' | 'OFF'>('ALL');
   const [dlg, setDlg] = useState<{ rule: Rule | null } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -35,10 +35,13 @@ export default function Rules() {
   const expired = (r: Rule) => r.effectiveTo !== null && r.effectiveTo < today;
   const rows = useMemo(() => rules.map((r) => ({ r, c: customers.find((x) => x.code === r.customerCode) })), [rules, customers]);
   const base = rows.filter(({ r, c }) =>
-    (mat === 'ALL' || r.material === mat) && (st === 'ALL' || (st === 'ON') === !expired(r)) &&
+    (st === 'ALL' || (st === 'ON') === !expired(r)) &&
     (!q.trim() || `${r.debtAccountCode} ${c?.name ?? ''} ${c?.company ?? ''} ${r.customerCode}`.toLowerCase().includes(q.trim().toLowerCase())));
   const cf = useColumnFilters(base, ({ r, c }) => ({ code: r.debtAccountCode, customer: `${r.customerCode} - ${c?.name ?? ''}`, material: MATERIAL_LABEL[r.material], kho: `${r.productionFineness.toFixed(2)}%`, giao: `${r.deliveryFineness.toFixed(2)}%`, loss: `${r.lossRate > 0 ? '+' : ''}${r.lossRate.toFixed(2)}%`, date: `${dmy(r.effectiveFrom)} → ${r.effectiveTo ? dmy(r.effectiveTo) : 'Vô thời hạn'}`, status: expired(r) ? 'Hết hiệu lực' : 'Đang áp dụng' }));
-  const shown = cf.view;
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
+  useEffect(() => setPage(1), [cf.view]);
+  const shown = pageSize === 0 ? cf.view : cf.view.slice((page - 1) * pageSize, page * pageSize);
   const active = rules.filter((r) => !expired(r)).length;
 
   return (
@@ -48,9 +51,6 @@ export default function Rules() {
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => setQ(e.target.value)}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />
-          <Select value={mat} onChange={(e) => setMat(e.target.value as typeof mat)} sx={{ minWidth: 160 }}>
-            <MenuItem value="ALL">Tất cả loại nguyên liệu</MenuItem><MenuItem value="GOLD">Vàng</MenuItem><MenuItem value="SILVER">Bạc</MenuItem>
-          </Select>
           <Box sx={{ flex: 1 }} />
           <ClearFilterButton active={cf.active} onClick={cf.clear} />
           <Button variant="contained" startIcon={mi('add')} onClick={() => setDlg({ rule: null })}>Thêm Quy Ước Tuổi & Hao Lai</Button>
@@ -84,6 +84,7 @@ export default function Rules() {
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePager page={page} pageSize={pageSize} total={cf.view.length} onPage={setPage} onPageSize={setPageSize} />
       </Card>
 
       {dlg && <RuleDialog key={dlg.rule?.id ?? 'new'} rule={dlg.rule} onClose={() => setDlg(null)} onSaved={(r) => setToast(`Đã lưu quy ước ${r.debtAccountCode}`)} />}

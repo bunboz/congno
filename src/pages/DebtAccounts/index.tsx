@@ -36,7 +36,6 @@ export default function DebtAccounts() {
   const { accounts, today, toggleAccount, deleteAccount, upgrade } = useStore();
   const [q, setQ] = useState('');
   const [status, setStatus] = useState<StatusFilter>('ALL');
-  const [material, setMaterial] = useState<Material | 'ALL'>('ALL');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [addOpen, setAddOpen] = useState(false);
@@ -53,10 +52,9 @@ export default function DebtAccounts() {
   const base = useMemo(() => {
     const k = q.trim().toLowerCase();
     return accounts.filter((a) =>
-      (material === 'ALL' || a.material === material) &&
       (status === 'ALL' || (status === 'ACTIVE' ? a.isActive : status === 'UPGRADED' ? a.version > 1 : !a.isActive)) &&
       (!k || [a.code, a.customerCode, a.customerName, a.customerCompany, a.note].some((s) => s.toLowerCase().includes(k))));
-  }, [accounts, q, status, material]);
+  }, [accounts, q, status]);
   const cf = useColumnFilters(base, (a) => ({ code: a.code, customer: `${a.customerCode} - ${a.customerName}`, channel: a.channel, material: MATERIAL_LABEL[a.material], uom: a.uom === 'LUONG' ? 'Lượng' : 'Gram', fineness: `${a.fineness.toFixed(2)}%`, status: statusText(a), entries: `${a.journalEntryCount} bút toán`, note: a.note, by: person(a.modifiedBy), at: dmyHm(a.modifiedAt) }));
   const filtered = cf.view;
   useEffect(() => setPage(1), [cf.view]);
@@ -71,11 +69,6 @@ export default function DebtAccounts() {
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />
-          <Select value={material} onChange={(e) => { setMaterial(e.target.value as Material | 'ALL'); setPage(1); }} sx={{ minWidth: 160 }}>
-            <MenuItem value="ALL">Tất cả loại nguyên liệu</MenuItem>
-            <MenuItem value="GOLD">Vàng (GOLD)</MenuItem>
-            <MenuItem value="SILVER">Bạc (SILVER)</MenuItem>
-          </Select>
           <Box sx={{ flex: 1 }} />
           <ClearFilterButton active={cf.active} onClick={cf.clear} />
           <Button variant="contained" startIcon={mi('add')} onClick={() => setAddOpen(true)}>Thêm Mã Đối Chiếu</Button>

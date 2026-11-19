@@ -99,8 +99,8 @@ export default function CreditLimits() {
           <Table stickyHeader>
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="customer" label="Khách Hàng" />
-              <FilterHead ctl={cf} k="status" label="Trạng Thái Tín Dụng" /><FilterHead ctl={cf} k="gold" label="Hạn Mức Nợ Vàng Tối Đa (Lượng)" align="right" /><FilterHead ctl={cf} k="silver" label="Hạn Mức Nợ Bạc Tối Đa (Lượng)" align="right" /><FilterHead ctl={cf} k="labor" label="Hạn Mức Nợ Tiền Công Tối Đa (VNĐ)" align="right" />
-              <FilterHead ctl={cf} k="term" label="Kỳ Hạn Nợ" sx={{ pl: 4 }} /><TableCell align="right" sx={{ width: 100, ...stickyEndHead }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="gold" label="Hạn Mức Nợ Vàng Tối Đa (Lượng)" align="right" /><FilterHead ctl={cf} k="silver" label="Hạn Mức Nợ Bạc Tối Đa (Lượng)" align="right" /><FilterHead ctl={cf} k="labor" label="Hạn Mức Nợ Tiền Công Tối Đa (VNĐ)" align="right" />
+              <FilterHead ctl={cf} k="term" label="Kỳ Hạn Nợ" sx={{ pl: 4 }} /><FilterHead ctl={cf} k="status" label="Trạng Thái Tín Dụng" /><TableCell align="right" sx={{ width: 100, ...stickyEndHead }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map(({ r, name, short, st, why }) => (
@@ -114,11 +114,11 @@ export default function CreditLimits() {
                       </Box>
                     </Stack>
                   </TableCell>
-                  <TableCell><Tooltip title={why ?? ''} arrow><span><StatusBadge tone={STATUS[st][1]} solid={st.startsWith('OVER')}>{STATUS[st][0]}</StatusBadge></span></Tooltip></TableCell>
                   <TableCell sx={overCell(r.debt.gold, r.goldLimit)}><LimitCell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
                   <TableCell sx={overCell(r.debt.silver, r.silverLimit)}><LimitCell debt={r.debt.silver} limit={r.silverLimit} digits={4} unit="Lượng" /></TableCell>
                   <TableCell sx={overCell(r.debt.labor, r.laborLimit)}><LimitCell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
                   <TableCell sx={{ pl: 4 }}>{r.termDays === 0 ? 'Thanh toán ngay' : `${r.termDays} ngày`}</TableCell>
+                  <TableCell><Tooltip title={why ?? ''} arrow><span><StatusBadge tone={STATUS[st][1]} solid={st.startsWith('OVER')}>{STATUS[st][0]}</StatusBadge></span></Tooltip></TableCell>
                   <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Chỉnh Sửa" aria-label="Chỉnh Sửa" onClick={() => setDrawer({ row: r })}>{mi('edit')}</IconButton>
                     <IconButton size="small" title="Xem Chi Tiết" aria-label="Xem Chi Tiết" onClick={() => ledger(r.customerCode)}>{mi('description')}</IconButton>

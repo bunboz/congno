@@ -71,9 +71,9 @@ export default function DebtAccounts() {
       <Card>
         <StatusTabs value={status} onChange={(v) => { setStatus(v as StatusFilter); setPage(1); }} tabs={[
           { value: 'ALL', label: 'Tất cả', count: accounts.length },
-          { value: 'ACTIVE', label: 'Đang hoạt động', count: activeN },
+          { value: 'ACTIVE', label: 'Hoạt động', count: activeN },
           { value: 'UPGRADED', label: 'Đã nâng version', count: accounts.filter((a) => a.version > 1).length },
-          { value: 'LOCKED', label: 'Tạm khóa / Ngưng', count: accounts.length - activeN },
+          { value: 'LOCKED', label: 'Tạm khóa / Ngưng hoạt động', count: accounts.length - activeN },
         ]} />
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}

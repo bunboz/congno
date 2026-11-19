@@ -22,37 +22,13 @@ const STATUS: Record<CreditStatus, [string, Tone]> = {
   SAFE: ['An Toàn', 'green'], WARNING: ['Cảnh Báo', 'yellow'], OVER_GOLD: ['Vượt HM Vàng', 'red'],
   OVER_SILVER: ['Vượt HM Bạc', 'purple'], OVER_LABOR: ['Vượt HM Công', 'orange'],
 };
-// Khách cần xử lý (vượt hạn mức, sắp đến hạn) luôn nằm trên cùng.
-const RANK: Record<CreditStatus, number> = { OVER_GOLD: 0, OVER_SILVER: 0, OVER_LABOR: 0, WARNING: 1, SAFE: 2 };
-// Lý do cụ thể đứng sau mỗi badge ngoại lệ, để người dùng không phải tự suy ra.
-function reasonOf(r: LimitRow, st: CreditStatus, today: string): string | null {
-  if (st === 'OVER_GOLD') return `Nợ vượt ${num(r.debt.gold - (r.goldLimit ?? 0), 4)} Lượng`;
-  if (st === 'OVER_SILVER') return `Nợ vượt ${num(r.debt.silver - (r.silverLimit ?? 0), 4)} Lượng`;
-  if (st === 'OVER_LABOR') return `Nợ vượt ${num(r.debt.labor - (r.laborLimit ?? 0))} đ`;
-  if (st === 'WARNING' && r.nextDueDate) {
-    const d = Math.round((Date.parse(r.nextDueDate) - Date.parse(today)) / 86400000);
-    return d < 0 ? `Quá hạn ${-d} ngày (${dmy(r.nextDueDate)})` : `Đến hạn ${dmy(r.nextDueDate)} (còn ${d} ngày)`;
-  }
-  return null;
-}
 const mi = (n: string) => <span className="material-icons" style={{ fontSize: 18 }}>{n}</span>;
 
 // Ô nào dư nợ vượt hạn mức thì tô nền đỏ nhạt (màu chip đỏ của DS).
 const overCell = (debt: number, limit: number | null) => (limit && debt > limit ? { bgcolor: colors.chipRedBg } : undefined);
 
-// Hạn mức ở trên, dư nợ ở dưới: xám khi ổn, cam khi dùng từ 80%, đỏ khi vượt.
-function LimitCell({ debt, limit, digits, unit }: { debt: number; limit: number | null; digits: number; unit: string }) {
-  const unlimited = !limit;
-  const ratio = unlimited ? 0 : debt / limit;
-  const color = ratio > 1 ? 'error.main' : ratio >= 0.8 ? colors.amber : 'text.secondary';
-  return (
-    <Box sx={{ textAlign: 'right' }}>
-      <b>{unlimited ? 'Không giới hạn' : `${num(limit, digits)} ${unit}`}</b>
-      <Typography variant="caption" component="div" sx={{ fontWeight: ratio >= 0.8 ? 600 : 400, color }}>
-        {debt === 0 ? 'Nợ: 0' : `Nợ: ${num(debt, digits)} ${unit}${unlimited ? '' : ` (${Math.round(ratio * 100)}%)`}`}
-      </Typography>
-    </Box>
-  );
+function LimitCell({ limit, digits, unit }: { limit: number | null; digits: number; unit: string }) {
+  return <Box sx={{ textAlign: 'right' }}><b>{!limit ? 'Không giới hạn' : `${num(limit, digits)} ${unit}`}</b></Box>;
 }
 
 export default function CreditLimits() {
@@ -68,8 +44,8 @@ export default function CreditLimits() {
   const rows = useMemo(() => limits.map((r) => {
     const c = customers.find((x) => x.code === r.customerCode);
     const st = creditStatus({ limits: { gold: r.goldLimit, silver: r.silverLimit, labor: r.laborLimit }, debt: r.debt, nextDueDate: r.nextDueDate, today });
-    return { r, name: c?.company ?? r.customerCode, short: c?.name ?? r.customerCode, st, why: reasonOf(r, st, today) };
-  }).sort((a, b) => RANK[a.st] - RANK[b.st]), [limits, customers, today]);
+    return { r, name: c?.company ?? r.customerCode, short: c?.name ?? r.customerCode, st };
+  }), [limits, customers, today]);
 
   const lim = (v: number | null, d: number) => (v ? num(v, d) : 'Không giới hạn');
   const base = useMemo(() => rows.filter((x) => (filter === 'ALL' || x.st === filter) && (!q.trim() || `${x.r.customerCode} ${x.name}`.toLowerCase().includes(q.trim().toLowerCase()))), [rows, filter, q]);
@@ -103,7 +79,7 @@ export default function CreditLimits() {
               <FilterHead ctl={cf} k="term" label="Kỳ Hạn Nợ" sx={{ pl: 4 }} /><FilterHead ctl={cf} k="status" label="Trạng Thái Tín Dụng" /><TableCell align="right" sx={{ width: 100, ...stickyEndHead }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
-              {shown.map(({ r, name, short, st, why }) => (
+              {shown.map(({ r, name, short, st }) => (
                 <TableRow hover key={r.customerCode}>
                   <TableCell sx={{ maxWidth: 380 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
@@ -114,11 +90,11 @@ export default function CreditLimits() {
                       </Box>
                     </Stack>
                   </TableCell>
-                  <TableCell sx={overCell(r.debt.gold, r.goldLimit)}><LimitCell debt={r.debt.gold} limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
-                  <TableCell sx={overCell(r.debt.silver, r.silverLimit)}><LimitCell debt={r.debt.silver} limit={r.silverLimit} digits={4} unit="Lượng" /></TableCell>
-                  <TableCell sx={overCell(r.debt.labor, r.laborLimit)}><LimitCell debt={r.debt.labor} limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
+                  <TableCell sx={overCell(r.debt.gold, r.goldLimit)}><LimitCell limit={r.goldLimit} digits={4} unit="Lượng" /></TableCell>
+                  <TableCell sx={overCell(r.debt.silver, r.silverLimit)}><LimitCell limit={r.silverLimit} digits={4} unit="Lượng" /></TableCell>
+                  <TableCell sx={overCell(r.debt.labor, r.laborLimit)}><LimitCell limit={r.laborLimit} digits={0} unit="đ" /></TableCell>
                   <TableCell sx={{ pl: 4 }}>{r.termDays === 0 ? 'Thanh toán ngay' : `${r.termDays} ngày`}</TableCell>
-                  <TableCell><Tooltip title={why ?? ''} arrow><span><StatusBadge tone={STATUS[st][1]} solid={st.startsWith('OVER')}>{STATUS[st][0]}</StatusBadge></span></Tooltip></TableCell>
+                  <TableCell><StatusBadge tone={STATUS[st][1]} solid={st.startsWith('OVER')}>{STATUS[st][0]}</StatusBadge></TableCell>
                   <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Chỉnh Sửa" aria-label="Chỉnh Sửa" onClick={() => setDrawer({ row: r })}>{mi('edit')}</IconButton>
                     <IconButton size="small" title="Xem Chi Tiết" aria-label="Xem Chi Tiết" onClick={() => ledger(r.customerCode)}>{mi('description')}</IconButton>

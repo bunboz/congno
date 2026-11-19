@@ -24,12 +24,12 @@ type StatusFilter = 'ALL' | 'ACTIVE' | 'CLOSED' | 'SUPERSEDED';
 const mi = (name: string, size = 18) => <span className="material-icons" style={{ fontSize: size }}>{name}</span>;
 
 // Trạng thái hoạt động: toggle của DS kèm chữ. Bật/tắt đều hỏi xác nhận (xem hộp thoại bên dưới).
-const VSTATUS: Record<DebtAccount['status'], [string, 'green' | 'gray']> = { ACTIVE: ['Đang hoạt động', 'green'], SUPERSEDED: ['Đã nâng version', 'gray'], CLOSED: ['Tạm khóa', 'gray'] };
+const VSTATUS: Record<DebtAccount['status'], [string, 'green' | 'gray']> = { ACTIVE: ['Hoạt động', 'green'], CLOSED: ['Tạm khóa', 'gray'], SUPERSEDED: ['Ngưng hoạt động', 'gray'] };
 
 function StatusCell({ a, onToggle }: { a: DebtAccount; onToggle: () => void }) {
   return (
     <Stack direction="row" alignItems="center" spacing={1}>
-      <Switch checked={a.isActive} onChange={onToggle} inputProps={{ 'aria-label': a.isActive ? 'Tạm khóa' : 'Kích hoạt' }} />
+      <Switch checked={a.isActive} disabled={a.status === 'SUPERSEDED'} onChange={onToggle} inputProps={{ 'aria-label': a.isActive ? 'Tạm khóa' : 'Kích hoạt' }} />
       <span>{VSTATUS[a.status][0]}</span>
     </Stack>
   );

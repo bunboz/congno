@@ -16,19 +16,16 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [material, setMaterial] = useState<Material>('GOLD');
   const [fineness, setFineness] = useState('61');
-  const [code, setCode] = useState('');
-  const [codeTouched, setCodeTouched] = useState(false);
   const [note, setNote] = useState('');
 
-  const pick = (c: Customer | null, m: Material) => {
-    setCustomer(c); setMaterial(m);
-    if (c && !codeTouched) setCode(defaultCode(c.code, m));
-  };
+  const pick = (c: Customer | null, m: Material) => { setCustomer(c); setMaterial(m); };
+  // BA US-01 AC-01: hệ thống tự điền mã đối chiếu (mã khách hàng, thêm hậu tố nếu là Bạc); người dùng không nhập.
+  const code = customer ? defaultCode(customer.code, material) : '';
   const finErr = validateFineness(fineness, 'đối chiếu');
   const blockErr = customer ? canCreateAccount(accounts, customer.code, material, code.trim()) : null;
   const canSave = !!customer && !finErr && !blockErr && code.trim() !== '' && note.length <= 500;
 
-  const reset = () => { setCustomer(null); setMaterial('GOLD'); setFineness('61'); setCode(''); setCodeTouched(false); setNote(''); };
+  const reset = () => { setCustomer(null); setMaterial('GOLD'); setFineness('61'); setNote(''); };
   const close = () => { reset(); onClose(); };
   const save = () => {
     if (!canSave || !customer) return;
@@ -63,8 +60,7 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
         </Stack>
       </Box>
       <Box sx={card}>
-        <Field size="small" fullWidth required label="Mã đối chiếu công nợ" value={code} InputLabelProps={{ shrink: true }}
-          onChange={(e) => { setCode(e.target.value); setCodeTouched(true); }} />
+        <Field size="small" fullWidth required label="Mã đối chiếu công nợ" value={code} disabled InputLabelProps={{ shrink: true }} />
         <Field size="small" fullWidth multiline minRows={2} label="Ghi chú nghiệp vụ" value={note} sx={{ mt: 2 }} InputLabelProps={{ shrink: true }} onChange={(e) => setNote(e.target.value.slice(0, 500))} />
       </Box>
       {blockErr && <Alert severity="error">{blockErr}</Alert>}

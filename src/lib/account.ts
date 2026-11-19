@@ -5,11 +5,11 @@ export function canCreateAccount(accounts: DebtAccount[], customerCode: string, 
   if (active) {
     return `Khách hàng ${customerCode} đã có Mã đối chiếu ${MATERIAL_LABEL[material]} đang hoạt động (${active.code}). Theo quy tắc, 1 Khách hàng - 1 Loại nguyên liệu chỉ có duy nhất 1 Mã đối chiếu. Nếu muốn thay đổi tuổi thỏa thuận, vui lòng sử dụng chức năng 'Đổi Tuổi Đối Chiếu (Nâng Version)'.`;
   }
-  if (accounts.some((a) => a.code === code)) return 'Mã đối chiếu đã tồn tại';
   return null;
 }
 
-const SUFFIX: Record<Material, string> = { GOLD: '', SILVER: '_BAC', PLATINUM: '_PT' };
+const SUFFIX: Record<Material, string> = { GOLD: '', SILVER: '_BAC', PLATINUM: '' };
+// BA chỉ nêu hậu tố _BAC cho Bạc; Bạch kim chưa có hậu tố nên giữ mã khách hàng (chờ BA).
 export const defaultCode = (customerCode: string, material: Material) => customerCode + SUFFIX[material];
 export const quickCodes = (c: string) => [c, `${c}_R`, `${c}_BAC`, `${c}_100`];
 
@@ -26,3 +26,6 @@ export function toggleActive(accounts: DebtAccount[], id: string): DebtAccount[]
 
 // BA US-01 AC-06 / BR-05: đã có bút toán thì cấm xóa.
 export const canDelete = (a: DebtAccount) => a.journalEntryCount === 0;
+
+// Từ điển US-01: mã đối chiếu unique toàn hệ thống (BA không ghi câu thông báo nên chỉ chặn lưu).
+export const codeExists = (accounts: DebtAccount[], code: string) => accounts.some((a) => a.code === code);

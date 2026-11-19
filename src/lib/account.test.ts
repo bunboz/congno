@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canCreateAccount, canDelete, defaultCode, quickCodes, toggleActive } from './account';
+import { canCreateAccount, canDelete, defaultCode, quickCodes, toggleActive, codeExists } from './account';
 import type { DebtAccount, Material } from './types';
 
 const mk = (o: Partial<DebtAccount> & { code: string; customerCode: string; material: Material }): DebtAccount => ({
@@ -23,7 +23,8 @@ describe('canCreateAccount', () => {
     expect(canCreateAccount(list, '100099', 'SILVER', '100099_R')).toBeNull();
   });
   it('mã trùng mã sẵn có bị chặn', () => {
-    expect(canCreateAccount(list, '100099', 'SILVER', '100099_BAC')).toBe('Mã đối chiếu đã tồn tại');
+    expect(codeExists(list, '100099_BAC')).toBe(true);
+    expect(codeExists(list, '100099_R')).toBe(false);
   });
 });
 
@@ -31,7 +32,7 @@ describe('mã gợi ý', () => {
   it('defaultCode theo loại', () => {
     expect(defaultCode('100006', 'GOLD')).toBe('100006');
     expect(defaultCode('100006', 'SILVER')).toBe('100006_BAC');
-    expect(defaultCode('100006', 'PLATINUM')).toBe('100006_PT');
+    expect(defaultCode('100006', 'PLATINUM')).toBe('100006');
   });
   it('quickCodes', () => {
     expect(quickCodes('100006')).toEqual(['100006', '100006_R', '100006_BAC', '100006_100']);

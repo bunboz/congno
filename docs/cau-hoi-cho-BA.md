@@ -9,7 +9,7 @@ Nguồn: 4 trang Confluence, đối chiếu với giao diện đang làm. Phân 
 3. **Câu cảnh báo chặn trùng mã**: US-01 AC-02 và US-02 AC-06 khác nhau vài chữ ("vui lòng sử dụng" / "hãy sử dụng", có hoặc không câu "Theo quy tắc..."). Dùng bản nào?
 4. **Quá hạn nợ**: từ điển có trạng thái `OVERDUE` riêng, nhưng US-03 AC-02 chỉ có 5 badge (không có "Quá hạn"). Khách quá hạn hiển thị badge nào?
 5. **Thứ tự ưu tiên badge** khi một khách vừa vượt hạn mức Vàng vừa vượt Bạc: hiển thị một badge hay nhiều?
-6. **Quy tắc thiếu**: thông báo khi mã đối chiếu trùng (từ điển ghi Unique nhưng không có câu); làm tròn khi quy đổi tuổi (đang làm tròn 4 chữ số thập phân); ngày hiệu lực của phiên bản mới có bắt buộc sau ngày hiệu lực hiện tại không.
+6. **Quy tắc thiếu**: thông báo khi mã đối chiếu trùng (từ điển ghi Unique nhưng không có câu; hiện chỉ làm mờ nút Lưu, không hiện câu); hậu tố mã cho **Bạch kim** (BA chỉ có `_BAC` cho Bạc, hiện để mã trùng mã khách hàng nên trùng mã Vàng của cùng khách và nút Lưu bị mờ); làm tròn khi quy đổi tuổi (đang làm tròn 4 chữ số thập phân); ngày hiệu lực của phiên bản mới có bắt buộc sau ngày hiệu lực hiện tại không.
 
 ## B. Luồng chưa có màn hình
 

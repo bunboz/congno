@@ -4,7 +4,7 @@ import Field from '../../components/Field';
 import { customerPicker } from '../../components/customerPicker';
 import FormDrawer from '../../components/FormDrawer';
 import { useStore } from '../../state/store';
-import { canCreateAccount, defaultCode } from '../../lib/account';
+import { canCreateAccount, codeExists, defaultCode } from '../../lib/account';
 import { parseNum, validateFineness } from '../../lib/fineness';
 import { CURRENT_USER } from '../../data/mock';
 import type { Customer, DebtAccount, Material } from '../../lib/types';
@@ -23,7 +23,7 @@ export default function AddAccountDrawer({ open, onClose, onCreated }: { open: b
   const code = customer ? defaultCode(customer.code, material) : '';
   const finErr = validateFineness(fineness, 'đối chiếu');
   const blockErr = customer ? canCreateAccount(accounts, customer.code, material, code.trim()) : null;
-  const canSave = !!customer && !finErr && !blockErr && code.trim() !== '' && note.length <= 500;
+  const canSave = !!customer && !finErr && !blockErr && code.trim() !== '' && !codeExists(accounts, code.trim()) && note.length <= 500;
 
   const reset = () => { setCustomer(null); setMaterial('GOLD'); setFineness('61'); setNote(''); };
   const close = () => { reset(); onClose(); };

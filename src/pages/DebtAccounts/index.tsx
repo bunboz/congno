@@ -24,11 +24,13 @@ type StatusFilter = 'ALL' | 'ACTIVE' | 'CLOSED' | 'SUPERSEDED';
 const mi = (name: string, size = 18) => <span className="material-icons" style={{ fontSize: size }}>{name}</span>;
 
 // Trạng thái hoạt động: toggle của DS kèm chữ. Bật/tắt đều hỏi xác nhận (xem hộp thoại bên dưới).
+const VSTATUS: Record<DebtAccount['status'], [string, 'green' | 'gray']> = { ACTIVE: ['Đang hoạt động', 'green'], SUPERSEDED: ['Đã nâng version', 'gray'], CLOSED: ['Tạm khóa', 'gray'] };
+
 function StatusCell({ a, onToggle }: { a: DebtAccount; onToggle: () => void }) {
   return (
     <Stack direction="row" alignItems="center" spacing={1}>
       <Switch checked={a.isActive} onChange={onToggle} inputProps={{ 'aria-label': a.isActive ? 'Tạm khóa' : 'Kích hoạt' }} />
-      <span>{a.isActive ? 'Đang hoạt động' : a.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động'}</span>
+      <span>{a.isActive ? 'Hoạt động' : 'Tạm khóa / Ngưng hoạt động'}</span>
     </Stack>
   );
 }
@@ -49,14 +51,13 @@ export default function DebtAccounts() {
   const byId = (id: string | null) => accounts.find((a) => a.id === id) ?? null;
   const hist = byId(histId), change = byId(changeId), del = byId(delId), tog = byId(togId);
 
-  const statusText = (x: DebtAccount) => (x.isActive ? 'Đang hoạt động' : x.status === 'CLOSED' ? 'Tạm khóa' : 'Ngưng hoạt động');
   const base = useMemo(() => {
     const k = q.trim().toLowerCase();
     return accounts.filter((a) =>
       (status === 'ALL' || (status === 'ACTIVE' ? a.isActive : status === 'CLOSED' ? !a.isActive && a.status === 'CLOSED' : !a.isActive && a.status !== 'CLOSED')) &&
       (!k || [a.code, a.customerCode, a.customerName, a.customerCompany, a.note].some((s) => s.toLowerCase().includes(k))));
   }, [accounts, q, status]);
-  const cf = useColumnFilters(base, (a) => ({ code: a.code, customer: `${a.customerCode} - ${a.customerName}`, channel: a.channel, material: MATERIAL_LABEL[a.material], uom: a.uom === 'LUONG' ? 'Lượng' : 'Gram', fineness: `${a.fineness.toFixed(2)}%`, status: statusText(a), entries: `${a.journalEntryCount} bút toán`, note: a.note, by: person(a.modifiedBy), at: dmyHm(a.modifiedAt) }));
+  const cf = useColumnFilters(base, (a) => ({ code: a.code, customer: `${a.customerCode} - ${a.customerName}`, channel: a.channel, material: MATERIAL_LABEL[a.material], uom: a.uom === 'LUONG' ? 'Lượng' : 'Gram', fineness: `${a.fineness.toFixed(2)}%`, vstatus: VSTATUS[a.status][0], status: a.isActive ? 'Hoạt động' : 'Tạm khóa / Ngưng hoạt động', entries: `${a.journalEntryCount} bút toán`, note: a.note, by: person(a.modifiedBy), at: dmyHm(a.modifiedAt) }));
   const filtered = cf.view;
   useEffect(() => setPage(1), [cf.view]);
 
@@ -85,7 +86,7 @@ export default function DebtAccounts() {
           <Table stickyHeader>
             <TableHead><TableRow>
               <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="channel" label="Kênh Phân Phối" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" /><FilterHead ctl={cf} k="uom" label="Đơn Vị Tính (ĐVT)" />
-              <FilterHead ctl={cf} k="fineness" label="Tuổi Đối Chiếu Thỏa Thuận" align="right" /><FilterHead ctl={cf} k="status" label="Trạng Thái Hoạt Động" /><FilterHead ctl={cf} k="entries" label="Số Bút Toán Sổ Cái" align="right" /><FilterHead ctl={cf} k="note" label="Ghi Chú Nghiệp Vụ" /><FilterHead ctl={cf} k="by" label="Người Cập Nhật Cuối" /><FilterHead ctl={cf} k="at" date label="Thời Điểm Cập Nhật Cuối" /><TableCell align="right" sx={{ width: 130, ...stickyEndHead }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="fineness" label="Tuổi Đối Chiếu Thỏa Thuận" align="right" /><FilterHead ctl={cf} k="vstatus" label="Trạng Thái Phiên Bản" /><FilterHead ctl={cf} k="status" label="Trạng Thái Hoạt Động" /><FilterHead ctl={cf} k="entries" label="Số Bút Toán Sổ Cái" align="right" /><FilterHead ctl={cf} k="note" label="Ghi Chú Nghiệp Vụ" /><FilterHead ctl={cf} k="by" label="Người Cập Nhật Cuối" /><FilterHead ctl={cf} k="at" date label="Thời Điểm Cập Nhật Cuối" /><TableCell align="right" sx={{ width: 130, ...stickyEndHead }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a) => (
@@ -108,6 +109,7 @@ export default function DebtAccounts() {
                   <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>
                   <TableCell>{a.uom === 'LUONG' ? 'Lượng' : 'Gram'}</TableCell>
                   <TableCell align="right"><b>{a.fineness.toFixed(2)}%</b></TableCell>
+                  <TableCell><StatusBadge tone={VSTATUS[a.status][1]}>{VSTATUS[a.status][0]}</StatusBadge></TableCell>
                   <TableCell><StatusCell a={a} onToggle={() => setTogId(a.id)} /></TableCell>
                   <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : colors.muted }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '0 bút toán'}</TableCell>
                   <TableCell sx={{ maxWidth: 220 }}><Typography noWrap title={a.note} sx={{ fontSize: 14 }}>{a.note || '--'}</Typography></TableCell>
@@ -119,7 +121,7 @@ export default function DebtAccounts() {
                   </Stack></TableCell>
                 </TableRow>
               ))}
-              {shown.length === 0 && <TableRow><TableCell colSpan={12} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
+              {shown.length === 0 && <TableRow><TableCell colSpan={13} align="center" sx={{ py: 4, color: 'text.secondary' }}>Không có dữ liệu</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>

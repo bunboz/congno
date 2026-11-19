@@ -67,7 +67,7 @@ export default function ChangeFinenessDialog({ account, today, open, onClose, on
 
         <Field fullWidth multiline minRows={2} required label="Lý do thay đổi" value={reason} onChange={(e) => setReason(e.target.value)} InputLabelProps={{ shrink: true }}
           placeholder="VD: Nâng tuổi theo Phụ lục số 12/2026/PL-SEV ngày 12/11/2026" error={!!errs.reason && reason !== ''}
-          helperText={reason !== '' ? errs.reason : 'Tối thiểu 6 ký tự'} />
+          helperText={reason !== '' ? errs.reason : undefined} />
       </Stack>
     </FormDialog>
   );

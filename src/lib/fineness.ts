@@ -1,3 +1,4 @@
+import { NO_BA_TEXT } from './format';
 import type { Balance, DebtAccount } from './types';
 
 const round = (n: number, d: number) => Math.round(n * 10 ** d) / 10 ** d;
@@ -33,9 +34,9 @@ export function validateUpgrade(cur: number, next: unknown, reason: string, effe
   const e: { fineness?: string; reason?: string; date?: string } = {};
   const f = validateFineness(next, 'đối chiếu');
   if (f) e.fineness = f;
-  else if (parseNum(next) === cur) e.fineness = 'Tuổi mới phải khác tuổi hiện tại';
-  if (reason.trim().length < 6) e.reason = 'Lý do thay đổi tối thiểu 6 ký tự';
-  if (!effectiveFrom || effectiveFrom <= curFrom) e.date = 'Ngày hiệu lực phải sau ngày hiệu lực của phiên bản hiện tại';
+  else if (parseNum(next) === cur) e.fineness = NO_BA_TEXT;
+  if (reason.trim().length < 6) e.reason = NO_BA_TEXT;
+  if (!effectiveFrom || effectiveFrom <= curFrom) e.date = NO_BA_TEXT;
   return e;
 }
 

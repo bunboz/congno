@@ -8,7 +8,6 @@ import {
 import Breadcrumb from '../../components/Breadcrumb';
 import Card from '../../components/Card';
 import StatusTabs from '../../components/StatusTabs';
-import ConfirmDialog from '../../components/ConfirmDialog';
 import StatusBadge from '../../components/StatusBadge';
 import { useStore } from '../../state/store';
 import type { Rule } from '../../lib/rules';
@@ -25,13 +24,11 @@ function Loss({ v }: { v: number }) {
 }
 
 export default function Rules() {
-  const { rules, customers, today, deleteRule } = useStore();
+  const { rules, customers, today } = useStore();
   const [q, setQ] = useState('');
   const [st, setSt] = useState<'ALL' | 'ON' | 'OFF'>('ALL');
   const [dlg, setDlg] = useState<{ rule: Rule | null } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
-  const [delId, setDelId] = useState<string | null>(null);
-  const del = rules.find((r) => r.id === delId) ?? null;
 
   const expired = (r: Rule) => r.effectiveTo !== null && r.effectiveTo < today;
   const rows = useMemo(() => rules.map((r) => ({ r, c: customers.find((x) => x.code === r.customerCode) })), [rules, customers]);
@@ -82,7 +79,6 @@ export default function Rules() {
                   <TableCell><StatusBadge tone={expired(r) ? 'gray' : 'green'}>{expired(r) ? 'Hết hiệu lực' : 'Đang áp dụng'}</StatusBadge></TableCell>
                   <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Sửa" aria-label="Sửa" onClick={() => setDlg({ rule: r })}>{mi('edit')}</IconButton>
-                    <IconButton size="small" title="Xóa" aria-label="Xóa" onClick={() => setDelId(r.id)}>{mi('delete')}</IconButton>
                   </Stack></TableCell>
                 </TableRow>
               ))}
@@ -93,11 +89,7 @@ export default function Rules() {
         <TablePager page={page} pageSize={pageSize} total={cf.view.length} onPage={setPage} onPageSize={setPageSize} />
       </Card>
 
-      {dlg && <RuleDialog key={dlg.rule?.id ?? 'new'} rule={dlg.rule} onClose={() => setDlg(null)} onSaved={(r) => setToast(`Đã lưu quy ước ${r.debtAccountCode}`)} />}
-      {del && <ConfirmDialog danger title={`Xóa quy ước ${del.debtAccountCode}?`} confirmLabel="Xóa vĩnh viễn" onClose={() => setDelId(null)}
-        onConfirm={() => { deleteRule(del.id); setToast('Đã xóa quy ước'); setDelId(null); }}>
-        Quy ước tuổi kho <b>{del.productionFineness.toFixed(2)}%</b> / tuổi giao <b>{del.deliveryFineness.toFixed(2)}%</b> của mã <b>{del.debtAccountCode}</b> sẽ bị xóa vĩnh viễn và không thể hoàn tác.
-      </ConfirmDialog>}
+      {dlg && <RuleDialog key={dlg.rule?.id ?? 'new'} rule={dlg.rule} onClose={() => setDlg(null)} onSaved={(r) => setToast('Thành công')} />}
       <Snackbar open={!!toast} autoHideDuration={4000} onClose={() => setToast(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
         <Alert severity="success" onClose={() => setToast(null)}>{toast}</Alert>
       </Snackbar>

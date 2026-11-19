@@ -67,9 +67,9 @@ export default function LimitDrawer({ open, row, onClose, onSaved }: Props) {
           </Stack>
           <Stack direction="row" spacing={2}>
           <Field size="small" fullWidth label="Hạn mức nợ Tiền công tối đa (VNĐ)" value={labor ? Number(labor).toLocaleString('en-US') : ''} onChange={(e) => setLabor(e.target.value.replace(/\D/g, ''))} error={!!errs.labor}
-            helperText={errs.labor ?? (l ? `Bằng chữ: ${amountInWords(l)}` : 'Để trống hoặc 0 = không giới hạn')} InputLabelProps={{ shrink: true }} InputProps={{ endAdornment: <span>VNĐ</span> }} />
+            helperText={errs.labor ?? (l ? `Bằng chữ: ${amountInWords(l)}` : undefined)} InputLabelProps={{ shrink: true }} InputProps={{ endAdornment: <span>VNĐ</span> }} />
           <Field size="small" fullWidth required label="Số ngày được phép nợ (Kỳ hạn thanh toán)" value={term} onChange={(e) => setTerm(e.target.value)} error={!!errs.termDays}
-            helperText={errs.termDays ?? '0 - 365 ngày (0 = thanh toán ngay)'} InputLabelProps={{ shrink: true }} InputProps={{ endAdornment: <span>Ngày</span> }} />
+            helperText={errs.termDays} InputLabelProps={{ shrink: true }} InputProps={{ endAdornment: <span>Ngày</span> }} />
           </Stack>
           <Field size="small" fullWidth multiline minRows={2} label="Ghi chú nghiệp vụ / Căn cứ phê duyệt" value={note}
             onChange={(e) => setNote(e.target.value.slice(0, 500))} InputLabelProps={{ shrink: true }} />

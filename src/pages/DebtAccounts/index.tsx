@@ -119,15 +119,15 @@ export default function DebtAccounts() {
         <TablePager page={page} pageSize={pageSize} total={filtered.length} onPage={setPage} onPageSize={setPageSize} />
       </Card>
 
-      <AddAccountDrawer open={addOpen} onClose={() => setAddOpen(false)} onCreated={(a) => setToast(`Đã tạo mã đối chiếu ${a.code}`)} />
+      <AddAccountDrawer open={addOpen} onClose={() => setAddOpen(false)} onCreated={(a) => setToast('Thành công')} />
       {hist && <VersionHistoryDialog key={hist.id + hist.version} account={hist} open onClose={() => setHistId(null)} onChangeFineness={() => { setHistId(null); setChangeId(hist.id); }} />}
       {change && <ChangeFinenessDialog key={change.id + change.version} account={change} today={today} open onClose={() => setChangeId(null)}
-        onConfirm={(next, from, reason) => { upgrade(change.id, next, from, reason); setToast(`Đã nâng mã ${change.code} lên v${change.version + 1}`); }} />}
+        onConfirm={(next, from, reason) => { upgrade(change.id, next, from, reason); setToast('Thành công'); }} />}
       {del && <DeleteBlockedDialog account={del} open onClose={() => setDelId(null)}
-        onSuspend={() => { if (del.isActive) toggleAccount(del.id); setDelId(null); setToast(`Đã chuyển mã ${del.code} sang trạng thái không hoạt động`); }}
-        onDelete={() => { deleteAccount(del.id); setDelId(null); setToast(`Đã xóa mã ${del.code}`); }} />}
+        onSuspend={() => { if (del.isActive) toggleAccount(del.id); setDelId(null); setToast('Thành công'); }}
+        onDelete={() => { deleteAccount(del.id); setDelId(null); setToast('Thành công'); }} />}
       {tog && <ConfirmDialog danger={tog.isActive} title={tog.isActive ? `Tạm khóa mã ${tog.code}?` : `Kích hoạt mã ${tog.code}?`} confirmLabel={tog.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClose={() => setTogId(null)}
-        onConfirm={() => { toggleAccount(tog.id); setToast(tog.isActive ? `Đã tạm khóa mã ${tog.code}` : `Đã kích hoạt mã ${tog.code}`); setTogId(null); }}>
+        onConfirm={() => { toggleAccount(tog.id); setToast('Thành công'); setTogId(null); }}>
         {tog.isActive ? 'Kho không thể lập phiếu xuất/nhập vào mã này cho đến khi được kích hoạt lại.' : 'Các mã khác của cùng khách hàng và loại nguyên liệu sẽ chuyển sang Ngưng hoạt động.'}
       </ConfirmDialog>}
       <Snackbar open={!!toast} autoHideDuration={4000} onClose={() => setToast(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>

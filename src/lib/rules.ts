@@ -1,3 +1,4 @@
+import { NO_BA_TEXT } from './format';
 import { dayBefore, parseNum, validateFineness } from './fineness';
 
 export interface Rule {
@@ -23,16 +24,16 @@ export function validateRule(r: { production: unknown; delivery: unknown; reason
   if (p) e.production = p;
   if (d) e.delivery = d;
   if (!p && !d && lossRate(parseNum(r.production), parseNum(r.delivery)) < 0 && r.reason.trim().length < 20) {
-    e.reason = 'Lý do duyệt ngoại lệ tối thiểu 20 ký tự';
+    e.reason = NO_BA_TEXT;
   }
-  if (!r.effectiveFrom) e.date = 'Vui lòng chọn ngày bắt đầu hiệu lực';
-  else if (r.effectiveTo && r.effectiveTo < r.effectiveFrom) e.date = 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu';
+  if (!r.effectiveFrom) e.date = NO_BA_TEXT;
+  else if (r.effectiveTo && r.effectiveTo < r.effectiveFrom) e.date = NO_BA_TEXT;
   return e;
 }
 
 // BR-02: cùng (mã đối chiếu, tuổi kho) không chồng thời gian; quy ước mở cũ tự chốt ở D-1.
 export function addRule(rules: Rule[], r: Rule): { rules: Rule[] } | { error: string } {
-  const clash = 'Quy ước bị chồng thời gian hiệu lực với quy ước hiện có';
+  const clash = NO_BA_TEXT;
   const same = (x: Rule) => x.debtAccountCode === r.debtAccountCode && x.productionFineness === r.productionFineness;
   const out = rules.map((x) => {
     if (!same(x)) return x;

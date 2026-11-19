@@ -31,3 +31,10 @@ Nguồn: 4 trang Confluence, đối chiếu với giao diện đang làm. Phân 
 16. **Toggle ở cột trạng thái**: US-01 AC-04 ghi toggle nằm ở cột Thao tác. Đang đặt toggle ngay trong cột "Trạng Thái Hoạt Động" (theo Figma DS, ERP chưa có trang nào dùng toggle trong bảng).
 17. **Hạn mức**: mô tả "tạo mới" và "chỉnh sửa" đều là Drawer; hiển thị ô vượt hạn mức (đang tô nền đỏ nhạt và chip "Vượt HM" đặc) chưa có yêu cầu trực quan từ BA.
 18. **Tên menu và breadcrumb** (BA không ghi).
+
+## E. Đã làm theo "chỉ đúng chữ BA" và đang để trống chờ BA
+
+19. **Thông báo lỗi nhập** (tuổi mới khác tuổi hiện tại, lý do tối thiểu 6/20 ký tự, ngày hiệu lực, hạn mức ≥ 0, số ngày nợ 0 đến 365, quy ước chồng thời gian): chỉ hiện ô viền đỏ và nút Lưu mờ, **không có câu chữ** vì BA chưa ghi.
+20. **Toast**: BA chỉ ghi "hiển thị Toast thông báo thành công", đang dùng đúng một chữ "Thành công" cho mọi thao tác.
+21. **Xóa quy ước tuổi giao và hao lai**: BA US-04 không có chức năng xóa nên đã **bỏ nút Xóa** ở bảng Quy ước (chỉ còn Sửa).
+22. **Hộp xác nhận khi khóa/kích hoạt mã và khi xóa mã chưa có bút toán**: BA không ghi, đang giữ để tránh thao tác nhầm, chữ trong hộp là chữ tạm. Cần BA quyết có hộp xác nhận không và câu chữ.

@@ -78,8 +78,8 @@ export default function RuleDialog({ rule, onClose, onSaved }: { rule: Rule | nu
           <Alert severity="warning">Hao lai ngược. Cần phê duyệt: {level === 'KTT' ? 'Kế toán trưởng' : 'Ban Giám Đốc (BOD / CFO)'}.</Alert>
         )}
         <Field fullWidth multiline minRows={2} label="Lý do duyệt ngoại lệ" value={reason} onChange={(e) => setReason(e.target.value)} InputLabelProps={{ shrink: true }}
-          required={level !== 'NONE'} error={!!errs.reason} helperText={errs.reason ?? (level !== 'NONE' ? 'Bắt buộc, tối thiểu 20 ký tự' : undefined)} />
-        {err && <Alert severity="error">{err}</Alert>}
+          required={level !== 'NONE'} error={!!errs.reason} helperText={errs.reason} />
+        {err?.trim() && <Alert severity="error">{err}</Alert>}
       </Stack>
     </FormDialog>
   );

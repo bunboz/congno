@@ -1,3 +1,4 @@
+import { NO_BA_TEXT } from './format';
 export type CreditStatus = 'SAFE' | 'WARNING' | 'OVER_GOLD' | 'OVER_SILVER' | 'OVER_LABOR';
 
 const over = (debt: number, limit: number | null) => !!limit && limit > 0 && debt > limit;
@@ -19,10 +20,10 @@ export function creditStatus(i: {
 export function validateLimits(l: { gold: number | null; silver: number | null; labor: number | null; termDays: number }) {
   const e: { gold?: string; silver?: string; labor?: string; termDays?: string } = {};
   const bad = (v: number | null) => v !== null && (!Number.isFinite(v) || v < 0);
-  if (bad(l.gold)) e.gold = 'Hạn mức phải lớn hơn hoặc bằng 0';
-  if (bad(l.silver)) e.silver = 'Hạn mức phải lớn hơn hoặc bằng 0';
-  if (bad(l.labor)) e.labor = 'Hạn mức phải lớn hơn hoặc bằng 0';
-  if (!Number.isInteger(l.termDays) || l.termDays < 0 || l.termDays > 365) e.termDays = 'Số ngày nợ phải là số nguyên từ 0 đến 365';
+  if (bad(l.gold)) e.gold = NO_BA_TEXT;
+  if (bad(l.silver)) e.silver = NO_BA_TEXT;
+  if (bad(l.labor)) e.labor = NO_BA_TEXT;
+  if (!Number.isInteger(l.termDays) || l.termDays < 0 || l.termDays > 365) e.termDays = NO_BA_TEXT;
   return e;
 }
 

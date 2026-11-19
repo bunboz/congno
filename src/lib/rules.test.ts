@@ -33,7 +33,7 @@ describe('validateRule', () => {
   });
   it('hao lai âm cần lý do >= 20 ký tự', () => {
     const neg = { ...ok, production: 62, delivery: 61 };
-    expect(validateRule({ ...neg, reason: 'a'.repeat(19) }).reason).toBe('Lý do duyệt ngoại lệ tối thiểu 20 ký tự');
+    expect(validateRule({ ...neg, reason: 'a'.repeat(19) }).reason).toBeTruthy();
     expect(validateRule({ ...neg, reason: 'a'.repeat(20) }).reason).toBeUndefined();
     expect(validateRule({ ...ok, reason: '' }).reason).toBeUndefined();
   });

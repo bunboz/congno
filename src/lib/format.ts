@@ -9,3 +9,5 @@ export const dmyHm = (iso: string) => {
   const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Ho_Chi_Minh', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date(iso)).map((x) => [x.type, x.value]));
   return `${p.day}/${p.month}/${p.year} ${p.hour === '24' ? '00' : p.hour}:${p.minute}`;
 };
+// BA có quy tắc chặn nhưng không ghi câu thông báo: chỉ hiện ô đỏ, không viết thêm chữ (xem docs/cau-hoi-cho-BA.md).
+export const NO_BA_TEXT = ' ';

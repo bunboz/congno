@@ -38,3 +38,7 @@ Nguồn: 4 trang Confluence, đối chiếu với giao diện đang làm. Phân 
 20. **Toast**: BA chỉ ghi "hiển thị Toast thông báo thành công", đang dùng đúng một chữ "Thành công" cho mọi thao tác.
 21. **Xóa quy ước tuổi giao và hao lai**: BA US-04 không có chức năng xóa nên đã **bỏ nút Xóa** ở bảng Quy ước (chỉ còn Sửa).
 22. **Hộp xác nhận khi khóa/kích hoạt mã và khi xóa mã chưa có bút toán**: BA không ghi, đang giữ để tránh thao tác nhầm, chữ trong hộp là chữ tạm. Cần BA quyết có hộp xác nhận không và câu chữ.
+
+## F. BA đã trả lời (chat với Nguyễn Đăng Khoa, ngày 19/11/2026)
+
+23. **Mã Ngưng hoạt động có bật lại được không?** Trả lời: **có**, "hoặc version cũ á, cho phép kích hoạt lại". Đã khớp với app đối với mã Ngưng hoạt động. **Còn mở:** kích hoạt lại **version cũ** hoạt động thế nào (phiên bản hiện tại có bị ngưng không; số dư và tuổi có quy đổi lại không; có sinh version mới không) và nút nằm ở đâu (popup Lịch sử phiên bản?). Đề nghị BA bổ sung vào Confluence vì câu trả lời mới chỉ qua chat.

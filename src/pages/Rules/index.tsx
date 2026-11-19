@@ -38,7 +38,7 @@ export default function Rules() {
   const base = rows.filter(({ r, c }) =>
     (mat === 'ALL' || r.material === mat) && (st === 'ALL' || (st === 'ON') === !expired(r)) &&
     (!q.trim() || `${r.debtAccountCode} ${c?.name ?? ''} ${c?.company ?? ''} ${r.customerCode}`.toLowerCase().includes(q.trim().toLowerCase())));
-  const cf = useColumnFilters(base, ({ r, c }) => ({ code: r.debtAccountCode, customer: `${r.customerCode} - ${c?.name ?? ''}`, material: MATERIAL_LABEL[r.material], kho: `${r.productionFineness.toFixed(2)}%`, giao: `${r.deliveryFineness.toFixed(2)}%`, loss: `${r.lossRate > 0 ? '+' : ''}${r.lossRate.toFixed(2)}%`, date: `${dmy(r.effectiveFrom)} → ${r.effectiveTo ? dmy(r.effectiveTo) : 'Vô thời hạn'}`, status: expired(r) ? 'Hết hiệu lực' : 'Hiệu lực' }));
+  const cf = useColumnFilters(base, ({ r, c }) => ({ code: r.debtAccountCode, customer: `${r.customerCode} - ${c?.name ?? ''}`, material: MATERIAL_LABEL[r.material], kho: `${r.productionFineness.toFixed(2)}%`, giao: `${r.deliveryFineness.toFixed(2)}%`, loss: `${r.lossRate > 0 ? '+' : ''}${r.lossRate.toFixed(2)}%`, date: `${dmy(r.effectiveFrom)} → ${r.effectiveTo ? dmy(r.effectiveTo) : 'Vô thời hạn'}`, status: expired(r) ? 'Hết hiệu lực' : 'Đang áp dụng' }));
   const shown = cf.view;
   const active = rules.filter((r) => !expired(r)).length;
 
@@ -48,7 +48,7 @@ export default function Rules() {
       <Card>
         <StatusTabs value={st} onChange={(v) => setSt(v as typeof st)} tabs={[
           { value: 'ALL', label: 'Tất cả', count: rules.length },
-          { value: 'ON', label: 'Hiệu lực', count: active },
+          { value: 'ON', label: 'Đang áp dụng', count: active },
           { value: 'OFF', label: 'Hết hiệu lực', count: rules.length - active },
         ]} />
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
@@ -79,7 +79,7 @@ export default function Rules() {
                   <TableCell align="right">{r.deliveryFineness.toFixed(2)}%</TableCell>
                   <TableCell align="right"><Loss v={r.lossRate} /></TableCell>
                   <TableCell>{dmy(r.effectiveFrom)}{r.effectiveTo ? ` → ${dmy(r.effectiveTo)}` : ' → Vô thời hạn'}</TableCell>
-                  <TableCell><StatusBadge tone={expired(r) ? 'gray' : 'green'}>{expired(r) ? 'Hết hiệu lực' : 'Hiệu lực'}</StatusBadge></TableCell>
+                  <TableCell><StatusBadge tone={expired(r) ? 'gray' : 'green'}>{expired(r) ? 'Hết hiệu lực' : 'Đang áp dụng'}</StatusBadge></TableCell>
                   <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Sửa" aria-label="Sửa" onClick={() => setDlg({ rule: r })}>{mi('edit')}</IconButton>
                     <IconButton size="small" title="Xóa" aria-label="Xóa" onClick={() => setDelId(r.id)}>{mi('delete')}</IconButton>

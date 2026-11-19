@@ -142,7 +142,7 @@ export default function DebtAccounts() {
         onDelete={() => { deleteAccount(del.id); setDelId(null); setToast(`Đã xóa mã ${del.code}`); }} />}
       {tog && <ConfirmDialog danger={tog.isActive} title={tog.isActive ? `Tạm khóa mã ${tog.code}?` : `Kích hoạt mã ${tog.code}?`} confirmLabel={tog.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClose={() => setTogId(null)}
         onConfirm={() => { toggleAccount(tog.id); setToast(tog.isActive ? `Đã tạm khóa mã ${tog.code}` : `Đã kích hoạt mã ${tog.code}`); setTogId(null); }}>
-        {tog.isActive ? 'Mã bị khóa sẽ không thể phát sinh giao dịch mới. Dữ liệu và bút toán cũ được giữ nguyên.' : 'Mã được kích hoạt lại sẽ tiếp tục phát sinh giao dịch.'}
+        {tog.isActive ? 'Kho không thể lập phiếu xuất/nhập vào mã này cho đến khi được kích hoạt lại.' : 'Các mã khác của cùng khách hàng và loại nguyên liệu sẽ chuyển sang Ngưng hoạt động.'}
       </ConfirmDialog>}
       <Snackbar open={!!toast} autoHideDuration={4000} onClose={() => setToast(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
         <Alert severity="success" onClose={() => setToast(null)}>{toast}</Alert>

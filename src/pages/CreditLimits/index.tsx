@@ -120,8 +120,8 @@ export default function CreditLimits() {
                   <TableCell sx={{ pl: 4 }}>{r.termDays === 0 ? 'Thanh toán ngay' : `${r.termDays} ngày`}</TableCell>
                   <TableCell><Tooltip title={why ?? ''} arrow><span><StatusBadge tone={STATUS[st][1]} solid={st.startsWith('OVER')}>{STATUS[st][0]}</StatusBadge></span></Tooltip></TableCell>
                   <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
-                    <IconButton size="small" title="Chỉnh sửa" aria-label="Chỉnh sửa" onClick={() => setDrawer({ row: r })}>{mi('edit')}</IconButton>
-                    <IconButton size="small" title="Xem chi tiết" aria-label="Xem chi tiết" onClick={() => ledger(r.customerCode)}>{mi('description')}</IconButton>
+                    <IconButton size="small" title="Chỉnh Sửa" aria-label="Chỉnh Sửa" onClick={() => setDrawer({ row: r })}>{mi('edit')}</IconButton>
+                    <IconButton size="small" title="Xem Chi Tiết" aria-label="Xem Chi Tiết" onClick={() => ledger(r.customerCode)}>{mi('description')}</IconButton>
                   </Stack></TableCell>
                 </TableRow>
               ))}

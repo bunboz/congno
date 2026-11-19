@@ -76,8 +76,8 @@ export default function DebtAccounts() {
         <TableContainer sx={{ flex: '0 1 auto', minHeight: 0 }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="channel" label="Kênh Phân Phối" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" /><FilterHead ctl={cf} k="uom" label="Đơn Vị Tính (ĐVT)" />
-              <FilterHead ctl={cf} k="fineness" label="Tuổi Đối Chiếu Thỏa Thuận" align="right" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><FilterHead ctl={cf} k="entries" label="Số Bút Toán Sổ Cái" align="right" /><FilterHead ctl={cf} k="note" label="Ghi Chú Nghiệp Vụ" /><FilterHead ctl={cf} k="by" label="Người Cập Nhật Cuối" /><FilterHead ctl={cf} k="at" date label="Thời Điểm Cập Nhật Cuối" /><TableCell align="right" sx={{ width: 130, ...stickyEndHead }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="status" label="Trạng Thái" /><FilterHead ctl={cf} k="channel" label="Kênh Phân Phối" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" /><FilterHead ctl={cf} k="uom" label="Đơn Vị Tính (ĐVT)" />
+              <FilterHead ctl={cf} k="fineness" label="Tuổi Đối Chiếu Thỏa Thuận" align="right" /><FilterHead ctl={cf} k="entries" label="Số Bút Toán Sổ Cái" align="right" /><FilterHead ctl={cf} k="note" label="Ghi Chú Nghiệp Vụ" /><FilterHead ctl={cf} k="by" label="Người Cập Nhật Cuối" /><FilterHead ctl={cf} k="at" date label="Thời Điểm Cập Nhật Cuối" /><TableCell align="right" sx={{ width: 130, ...stickyEndHead }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map((a) => (
@@ -96,11 +96,11 @@ export default function DebtAccounts() {
                         <Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{a.customerCompany}</Typography></Box>
                     </Stack>
                   </TableCell>
+                  <TableCell><StatusBadge tone={VSTATUS[a.status][1]}>{VSTATUS[a.status][0]}</StatusBadge></TableCell>
                   <TableCell>{a.channel}</TableCell>
                   <TableCell>{MATERIAL_LABEL[a.material]}</TableCell>
                   <TableCell>{a.uom === 'LUONG' ? 'Lượng' : 'Gram'}</TableCell>
                   <TableCell align="right"><b>{a.fineness.toFixed(2)}%</b></TableCell>
-                  <TableCell><StatusBadge tone={VSTATUS[a.status][1]}>{VSTATUS[a.status][0]}</StatusBadge></TableCell>
                   <TableCell align="right" sx={{ color: a.journalEntryCount > 0 ? 'text.primary' : colors.muted }}>{a.journalEntryCount > 0 ? `${a.journalEntryCount} bút toán` : '0 bút toán'}</TableCell>
                   <TableCell sx={{ maxWidth: 220 }}><Typography noWrap title={a.note} sx={{ fontSize: 14 }}>{a.note || '--'}</Typography></TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><span>{person(a.modifiedBy)}</span></Stack></TableCell>

@@ -62,21 +62,21 @@ export default function Rules() {
         <TableContainer sx={{ flex: '0 1 auto', minHeight: 0 }}>
           <Table stickyHeader>
             <TableHead><TableRow>
-              <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" />
+              <FilterHead ctl={cf} k="code" label="Mã Đối Chiếu" /><FilterHead ctl={cf} k="customer" label="Khách Hàng" /><FilterHead ctl={cf} k="status" label="Trạng Thái Hoạt Động" /><FilterHead ctl={cf} k="material" label="Loại Nguyên Liệu" />
               <FilterHead ctl={cf} k="kho" label="Tuổi Kho Sản Xuất" align="right" /><FilterHead ctl={cf} k="giao" label="Tuổi Giao Tính Nợ" align="right" /><FilterHead ctl={cf} k="loss" label="Hao Lai (%)" align="right" />
-              <FilterHead ctl={cf} k="date" date label="Ngày Hiệu Lực" /><FilterHead ctl={cf} k="status" label="Trạng Thái Hoạt Động" /><TableCell align="right" sx={{ width: 100, ...stickyEndHead }}>Thao Tác</TableCell>
+              <FilterHead ctl={cf} k="date" date label="Ngày Hiệu Lực" /><TableCell align="right" sx={{ width: 100, ...stickyEndHead }}>Thao Tác</TableCell>
             </TableRow></TableHead>
             <TableBody>
               {shown.map(({ r, c }) => (
                 <TableRow hover key={r.id}>
                   <TableCell><b style={{ color: colors.primary }}>{r.debtAccountCode}</b></TableCell>
                   <TableCell sx={{ maxWidth: 380 }}><Stack direction="row" alignItems="center" spacing={1}><Avatar sx={{ width: 26, height: 26, bgcolor: colors.primary }}>{' '}</Avatar><Box sx={{ minWidth: 0 }}><span>{r.customerCode} - {c?.name ?? r.customerCode}</span><Typography variant="caption" component="div" noWrap color="text.secondary" sx={{ fontWeight: 400 }}>{c?.company}</Typography></Box></Stack></TableCell>
+                  <TableCell><StatusBadge tone={expired(r) ? 'gray' : 'green'}>{expired(r) ? 'Hết hiệu lực' : 'Đang áp dụng'}</StatusBadge></TableCell>
                   <TableCell>{MATERIAL_LABEL[r.material]}</TableCell>
                   <TableCell align="right">{r.productionFineness.toFixed(2)}%</TableCell>
                   <TableCell align="right">{r.deliveryFineness.toFixed(2)}%</TableCell>
                   <TableCell align="right"><Loss v={r.lossRate} /></TableCell>
                   <TableCell>{dmy(r.effectiveFrom)}{r.effectiveTo ? ` → ${dmy(r.effectiveTo)}` : ' → Vô thời hạn'}</TableCell>
-                  <TableCell><StatusBadge tone={expired(r) ? 'gray' : 'green'}>{expired(r) ? 'Hết hiệu lực' : 'Đang áp dụng'}</StatusBadge></TableCell>
                   <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
                     <IconButton size="small" title="Sửa" aria-label="Sửa" onClick={() => setDlg({ rule: r })}>{mi('edit')}</IconButton>
                   </Stack></TableCell>

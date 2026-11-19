@@ -107,7 +107,7 @@ export default function DebtAccounts() {
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>{dmyHm(a.modifiedAt)}</TableCell>
                   <TableCell align="right" sx={stickyEndCell}><Stack direction="row" justifyContent="flex-end">
                     {a.status !== 'SUPERSEDED' && <Tooltip title={a.isActive ? 'Tạm khóa' : 'Kích hoạt'}><IconButton size="small" aria-label={a.isActive ? 'Tạm khóa' : 'Kích hoạt'} onClick={() => setTogId(a.id)}>{mi(a.isActive ? 'lock' : 'lock_open')}</IconButton></Tooltip>}
-                    <Tooltip title="Đổi tuổi đối chiếu"><IconButton size="small" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('edit')}</IconButton></Tooltip>
+                    <Tooltip title="Đổi tuổi đối chiếu"><IconButton size="small" aria-label="Đổi tuổi đối chiếu" onClick={() => setChangeId(a.id)}>{mi('balance')}</IconButton></Tooltip>
                     <Tooltip title="Xóa mã"><IconButton size="small" aria-label="Xóa mã" onClick={() => setDelId(a.id)}>{mi('delete')}</IconButton></Tooltip>
                   </Stack></TableCell>
                 </TableRow>

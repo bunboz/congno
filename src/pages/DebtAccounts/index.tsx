@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
 import Card from '../../components/Card';
+import StatusTabs from '../../components/StatusTabs';
 import StatusBadge from '../../components/StatusBadge';
 import TablePager from '../../components/TablePager';
 import { useStore } from '../../state/store';
@@ -19,7 +20,7 @@ import DeleteBlockedDialog from './DeleteBlockedDialog';
 import { stickyEndCell, stickyEndHead } from '../../components/stickyEnd';
 import { colors } from '../../tokens';
 
-type StatusFilter = 'ALL' | 'ACTIVE' | 'UPGRADED' | 'LOCKED';
+type StatusFilter = 'ALL' | 'ACTIVE' | 'CLOSED' | 'SUPERSEDED';
 const mi = (name: string, size = 18) => <span className="material-icons" style={{ fontSize: size }}>{name}</span>;
 
 // Trạng thái hoạt động: toggle của DS kèm chữ. Bật/tắt đều hỏi xác nhận (xem hộp thoại bên dưới).
@@ -52,7 +53,7 @@ export default function DebtAccounts() {
   const base = useMemo(() => {
     const k = q.trim().toLowerCase();
     return accounts.filter((a) =>
-      (status === 'ALL' || (status === 'ACTIVE' ? a.isActive : status === 'UPGRADED' ? a.version > 1 : !a.isActive)) &&
+      (status === 'ALL' || (status === 'ACTIVE' ? a.isActive : status === 'CLOSED' ? !a.isActive && a.status === 'CLOSED' : !a.isActive && a.status !== 'CLOSED')) &&
       (!k || [a.code, a.customerCode, a.customerName, a.customerCompany, a.note].some((s) => s.toLowerCase().includes(k))));
   }, [accounts, q, status]);
   const cf = useColumnFilters(base, (a) => ({ code: a.code, customer: `${a.customerCode} - ${a.customerName}`, channel: a.channel, material: MATERIAL_LABEL[a.material], uom: a.uom === 'LUONG' ? 'Lượng' : 'Gram', fineness: `${a.fineness.toFixed(2)}%`, status: statusText(a), entries: `${a.journalEntryCount} bút toán`, note: a.note, by: person(a.modifiedBy), at: dmyHm(a.modifiedAt) }));
@@ -66,6 +67,12 @@ export default function DebtAccounts() {
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Danh mục sổ đối chiếu' }]} />
       <Card>
+        <StatusTabs value={status} onChange={(v) => { setStatus(v as StatusFilter); setPage(1); }} tabs={[
+          { value: 'ALL', label: 'Tất cả', count: accounts.length },
+          { value: 'ACTIVE', label: 'Hoạt động', count: accounts.filter((a) => a.isActive).length },
+          { value: 'CLOSED', label: 'Tạm khóa', count: accounts.filter((a) => !a.isActive && a.status === 'CLOSED').length },
+          { value: 'SUPERSEDED', label: 'Ngưng hoạt động', count: accounts.filter((a) => !a.isActive && a.status !== 'CLOSED').length },
+        ]} />
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />

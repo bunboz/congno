@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import Breadcrumb from '../../components/Breadcrumb';
 import Card from '../../components/Card';
+import StatusTabs from '../../components/StatusTabs';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import StatusBadge from '../../components/StatusBadge';
 import { useStore } from '../../state/store';
@@ -48,6 +49,11 @@ export default function Rules() {
     <Box>
       <Breadcrumb items={[{ label: 'Quản lý công nợ', to: '/debt-accounts' }, { label: 'Cấu hình & Chính sách' }, { label: 'Quy Ước Tuổi Giao & Hao Lai' }]} />
       <Card>
+        <StatusTabs value={st} onChange={(v) => setSt(v as typeof st)} tabs={[
+          { value: 'ALL', label: 'Tất cả', count: rules.length },
+          { value: 'ON', label: 'Đang áp dụng', count: active },
+          { value: 'OFF', label: 'Hết hiệu lực', count: rules.length - active },
+        ]} />
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => setQ(e.target.value)}
             startAdornment={<InputAdornment position="start">{mi('search')}</InputAdornment>} sx={{ width: 320 }} />

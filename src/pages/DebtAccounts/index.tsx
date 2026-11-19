@@ -20,7 +20,7 @@ import DeleteBlockedDialog from './DeleteBlockedDialog';
 import { stickyEndCell, stickyEndHead } from '../../components/stickyEnd';
 import { colors } from '../../tokens';
 
-type StatusFilter = 'ALL' | 'ACTIVE' | 'CLOSED' | 'SUPERSEDED';
+type StatusFilter = 'ALL' | 'ACTIVE' | 'CLOSED';
 const mi = (name: string, size = 18) => <span className="material-icons" style={{ fontSize: size }}>{name}</span>;
 
 // 3 trạng thái BA: Hoạt động / Tạm khóa / Ngưng hoạt động. BA không phân biệt cách xử lý của hai trạng thái không hoạt động nên cùng một nút Khóa / Kích hoạt (luôn hỏi xác nhận).
@@ -45,7 +45,7 @@ export default function DebtAccounts() {
   const base = useMemo(() => {
     const k = q.trim().toLowerCase();
     return accounts.filter((a) =>
-      (status === 'ALL' || (status === 'ACTIVE' ? a.isActive : status === 'CLOSED' ? !a.isActive && a.status === 'CLOSED' : !a.isActive && a.status !== 'CLOSED')) &&
+      (status === 'ALL' || (status === 'ACTIVE' ? a.isActive : !a.isActive)) &&
       (!k || [a.code, a.customerCode, a.customerName, a.customerCompany, a.note].some((s) => s.toLowerCase().includes(k))));
   }, [accounts, q, status]);
   const cf = useColumnFilters(base, (a) => ({ code: a.code, customer: `${a.customerCode} - ${a.customerName}`, channel: a.channel, material: MATERIAL_LABEL[a.material], uom: a.uom === 'LUONG' ? 'Lượng' : 'Gram', fineness: `${a.fineness.toFixed(2)}%`, status: VSTATUS[a.status][0], entries: `${a.journalEntryCount} bút toán`, note: a.note, by: person(a.modifiedBy), at: dmyHm(a.modifiedAt) }));
@@ -63,7 +63,6 @@ export default function DebtAccounts() {
           { value: 'ALL', label: 'Tất cả', count: accounts.length },
           { value: 'ACTIVE', label: 'Hoạt động', count: accounts.filter((a) => a.isActive).length },
           { value: 'CLOSED', label: 'Tạm khóa', count: accounts.filter((a) => !a.isActive && a.status === 'CLOSED').length },
-          { value: 'SUPERSEDED', label: 'Ngưng hoạt động', count: accounts.filter((a) => !a.isActive && a.status !== 'CLOSED').length },
         ]} />
         <Stack direction="row" spacing={1.5} sx={{ mb: 1.5 }}>
           <OutlinedInput placeholder="Tìm mã, tên khách hàng..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }}

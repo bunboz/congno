@@ -41,4 +41,4 @@ Nguồn: 4 trang Confluence, đối chiếu với giao diện đang làm. Phân 
 
 ## F. BA đã trả lời (chat với Nguyễn Đăng Khoa, ngày 19/11/2026)
 
-23. **Mã Ngưng hoạt động có bật lại được không?** Trả lời: **có**, "hoặc version cũ á, cho phép kích hoạt lại". Đã khớp với app đối với mã Ngưng hoạt động. **Còn mở:** kích hoạt lại **version cũ** hoạt động thế nào (phiên bản hiện tại có bị ngưng không; số dư và tuổi có quy đổi lại không; có sinh version mới không) và nút nằm ở đâu (popup Lịch sử phiên bản?). Đề nghị BA bổ sung vào Confluence vì câu trả lời mới chỉ qua chat.
+23. **Mã Ngưng hoạt động có bật lại được không?** BA trả lời qua chat: "có, hoặc version cũ, cho phép kích hoạt lại". **Quyết định hiện tại (đã chốt với người dùng):** không làm chức năng đổi/chọn lại version cũ vì Confluence không có màn này. Muốn làm lại thì khóa mã cũ (Tạm khóa) rồi tạo mã đối chiếu mới. "Ngưng hoạt động" chỉ còn là trạng thái của version cũ trong popup Lịch sử phiên bản, không có tab hay dòng riêng ở bảng đối chiếu. Đề nghị BA bổ sung vào Confluence nếu cách hiểu này đúng (US-01 AC-04 đang ghi các mã khác chuyển Ngưng hoạt động, nghe như là dòng riêng trong bảng).

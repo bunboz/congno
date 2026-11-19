@@ -95,7 +95,7 @@ export const accounts: DebtAccount[] = [
   acc('400003', '400003', 'GOLD', 58.5, { version: 2, effectiveFrom: '2026-09-01', journalEntryCount: 12, balance: { goldDelivered: 4.2, goldPending: 1.1, labor: 18500000 }, note: 'Chuyển sang vàng 14K theo hợp đồng mới',
     history: [rec(1, '400003', 41.6, null, '2026-01-01', '2026-08-31', 'Cù Thị Mỹ Duy (04108)', '2026-01-01T09:15:00Z', 'Khởi tạo')], modifiedBy: 'Cù Thị Mỹ Duy (04108)', modifiedAt: '2026-09-01T10:00:00Z' }),
   acc('400003_BAC', '400003', 'SILVER', 75, { isActive: false, status: 'CLOSED', note: 'Tạm khóa chờ đối chiếu công nợ cuối quý', modifiedBy: 'Tôn Tấn Khang (04127)', modifiedAt: '2026-11-10T16:30:00Z' }),
-  acc('400004', '400004', 'GOLD', 33.3, { isActive: false, status: 'SUPERSEDED', version: 2, effectiveFrom: '2026-04-01', note: 'Đã thay thế bằng mã mới', modifiedBy: 'Tôn Tấn Khang (04127)', modifiedAt: '2026-04-01T09:00:00Z',
+  acc('400004', '400004', 'GOLD', 33.3, { version: 2, effectiveFrom: '2026-04-01', modifiedBy: 'Tôn Tấn Khang (04127)', modifiedAt: '2026-04-01T09:00:00Z',
     history: [rec(1, '400004', 30, null, '2026-01-01', '2026-03-31', 'Tôn Tấn Khang (04127)', '2026-01-01T09:15:00Z', 'Khởi tạo')] }),
   acc('400005', '400005', 'GOLD', 68, { journalEntryCount: 1, modifiedBy: 'Lê Trung Hiếu (04162)', modifiedAt: '2026-11-12T11:05:00Z' }),
   acc('400005_PT', '400005', 'PLATINUM', 95, { note: 'Bạch kim đặt hàng riêng', modifiedBy: 'Lê Trung Hiếu (04162)', modifiedAt: '2026-11-12T11:10:00Z' }),
@@ -119,7 +119,7 @@ function fillerAccounts(): DebtAccount[] {
     const f = FIN[i % FIN.length];
     const ver = i % 6 === 2 ? 2 : i % 17 === 4 ? 4 : 1;
     const history = Array.from({ length: ver - 1 }, (_, k) => rec(k + 1, c.code, f - (ver - k) , k === 0 ? null : 1, `202${5 + (k > 0 ? 1 : 0)}-0${k + 1}-01`, `2026-0${k + 3}-30`, WHO[(i + k) % 5], `2026-0${k + 1}-01T09:15:00Z`, k === 0 ? 'Khởi tạo' : `Nâng tuổi theo phụ lục 0${k}/2026`));
-    const status = i % 11 === 5 ? 'CLOSED' : i % 13 === 7 ? 'SUPERSEDED' : 'ACTIVE';
+    const status = i % 11 === 5 ? 'CLOSED' : 'ACTIVE';
     out.push(acc(c.code, c.code, 'GOLD', f, {
       version: ver, history, status, isActive: status === 'ACTIVE', uom: i % 10 === 3 ? 'GRAM' : 'LUONG', note: NOTES[i % NOTES.length],
       journalEntryCount: i % 3 === 0 ? i * 2 + 1 : 0, effectiveFrom: ver > 1 ? '2026-06-01' : '2026-01-01',
